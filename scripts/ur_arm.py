@@ -124,10 +124,14 @@ def read_packet(host=ROBOT_IP, want_type=4, timeout=3.0):
 class Arm:
     """经 ROS 话题 /ur_link/urscript 控制（需要 ur_command_node 在跑）"""
 
-    def __init__(self, ip=ROBOT_IP):
+    def __init__(self, ip=ROBOT_IP, payload=None, cog=None):
+        """payload: 负载质量 kg（None=不设置，沿用机器人当前值）
+        cog: 重心在 tool0 系 [x,y,z] 米（默认 [0,0,0.05]，仅在设 payload 时用）"""
         self.ip = ip
         self._node = None
         self._pub = None
+        self.payload = payload
+        self.cog = cog if cog is not None else [0.0, 0.0, 0.05]
 
     # --- ROS 初始化（惰性） ---
     def _ensure_ros(self):
@@ -143,9 +147,17 @@ class Arm:
         time.sleep(0.6)          # 等发现/连接建立，否则第一条会丢
 
     def send_script(self, script, call=True):
-        """发 URScript。call=True 时把 def 包起来并显式调用（不调用不会动！）"""
+        """发 URScript。call=True 时把 def 包起来并显式调用（不调用不会动！）
+
+        若构造时给了 payload，会在脚本前加 set_payload(...)——
+        因为 URScript 程序每次运行会重置负载（示例程序里有 set_payload(0.01)），
+        必须在我们自己的脚本里也设置，否则负载标定形同虚设。
+        """
         from std_msgs.msg import String
         self._ensure_ros()
+        if self.payload is not None:
+            script = "set_payload(%r, [%r, %r, %r])\n" % (
+                self.payload, self.cog[0], self.cog[1], self.cog[2]) + script
         if call:
             body = "\n".join("  " + ln for ln in script.splitlines())
             script = "def arm_cmd():\n%s\nend\narm_cmd()" % body
