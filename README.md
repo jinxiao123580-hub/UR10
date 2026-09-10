@@ -108,10 +108,14 @@ python3 scripts/ur_pick_place_full.py 4 --pingpong    # 往返 4 轮，物体来
 | [`docs/05-完整抓放.md`](docs/05-完整抓放.md) | 抓放脚本用法、三种方向模式、参数调优、抓空检测 |
 | [`docs/06-排查手册.md`](docs/06-排查手册.md) | 症状 → 原因 → 解决 速查表 + 完整踩坑记录 |
 | [`docs/07-机器人内部访问.md`](docs/07-机器人内部访问.md) | root SSH 进机器人、`.urp` 是 gzip+XML、直接读写程序文件 |
+| [`docs/08-六维力与3D相机.md`](docs/08-六维力与3D相机.md) | **ATI Net F/T 力传感器 + Mech-Eye 3D 相机** 接入（RDT 协议实测、GVCP 发现、官方 ROS 2 接口、坐标系统一） |
 
 | 脚本 | 作用 |
 |---|---|
 | `scripts/diagnose.py` | **一键体检**：网络/端口/夹爪/机械臂全查 |
+| `scripts/ati_netft_node.py` | **ATI Net F/T 力传感器 → ROS 2**（`/ft_sensor/wrench`，带 `--check` 命令行看数） |
+| `scripts/start_ur_tf.sh` | 起 UR10 的 TF 链（`base → tool0`），视觉抓取的地基 |
+| `scripts/check_fk.py` | **FK 自检**：比对 TF 与真机 TCP，并检查 `base`/`base_link` 镜像坑 |
 | `scripts/rq_gripper.py` | 夹爪直控模块（`status`/`open`/`close`/`test`），可当库用 |
 | `scripts/ur_arm.py` | 机械臂控制模块（`check`/`nudge`），可当库用 |
 | `scripts/ur_pick_place_full.py` | **完整抓放**（三种方向模式） |

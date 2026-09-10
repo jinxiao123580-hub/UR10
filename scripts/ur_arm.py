@@ -25,6 +25,63 @@ SCRIPT_PORT = 30002
 STATE_PORT = 30001
 
 
+# ---------------- 姿态表示法转换（视觉抓取必用） ----------------
+# UR 的 movel(p[x,y,z,rx,ry,rz]) 里 rx,ry,rz 是**轴角(rotation vector)**，
+# 不是 RPY！TF 给的是四元数/RPY，直接塞进 movel 姿态必错。
+import math                                                            # noqa: E402
+
+
+def quat_to_rotvec(q):
+    """四元数 (x,y,z,w) → 轴角 (rx,ry,rz)，可直接喂给 movel 的姿态部分"""
+    x, y, z, w = [float(v) for v in q]
+    n = math.sqrt(x * x + y * y + z * z + w * w)
+    if n < 1e-12:
+        return (0.0, 0.0, 0.0)
+    x, y, z, w = x / n, y / n, z / n, w / n
+    if w < 0:                       # 取短弧
+        x, y, z, w = -x, -y, -z, -w
+    angle = 2.0 * math.acos(max(-1.0, min(1.0, w)))
+    s = math.sqrt(max(0.0, 1.0 - w * w))
+    if s < 1e-9:
+        return (0.0, 0.0, 0.0)
+    return (angle * x / s, angle * y / s, angle * z / s)
+
+
+def rotvec_to_quat(v):
+    """轴角 (rx,ry,rz) → 四元数 (x,y,z,w)"""
+    rx, ry, rz = [float(c) for c in v]
+    angle = math.sqrt(rx * rx + ry * ry + rz * rz)
+    if angle < 1e-12:
+        return (0.0, 0.0, 0.0, 1.0)
+    s = math.sin(angle / 2.0) / angle
+    return (rx * s, ry * s, rz * s, math.cos(angle / 2.0))
+
+
+def quat_to_rpy(q):
+    """四元数 (x,y,z,w) → RPY（仅用于显示/比对，别喂给 movel）"""
+    x, y, z, w = [float(v) for v in q]
+    sinr = 2 * (w * x + y * z)
+    cosr = 1 - 2 * (x * x + y * y)
+    roll = math.atan2(sinr, cosr)
+    sinp = max(-1.0, min(1.0, 2 * (w * y - z * x)))
+    pitch = math.copysign(math.pi / 2, sinp) if abs(sinp) >= 1 else math.asin(sinp)
+    siny = 2 * (w * z + x * y)
+    cosy = 1 - 2 * (y * y + z * z)
+    return (roll, pitch, math.atan2(siny, cosy))
+
+
+def rpy_to_quat(rpy):
+    """RPY → 四元数 (x,y,z,w)"""
+    r, p, y = [float(c) for c in rpy]
+    cr, sr = math.cos(r / 2), math.sin(r / 2)
+    cp, sp = math.cos(p / 2), math.sin(p / 2)
+    cy, sy = math.cos(y / 2), math.sin(y / 2)
+    return (sr * cp * cy - cr * sp * sy,
+            cr * sp * cy + sr * cp * sy,
+            cr * cp * sy - sr * sp * cy,
+            cr * cp * cy + sr * sp * sy)
+
+
 # ---------------- 状态读取（不依赖 ROS，走 30001 状态流） ----------------
 def read_packet(host=ROBOT_IP, want_type=4, timeout=3.0):
     """从 30001 读一个子包(type=4 是 Cartesian info, 返回 TCP 位姿)"""
