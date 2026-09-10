@@ -114,6 +114,7 @@ python3 scripts/ur_pick_place_full.py 4 --pingpong    # 往返 4 轮，物体来
 | [`docs/08-六维力与3D相机.md`](docs/08-六维力与3D相机.md) | **ATI Net F/T 力传感器 + Mech-Eye 3D 相机** 接入（RDT 协议实测、GVCP 发现、官方 ROS 2 接口、坐标系统一） |
 | [`docs/09-MechEye相机接入清单.md`](docs/09-MechEye相机接入清单.md) | 梅卡曼德相机**一步步接入清单**（SDK 安装、自动打补丁、四个官方坑） |
 | [`docs/10-网页监控台.md`](docs/10-网页监控台.md) | **网页看相机画面 + 六轴力折线图**（自研 ROS→WebSocket 桥、协议、实测数据） |
+| [`docs/11-机器人自身标定.md`](docs/11-机器人自身标定.md) | **自身标定执行记录**：负载/置零/TCP/运动学（含实测结论与放弃原因） |
 | [`docs/11-同步数字孪生.md`](docs/11-同步数字孪生.md) | **UR10 真机同步 RViz 数字孪生**（只读关节镜像、离线演示、独立 `twin_*` TF） |
 
 | 脚本 | 作用 |
