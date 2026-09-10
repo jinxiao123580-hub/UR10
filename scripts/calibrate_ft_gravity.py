@@ -215,14 +215,25 @@ def run(args):
     if not start:
         raise RuntimeError("读不到 UR10 TCP 位姿")
     targets = make_targets(start, args.angle_deg)
+    gravity_base = np.array([0.0, 0.0, -GRAVITY])
+    preview_gravity = np.array([
+        rotvec_to_matrix(target[3:]).T @ gravity_base for target in targets
+    ])
+    preview_condition = float(np.linalg.cond(
+        np.hstack([preview_gravity, np.ones((len(targets), 1))])))
     print("起始 TCP: [%s]" % ", ".join("%.5f" % x for x in start))
     print("轨迹: 位置保持不变，%d 个姿态，工具坐标轴最大转动 %.1f deg"
           % (len(targets), args.angle_deg))
+    print("预计设计矩阵条件数: %.1f（要求 <= %.1f）" %
+          (preview_condition, args.max_condition))
     for i, pose in enumerate(targets, 1):
         print("  %02d rotvec=[% .4f % .4f % .4f]" % (i, *pose[3:]))
     if not args.execute:
         print("\n仅预览，未发送运动。确认后加 --execute。")
         return 0
+    if preview_condition > args.max_condition:
+        raise RuntimeError("姿态覆盖不足：条件数 %.1f > %.1f，请增大 --angle-deg"
+                           % (preview_condition, args.max_condition))
     answer = input("确认末端周围无障碍、无外部接触，人在机械臂旁且手放急停？输入 YES: ")
     if answer != "YES":
         raise RuntimeError("用户未确认，已取消")
@@ -257,7 +268,8 @@ def run(args):
                                    (i, position_error * 1000, angle_error))
             mean, std, count = collector.sample(args.duration, args.min_messages)
             samples.append({"rotation_base_tool": rotvec_to_matrix(actual[3:]),
-                            "wrench": mean})
+                            "wrench": mean, "std": std, "count": count,
+                            "tcp_pose": list(actual)})
             print("  %d 点, F=[% .3f % .3f % .3f]N, max_std=%.3fN"
                   % (count, *mean[:3], np.max(std[:3])))
         result = fit_gravity(samples)
@@ -272,18 +284,40 @@ def run(args):
 
     output = os.path.abspath(os.path.expanduser(args.output))
     os.makedirs(os.path.dirname(output), exist_ok=True)
-    document = {"schema_version": 1,
+    failures = []
+    if result["design_condition"] > args.max_condition:
+        failures.append("design_condition %.1f > %.1f" %
+                        (result["design_condition"], args.max_condition))
+    if result["force_rms_n"] > args.max_force_rms:
+        failures.append("force_rms %.3fN > %.3fN" %
+                        (result["force_rms_n"], args.max_force_rms))
+    if result["torque_rms_nm"] > args.max_torque_rms:
+        failures.append("torque_rms %.4fNm > %.4fNm" %
+                        (result["torque_rms_nm"], args.max_torque_rms))
+    valid = not failures
+    serializable_samples = [{
+        "tcp_pose": [float(x) for x in sample["tcp_pose"]],
+        "wrench_mean": [float(x) for x in sample["wrench"]],
+        "wrench_std": [float(x) for x in sample["std"]],
+        "message_count": int(sample["count"]),
+    } for sample in samples]
+    document = {"schema_version": 1, "valid": valid,
                 "frames": {"base": "base", "tool": "tool0", "sensor": "ft_sensor"},
                 "gravity_m_s2": GRAVITY, "calibration": result,
+                "validation_failures": failures,
+                "samples": serializable_samples,
                 "note": "ATI hardware Bias must remain zero."}
     with open(output, "w", encoding="utf-8") as stream:
         yaml.safe_dump(document, stream, sort_keys=False, allow_unicode=True)
-    print("标定完成: mass=%.4fkg, CoM(sensor)=%s m" %
+    print("拟合结果: mass=%.4fkg, CoM(sensor)=%s m" %
           (result["mass_kg"], np.round(result["com_sensor_m"], 6)))
     print("残差: force RMS=%.4fN max=%.4fN; torque RMS=%.5fNm max=%.5fNm" %
           (result["force_rms_n"], result["force_max_n"],
            result["torque_rms_nm"], result["torque_max_nm"]))
     print("输出: %s" % output)
+    if not valid:
+        raise RuntimeError("标定质量门禁失败: " + "; ".join(failures))
+    print("✔ 标定质量门禁通过")
     return 0
 
 
@@ -292,12 +326,15 @@ def main():
     parser.add_argument("--execute", action="store_true", help="确认后实际移动机械臂")
     parser.add_argument("--self-test", action="store_true")
     parser.add_argument("--topic", default="/ft_sensor/wrench")
-    parser.add_argument("--angle-deg", type=float, default=20.0)
+    parser.add_argument("--angle-deg", type=float, default=40.0)
     parser.add_argument("--duration", type=float, default=1.0)
     parser.add_argument("--min-messages", type=int, default=100)
     parser.add_argument("--settle", type=float, default=1.0)
     parser.add_argument("--speed", type=float, default=0.05)
     parser.add_argument("--acceleration", type=float, default=0.2)
+    parser.add_argument("--max-condition", type=float, default=120.0)
+    parser.add_argument("--max-force-rms", type=float, default=1.0)
+    parser.add_argument("--max-torque-rms", type=float, default=0.1)
     parser.add_argument("--output", default="config/ft_gravity_calibration.yaml")
     args = parser.parse_args()
     if args.self_test:
