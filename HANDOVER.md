@@ -134,7 +134,6 @@ ros2 run ur_link ur_command_node --ros-args -p robot_ip:=192.168.1.3 &
 ~/UR10/  （= GitHub jinxiao123580-hub/UR10）
 ├── README.md                    总览 + 快速开始 + 五个必知坑
 ├── HANDOVER.md                  ← 本文件
-├── CODEX_PROMPT.md              给 AI 接手者的提示词（可直接粘贴）
 ├── docs/
 │   ├── 01-硬件与网络.md          拓扑/静态IP/绕代理/端口全表/上电流程
 │   ├── 02-ROS2驱动-ur_link.md    话题与服务清单、构建、离线自测
