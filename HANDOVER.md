@@ -271,8 +271,9 @@ ros2 service call /ft_sensor/tare std_srvs/srv/Trigger  # 软件去皮
 - 物理量 = `counts / 1000000`（本机 counts_per_force = counts_per_torque = 1e6）
 - **status 非 0 = 某轴饱和**；`FLT` 类故障见 HTTP 页
 
-**⚠️ 传感器从未置零**：`manuf.htm` 显示 Bias 全 0，因此当前读数含**工装自重**
-（实测 `Fz≈62N`）。挂好工具后必须 tare。
+**ATI 硬件 Bias 必须保持全 0**：带载某一姿态的读数包含工装自重
+（历史实测 `Fz≈62N`），不应写入硬件 Bias。用 `scripts/calibrate_ft_gravity.py`
+做多姿态质量/重心/零偏标定；`tare` 仅作某一固定工作姿态的临时软件去皮。
 **活动配置是 `#16 End of line test`**（出厂测试用），`#1` 名为 `KUKA_FTCtrl_!DoNotChange!`
 （说明这盒子来自 KUKA 系统），正式用前建议在 `config.htm` 建自己的配置。
 
@@ -370,7 +371,7 @@ bash scripts/start_dashboard.sh          # 一键起 → http://127.0.0.1:8080/
 | 项 | 说明 |
 |---|---|
 | 手眼标定未做 | 点云还在相机坐标系，**不能直接用于抓取**（P1） |
-| 力传感器未置零 | 读数含工装自重（Fz≈62N），**用前必须 tare** |
+| 力重力模型未标定 | 原始读数含工装自重；硬件 Bias 保持 0，用多姿态脚本标定质量/重心/零偏 |
 | 配置是出厂测试项 | ATI 活动配置 `#16 End of line test`，建议建自己的 |
 | 机器人 root 密码是默认值 | `root/easybot`，**这是台对内网敞开的设备**，注意网络安全 |
 | `base_link` 镜像坑 | 任何坐标系变换的逻辑都必须走 `base`，见铁律 3 |

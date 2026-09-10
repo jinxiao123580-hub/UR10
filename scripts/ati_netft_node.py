@@ -97,7 +97,7 @@ class NetFT:
                 pass
         return False
 
-    def read(self):
+    def read(self, timeout=2.5):
         """收一个包，返回 (wrench6, status_word, rdt_seq, ft_seq) 或 None
 
         wrench6 = [Fx, Fy, Fz, Tx, Ty, Tz]，单位 N / N·m，已去软件皮
@@ -105,38 +105,59 @@ class NetFT:
         if not self.sock:
             self.start()
         skipped = 0
-        deadline = time.time() + 2.5        # 硬上限：再长的连续短包也不会把这里卡死
-        while time.time() < deadline:
-            data, _ = self.sock.recvfrom(2048)
-            if len(data) < 36:
-                # 短包（应答/缓冲头等）不是测量数据，跳过继续等；
-                # 但必须带截止时间，否则遇到持续短包会永远出不去（曾把节点卡死）
-                skipped += 1
-                if skipped > 50:
-                    raise socket.timeout("连续 %d 个短包，未见有效数据" % skipped)
-                continue
-            rdt_seq, ft_seq, status = struct.unpack(">III", data[:12])
-            raw = struct.unpack(">6i", data[12:36])
-            self.last_ok = time.time()
-            w = [raw[0] / self.cpf - self.bias[0],
-                 raw[1] / self.cpf - self.bias[1],
-                 raw[2] / self.cpf - self.bias[2],
-                 raw[3] / self.cpt - self.bias[3],
-                 raw[4] / self.cpt - self.bias[4],
-                 raw[5] / self.cpt - self.bias[5]]
-            return w, status, rdt_seq, ft_seq
-        raise socket.timeout("等待数据超时")
+        deadline = time.monotonic() + max(0.0, timeout)
+        original_timeout = self.sock.gettimeout()
+        try:
+            while True:
+                remaining = deadline - time.monotonic()
+                if remaining <= 0:
+                    raise socket.timeout("等待数据超时")
+                self.sock.settimeout(min(2.0, remaining))
+                data, _ = self.sock.recvfrom(2048)
+                if len(data) < 36:
+                    # 短包（应答/缓冲头等）不是测量数据。
+                    skipped += 1
+                    if skipped > 50:
+                        raise socket.timeout("连续 %d 个短包，未见有效数据" % skipped)
+                    continue
+                rdt_seq, ft_seq, status = struct.unpack(">III", data[:12])
+                raw = struct.unpack(">6i", data[12:36])
+                self.last_ok = time.time()
+                w = [raw[0] / self.cpf - self.bias[0],
+                     raw[1] / self.cpf - self.bias[1],
+                     raw[2] / self.cpf - self.bias[2],
+                     raw[3] / self.cpt - self.bias[3],
+                     raw[4] / self.cpt - self.bias[4],
+                     raw[5] / self.cpt - self.bias[5]]
+                return w, status, rdt_seq, ft_seq
+        finally:
+            self.sock.settimeout(original_timeout)
 
-    def tare(self):
-        """把当前读数当作零点（软件去皮，不改传感器本身）"""
-        b = [0.0] * 6
-        for _ in range(20):                      # 多次平均，降噪
-            r = self.read()
-            if r:
-                for i in range(6):
-                    b[i] += r[0][i] / 20.0
-        self.bias = b
-        return b
+    def tare(self, timeout=5.0, target_samples=20, min_samples=3):
+        """在总超时内软件去皮，返回 (bias, 有效样本数, 是否更新)。"""
+        sums = [0.0] * 6
+        count = 0
+        deadline = time.monotonic() + max(0.0, timeout)
+        while count < target_samples:
+            remaining = deadline - time.monotonic()
+            if remaining <= 0:
+                break
+            try:
+                r = self.read(timeout=remaining)
+            except (socket.timeout, OSError):
+                continue
+            if not r:
+                continue
+            for i in range(6):
+                sums[i] += r[0][i]
+            count += 1
+
+        if count < min_samples:
+            return list(self.bias), count, False
+
+        # read() 返回的是已扣除旧 bias 的值，重复 tare 时必须累加。
+        self.bias = [self.bias[i] + sums[i] / count for i in range(6)]
+        return list(self.bias), count, True
 
 
 # ---------------- 命令行看数 ----------------
@@ -197,9 +218,13 @@ def ros_main(args):
                 % (ip, rate, self.frame_id))
 
         def _on_tare(self, req, res):
-            b = self.ft.tare()
-            res.success = True
-            res.message = "已去皮: " + ", ".join("%.3f" % v for v in b)
+            b, count, updated = self.ft.tare(timeout=5.0)
+            res.success = updated
+            if updated:
+                res.message = "已去皮（%d 样本）: %s" % (
+                    count, ", ".join("%.3f" % v for v in b))
+            else:
+                res.message = "去皮失败：5 秒内仅 %d 个有效样本，已保留原 bias" % count
             self.get_logger().info(res.message)
             return res
 
