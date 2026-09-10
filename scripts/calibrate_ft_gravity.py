@@ -47,6 +47,18 @@ def matrix_to_rotvec(r):
     return axis * angle
 
 
+def matrix_to_rotvec_near(r, reference):
+    """返回与 reference 最接近的等价轴角，避免 pi 分支导致手腕绕远。"""
+    canonical = matrix_to_rotvec(r)
+    angle = np.linalg.norm(canonical)
+    if angle < 1e-12:
+        return canonical
+    axis = canonical / angle
+    candidates = [canonical + (2 * math.pi * k) * axis for k in range(-2, 3)]
+    reference = np.asarray(reference, dtype=float)
+    return min(candidates, key=lambda value: np.linalg.norm(value - reference))
+
+
 def fit_gravity(samples):
     if len(samples) < 8:
         raise ValueError("至少需要 8 个有效姿态")
@@ -74,9 +86,11 @@ def fit_gravity(samples):
                               for g in gravity_tool])
     force_pred = gravity_force + force_bias
 
-    # T_sensor = r_com_sensor x F_gravity_sensor + b_t.
+    # T_sensor = r_com_sensor x F_sensor_corrected + b_t.  Use the measured
+    # force after bias removal so force residuals are not amplified by the CoM.
+    corrected_force = force - force_bias
     torque_design = np.vstack([
-        np.hstack([-skew(f), np.eye(3)]) for f in gravity_force
+        np.hstack([-skew(f), np.eye(3)]) for f in corrected_force
     ])
     torque_coeff, _, torque_rank, _ = np.linalg.lstsq(
         torque_design, torque.reshape(-1), rcond=None)
@@ -85,7 +99,7 @@ def fit_gravity(samples):
     com_sensor = torque_coeff[:3]
     torque_bias = torque_coeff[3:]
     torque_pred = np.array([np.cross(com_sensor, f) + torque_bias
-                            for f in gravity_force])
+                            for f in corrected_force])
     force_error = force - force_pred
     torque_error = torque - torque_pred
     spread = np.linalg.svd(gravity_tool - gravity_tool.mean(axis=0),
@@ -160,7 +174,8 @@ def make_targets(start_pose, angle_deg):
     for rx, ry, rz in calibration_offsets(angle_deg):
         delta = rotvec_to_matrix([rx, ry, rz])
         target_rotation = start_rotation @ delta
-        targets.append(list(start_pose[:3]) + matrix_to_rotvec(target_rotation).tolist())
+        rotvec = matrix_to_rotvec_near(target_rotation, start_pose[3:])
+        targets.append(list(start_pose[:3]) + rotvec.tolist())
     return targets
 
 
@@ -207,6 +222,110 @@ def self_test():
     assert np.max(np.abs(np.array(result["com_sensor_m"]) - true_com)) < 0.001
     print("自测通过: mass=%.4fkg, CoM=%s" %
           (result["mass_kg"], np.round(result["com_sensor_m"], 5)))
+
+
+def save_result(args, result, samples, valid, failures):
+    output = os.path.abspath(os.path.expanduser(args.output))
+    os.makedirs(os.path.dirname(output), exist_ok=True)
+    serializable_samples = [{
+        "tcp_pose": [float(x) for x in sample["tcp_pose"]],
+        "wrench_mean": [float(x) for x in sample["wrench"]],
+        "wrench_std": [float(x) for x in sample["std"]],
+        "count": int(sample["count"]),
+    } for sample in samples]
+    document = {
+        "schema_version": 1,
+        "valid": valid,
+        "validation_failures": failures,
+        "frames": {"base": "base", "tool": "tool0", "sensor": "ft_sensor"},
+        "gravity_m_s2": GRAVITY,
+        "calibration": result,
+        "samples": serializable_samples,
+        "note": "ATI hardware Bias must remain zero.",
+    }
+    with open(output, "w", encoding="utf-8") as stream:
+        yaml.safe_dump(document, stream, sort_keys=False, allow_unicode=True)
+    return output
+
+
+def run_manual(args):
+    arm = Arm()
+    collector = WrenchCollector(args.topic)
+    samples = []
+    if args.resume:
+        with open(os.path.expanduser(args.resume), encoding="utf-8") as stream:
+            saved = yaml.safe_load(stream)
+        for row in saved.get("samples", []):
+            pose = row["tcp_pose"]
+            samples.append({
+                "rotation_base_tool": rotvec_to_matrix(pose[3:]),
+                "wrench": np.asarray(row["wrench_mean"], dtype=float),
+                "std": np.asarray(row["wrench_std"], dtype=float),
+                "count": int(row["count"]),
+                "tcp_pose": pose,
+            })
+        print("已从 %s 恢复 %d 组样本" % (args.resume, len(samples)))
+    print("手动模式：本脚本不会发送任何机械臂运动命令。")
+    print("用示教器/自由驱动换到安全姿态，停稳且末端无接触后按 Enter 采样；f 拟合；q 退出。")
+    try:
+        time.sleep(1.0)
+        while True:
+            command = input("[%d 组] Enter=采样, f=拟合, q=退出: " % len(samples)).strip().lower()
+            if command == "q":
+                return 1
+            if command == "f":
+                break
+            pose_before = arm.get_tcp_pose()
+            if not pose_before:
+                print("✘ 读不到 TCP，本组放弃")
+                continue
+            mean, std, count = collector.sample(args.duration, args.min_messages)
+            pose_after = arm.get_tcp_pose()
+            if not pose_after:
+                print("✘ 读不到采样后 TCP，本组放弃")
+                continue
+            position_motion = np.linalg.norm(np.asarray(pose_after[:3]) - pose_before[:3])
+            angle_motion = rotation_error_deg(rotvec_to_matrix(pose_before[3:]),
+                                              rotvec_to_matrix(pose_after[3:]))
+            if position_motion > 0.001 or angle_motion > 0.2:
+                print("✘ 采样期间机械臂未停稳: %.1fmm / %.2fdeg" %
+                      (position_motion * 1000, angle_motion))
+                continue
+            sample = {"rotation_base_tool": rotvec_to_matrix(pose_after[3:]),
+                      "wrench": mean, "std": std, "count": count,
+                      "tcp_pose": list(pose_after)}
+            samples.append(sample)
+            condition_text = ""
+            if len(samples) >= 4:
+                gb = np.array([0.0, 0.0, -GRAVITY])
+                gs = np.array([s["rotation_base_tool"].T @ gb for s in samples])
+                condition_text = ", cond=%.1f" % np.linalg.cond(
+                    np.hstack([gs, np.ones((len(gs), 1))]))
+            print("✔ %d 点, F=[% .3f % .3f % .3f]N, max_std=%.3fN%s" %
+                  (count, *mean[:3], np.max(std[:3]), condition_text))
+        result = fit_gravity(samples)
+        failures = []
+        if result["design_condition"] > args.max_condition:
+            failures.append("design_condition %.1f > %.1f" %
+                            (result["design_condition"], args.max_condition))
+        if result["force_rms_n"] > args.max_force_rms:
+            failures.append("force_rms %.3fN > %.3fN" %
+                            (result["force_rms_n"], args.max_force_rms))
+        if result["torque_rms_nm"] > args.max_torque_rms:
+            failures.append("torque_rms %.4fNm > %.4fNm" %
+                            (result["torque_rms_nm"], args.max_torque_rms))
+        output = save_result(args, result, samples, not failures, failures)
+        print("结果: mass=%.4fkg, CoM(sensor)=%s" %
+              (result["mass_kg"], np.round(result["com_sensor_m"], 6)))
+        print("残差: force RMS=%.4fN; torque RMS=%.5fNm; cond=%.1f" %
+              (result["force_rms_n"], result["torque_rms_nm"],
+               result["design_condition"]))
+        print("输出: %s" % output)
+        if failures:
+            raise RuntimeError("标定质量门禁失败: " + "; ".join(failures))
+        return 0
+    finally:
+        collector.close()
 
 
 def run(args):
@@ -258,6 +377,11 @@ def run(args):
         print("力数据门禁通过: %d 点/0.5s（要求 >=%d）, F=[% .3f % .3f % .3f]N" %
               (pre_count, preflight_min, *pre_mean[:3]))
         for i, target in enumerate(targets, 1):
+            if i > 1:
+                print("[%02d/%02d] 先回起始姿态..." % (i, len(targets)))
+                moved = True
+                move_and_wait(arm, start, args.acceleration, args.speed,
+                              args.settle)
             print("[%02d/%02d] 移动..." % (i, len(targets)))
             moved = True
             actual = move_and_wait(arm, target, args.acceleration, args.speed,
@@ -327,6 +451,8 @@ def run(args):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--execute", action="store_true", help="确认后实际移动机械臂")
+    parser.add_argument("--manual", action="store_true", help="手动换姿态，脚本只采样不运动")
+    parser.add_argument("--resume", help="从既有 YAML 恢复手动采样")
     parser.add_argument("--self-test", action="store_true")
     parser.add_argument("--topic", default="/ft_sensor/wrench")
     parser.add_argument("--angle-deg", type=float, default=40.0)
@@ -343,6 +469,8 @@ def main():
     if args.self_test:
         self_test()
         return 0
+    if args.manual:
+        return run_manual(args)
     return run(args)
 
 
