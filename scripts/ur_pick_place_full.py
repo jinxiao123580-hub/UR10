@@ -45,6 +45,16 @@ def _find_poses():
 
 POSES_FILE = _find_poses()
 
+# ── 负载标定（2026-09-10 实测）──────────────────────────────
+# 工具装配: 法兰 → ATI 力传感器 → [偏心 3D 相机] + [正装夹爪]
+#   实测: 传感器下方工具(相机+夹爪) = 6.56 kg（力传感器 |F|=64.4N）
+#   传感器自重: ~1.5 kg（估算，看铭牌确认）
+#   重心: 测得的工具重心横向偏移 ≈ (-31, +29) mm（传感器系，来自偏心相机），
+#         高度按安装尺寸估 60mm 下方；最终精确值建议用示教器「负载」向导校准
+# 设 None 则不动负载（保持机器人当前值）
+PAYLOAD_MASS = 8.0          # 6.56 + ~1.5
+PAYLOAD_COG = [-0.03, 0.03, -0.06]   # tool0 系，米
+
 
 def up(pose, h=H):
     """返回该位姿上方 h 米的位姿（保持姿态不变）"""
@@ -69,7 +79,7 @@ def main():
              "一直循环" if count is None else "%d 轮" % count))
 
     # ---- 连接两侧 ----
-    arm = Arm()
+    arm = Arm(payload=PAYLOAD_MASS, cog=PAYLOAD_COG)
     g = RobotiqGripper()
     g.connect()
     st = g.status()
