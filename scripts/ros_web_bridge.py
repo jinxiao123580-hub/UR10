@@ -76,7 +76,18 @@ class RosWebBridge(Node):
         self.ws_clients = set()
         self._subs = {}
         self._stats = {}
-        self._clients = {}          # service 名 -> ServiceClient
+        self._service_clients = {}  # service 名 -> ServiceClient
+        if MECHEYE_OK:
+            self._service_clients.update({
+                "/capture_color_image": self.create_client(
+                    CaptureColorImage, "/capture_color_image"),
+                "/capture_depth_map": self.create_client(
+                    CaptureDepthMap, "/capture_depth_map"),
+                "/capture_point_cloud": self.create_client(
+                    CapturePointCloud, "/capture_point_cloud"),
+            })
+        self._service_clients["/ft_sensor/tare"] = self.create_client(
+            Trigger, "/ft_sensor/tare")
         self._lock = threading.Lock()
         self._http = None
         print("[桥] rclpy 节点 ros_web_bridge 就绪；Mech-Eye 服务类型: %s"
@@ -176,20 +187,27 @@ class RosWebBridge(Node):
         def worker():
             try:
                 with self._lock:
-                    client = self._clients.get(srv_name)
+                    client = self._service_clients.get(srv_name)
                     if client is None:
                         client = self.create_client(srv_type, srv_name)
-                        self._clients[srv_name] = client
+                        self._service_clients[srv_name] = client
                 if not client.wait_for_service(timeout_sec=4.0):
                     loop.call_soon_threadsafe(fut.set_result, {
                         "ok": False, "error": "服务 %s 不存在或无响应" % srv_name,
                         "service": srv_name, "request_id": request_id})
                     return
                 rf = client.call_async(req)
-                rf.add_done_callback(
-                    lambda f: loop.call_soon_threadsafe(
-                        fut.set_result, {"ok": True, "response": _dump_resp(f.result()),
-                                         "service": srv_name, "request_id": request_id}))
+
+                def service_done(done):
+                    try:
+                        result = {"ok": True, "response": _dump_resp(done.result()),
+                                  "service": srv_name, "request_id": request_id}
+                    except Exception as exc:
+                        result = {"ok": False, "error": str(exc),
+                                  "service": srv_name, "request_id": request_id}
+                    loop.call_soon_threadsafe(fut.set_result, result)
+
+                rf.add_done_callback(service_done)
             except Exception as e:
                 loop.call_soon_threadsafe(fut.set_result, {
                     "ok": False, "error": str(e), "service": srv_name, "request_id": request_id})
@@ -352,7 +370,9 @@ async def ws_handler(ws, bridge):
             elif op == "call_service":
                 fut = bridge.call_service(req.get("service"), req.get("kind", "trigger"),
                                           req.get("request_id"))
-                await asyncio.wait_for(asyncio.shield(fut), timeout=20.0)
+                result = await asyncio.wait_for(asyncio.shield(fut), timeout=20.0)
+                result["op"] = "call_service"
+                await ws.send(json.dumps(result))
             elif op == "ping":
                 await ws.send(json.dumps({"op": "pong"}))
             elif op == "status":

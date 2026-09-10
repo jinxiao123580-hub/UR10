@@ -123,7 +123,9 @@ function renderChart() {
   const tEnd = data[data.length - 1].t, tStart = tEnd - WRENCH_WINDOW;
   const seg = data.filter(p => p.t >= tStart);
   const series = AXES.map(a => seg.map(p => [p.t, p[a.key]]));
-  chart.setOption({ series: series.map((s, i) => ({ data: s })) }, { replaceMerge: ["series"] });
+  chart.setOption({
+    series: series.map((s, i) => ({ name: AXES[i].label, data: s })),
+  });
   const last = seg[seg.length - 1];
   ftStatusEl.textContent = `F = (${last.fx.toFixed(1)}, ${last.fy.toFixed(1)}, ${last.fz.toFixed(1)}) N · T = (${last.tx.toFixed(2)}, ${last.ty.toFixed(2)}, ${last.tz.toFixed(2)}) N·m`;
   ftRateEl.textContent = `${Math.round((seg.length / (tEnd - tStart)) || 0)} Hz`;
@@ -150,7 +152,11 @@ function drawCanvas(cv, jpeg, infoEl, label) {
   img.onload = () => {
     cv.width = jpeg.width; cv.height = jpeg.height;
     const ctx = cv.getContext("2d");
+    ctx.save();
+    ctx.translate(0, cv.height);
+    ctx.scale(1, -1);
     ctx.drawImage(img, 0, 0);
+    ctx.restore();
     if (infoEl) infoEl.textContent = `${jpeg.width}×${jpeg.height}  ${label}`;
   };
   img.src = "data:image/jpeg;base64," + jpeg.data;
