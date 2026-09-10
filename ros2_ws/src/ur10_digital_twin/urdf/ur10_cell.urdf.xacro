@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://wiki.ros.org/xacro" name="ur10_digital_twin">
+  <xacro:arg name="tf_prefix" default="twin_"/>
+  <xacro:arg name="ur_type" default="ur10"/>
+
+  <xacro:include filename="$(find ur_description)/urdf/ur_macro.xacro"/>
+
+  <material name="ati_blue"><color rgba="0.10 0.35 0.75 1"/></material>
+  <material name="gripper_gray"><color rgba="0.18 0.20 0.23 1"/></material>
+  <material name="finger_metal"><color rgba="0.65 0.68 0.72 1"/></material>
+
+  <link name="world"/>
+  <xacro:ur_robot
+      name="ur10"
+      tf_prefix="$(arg tf_prefix)"
+      parent="world"
+      joint_limits_parameters_file="$(find ur_description)/config/$(arg ur_type)/joint_limits.yaml"
+      kinematics_parameters_file="$(find ur_description)/config/$(arg ur_type)/default_kinematics.yaml"
+      physical_parameters_file="$(find ur_description)/config/$(arg ur_type)/physical_parameters.yaml"
+      visual_parameters_file="$(find ur_description)/config/$(arg ur_type)/visual_parameters.yaml"
+      safety_limits="false"
+      safety_pos_margin="0.15"
+      safety_k_position="20"
+      force_abs_paths="false">
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </xacro:ur_robot>
+
+  <!-- ATI Net F/T and Robotiq are uncalibrated visualization placeholders only. -->
+  <link name="$(arg tf_prefix)ati_sensor">
+    <visual>
+      <origin xyz="0 0 0.018" rpy="0 0 0"/>
+      <geometry><cylinder radius="0.045" length="0.036"/></geometry>
+      <material name="ati_blue"/>
+    </visual>
+  </link>
+  <joint name="$(arg tf_prefix)tool0_to_ati" type="fixed">
+    <parent link="$(arg tf_prefix)tool0"/>
+    <child link="$(arg tf_prefix)ati_sensor"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>
+
+  <link name="$(arg tf_prefix)gripper_base">
+    <visual>
+      <origin xyz="0 0 0.045" rpy="0 0 0"/>
+      <geometry><box size="0.09 0.075 0.09"/></geometry>
+      <material name="gripper_gray"/>
+    </visual>
+  </link>
+  <joint name="$(arg tf_prefix)ati_to_gripper" type="fixed">
+    <parent link="$(arg tf_prefix)ati_sensor"/>
+    <child link="$(arg tf_prefix)gripper_base"/>
+    <origin xyz="0 0 0.036" rpy="0 0 0"/>
+  </joint>
+
+  <link name="$(arg tf_prefix)left_finger">
+    <visual>
+      <origin xyz="0 0 0.055" rpy="0 0 0"/>
+      <geometry><box size="0.018 0.022 0.11"/></geometry>
+      <material name="finger_metal"/>
+    </visual>
+  </link>
+  <joint name="$(arg tf_prefix)left_finger_joint" type="prismatic">
+    <parent link="$(arg tf_prefix)gripper_base"/>
+    <child link="$(arg tf_prefix)left_finger"/>
+    <origin xyz="0 0.022 0.085" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="0" upper="0.04" effort="100" velocity="0.1"/>
+  </joint>
+
+  <link name="$(arg tf_prefix)right_finger">
+    <visual>
+      <origin xyz="0 0 0.055" rpy="0 0 0"/>
+      <geometry><box size="0.018 0.022 0.11"/></geometry>
+      <material name="finger_metal"/>
+    </visual>
+  </link>
+  <joint name="$(arg tf_prefix)right_finger_joint" type="prismatic">
+    <parent link="$(arg tf_prefix)gripper_base"/>
+    <child link="$(arg tf_prefix)right_finger"/>
+    <origin xyz="0 -0.022 0.085" rpy="0 0 0"/>
+    <axis xyz="0 -1 0"/>
+    <limit lower="0" upper="0.04" effort="100" velocity="0.1"/>
+  </joint>
+</robot>

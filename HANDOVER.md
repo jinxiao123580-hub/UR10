@@ -144,7 +144,8 @@ ros2 run ur_link ur_command_node --ros-args -p robot_ip:=192.168.1.3 &
 │   ├── 07-机器人内部访问.md      root SSH、.urp 是 gzip+XML、程序读写
 │   ├── 08-六维力与3D相机.md      ★ RDT 协议实测、GVCP 发现、base/base_link 坑、手眼标定
 │   ├── 09-MechEye相机接入清单.md 相机一步步接入（含 SD卡 安装、四个官方坑）
-│   └── 10-网页监控台.md          ★ 桥协议、实测数据、排查
+│   ├── 10-网页监控台.md          ★ 桥协议、实测数据、排查
+│   └── 11-同步数字孪生.md        ★ 真机只读同步、离线演示、独立 twin_* TF
 ├── scripts/
 │   ├── diagnose.py               ★ 一键体检（网络/端口/夹爪/机械臂）
 │   ├── rq_gripper.py             ★ 夹爪直控（可当库：open/close/status/object_detected）
@@ -156,12 +157,14 @@ ros2 run ur_link ur_command_node --ros-args -p robot_ip:=192.168.1.3 &
 │   ├── setup_mecheye.py          相机接入助手（自动打补丁+编译）
 │   ├── fake_mecheye_publisher.py 模拟相机（无 SDK 也能验证页面）
 │   ├── start_ur_tf.sh / check_fk.py   TF 链 + FK 自检
+│   ├── start_digital_twin.sh / check_digital_twin.py  同步孪生启动 + 数值验收
 │   ├── ur_capture_pose.py        标定抓取点/放置点 → poses.json
 │   ├── ur_rel_move.py / ur_circle.py  相对移动 / 画圆
 │   ├── network_setup.sh / setup_pc_ip.sh  配网（静态IP + 绕代理）
 │   └── fake_ur_server.py         离线模拟 UR 服务器
 ├── web_dashboard/                index.html + app.js + style.css（ECharts 折线 + canvas 画面）
 ├── ros2_ws/src/ur_link/          ROS2 驱动包（机器人侧零安装）
+├── ros2_ws/src/ur10_digital_twin/ 只读 RViz 同步数字孪生包
 ├── legacy/                       已废弃的示教器 socket 方案（含"为什么放弃"）
 └── poses.json                    抓取点/放置点标定值
 ```
@@ -169,7 +172,7 @@ ros2 run ur_link ur_command_node --ros-args -p robot_ip:=192.168.1.3 &
 **⚠️ 另有一个外部依赖目录**（不在本仓库）：
 
 ```
-~/colcon_ws/src/mecheye_ros2_interface/   梅卡曼德官方 ROS 2 接口（已克隆，已被脚本打补丁，未编译）
+~/colcon_ws/src/mecheye_ros2_interface/   梅卡曼德官方 ROS 2 接口（已打补丁并编译）
 ~/ros2_ws/                                ur_link 的编译工作区（已 build，install/ 里是产物）
 ```
 

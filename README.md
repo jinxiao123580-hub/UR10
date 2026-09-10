@@ -114,11 +114,14 @@ python3 scripts/ur_pick_place_full.py 4 --pingpong    # 往返 4 轮，物体来
 | [`docs/08-六维力与3D相机.md`](docs/08-六维力与3D相机.md) | **ATI Net F/T 力传感器 + Mech-Eye 3D 相机** 接入（RDT 协议实测、GVCP 发现、官方 ROS 2 接口、坐标系统一） |
 | [`docs/09-MechEye相机接入清单.md`](docs/09-MechEye相机接入清单.md) | 梅卡曼德相机**一步步接入清单**（SDK 安装、自动打补丁、四个官方坑） |
 | [`docs/10-网页监控台.md`](docs/10-网页监控台.md) | **网页看相机画面 + 六轴力折线图**（自研 ROS→WebSocket 桥、协议、实测数据） |
+| [`docs/11-同步数字孪生.md`](docs/11-同步数字孪生.md) | **UR10 真机同步 RViz 数字孪生**（只读关节镜像、离线演示、独立 `twin_*` TF） |
 
 | 脚本 | 作用 |
 |---|---|
 | `scripts/diagnose.py` | **一键体检**：网络/端口/夹爪/机械臂全查 |
 | `scripts/start_dashboard.sh` | **一键起网页监控台**（力+相机+桥+浏览器） |
+| `scripts/start_digital_twin.sh` | 一键启动真机同步或离线数字孪生 |
+| `scripts/check_digital_twin.py` | 数字孪生六关节数值一致性检查 |
 | `scripts/ros_web_bridge.py` | ROS 话题 → WebSocket 桥（网页数据源） |
 | `scripts/ati_netft_node.py` | **ATI Net F/T 力传感器 → ROS 2**（`/ft_sensor/wrench`，带 `--check` 命令行看数） |
 | `scripts/setup_mecheye.py` | 梅卡曼德相机接入助手（自动发现 + 打补丁 + 编译 + 验证） |
@@ -134,6 +137,7 @@ python3 scripts/ur_pick_place_full.py 4 --pingpong    # 往返 4 轮，物体来
 | `scripts/network_setup.sh` | 一键配网（静态 IP + 策略路由绕代理） |
 | `scripts/fake_ur_server.py` | 模拟 UR 服务器，没机器人也能调代码 |
 | `ros2_ws/src/ur_link/` | ROS2 驱动包（最小 UR 桥，机器人侧零安装） |
+| `ros2_ws/src/ur10_digital_twin/` | 只读同步数字孪生包（URDF、launch、RViz、关节桥） |
 | `legacy/` | 已废弃的示教器 socket 方案（留档，说明为什么放弃） |
 
 ---
