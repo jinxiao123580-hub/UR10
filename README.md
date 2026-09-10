@@ -6,6 +6,9 @@
 **不需要**：示教器里跑程序、URCap 编程、socket 转发服务、MoveIt、官方 ur_robot_driver。
 **只需要**：一根网线 + 电脑上的 ROS 2 + 本仓库的脚本。
 
+> 📌 **接手这个项目？先读 [`HANDOVER.md`](HANDOVER.md)**（交接主文档：设备参数、当前状态、
+> 五条铁律、待办清单、验证命令）。给 AI 编码助手的现成提示词见 [`CODEX_PROMPT.md`](CODEX_PROMPT.md)。
+
 ---
 
 ## 0. 实测环境（本文档所有结论均在此环境验证）
