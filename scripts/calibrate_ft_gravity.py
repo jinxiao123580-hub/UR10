@@ -247,13 +247,16 @@ def run(args):
     moved = False
     try:
         time.sleep(1.0)
+        preflight_duration = 0.5
+        preflight_min = max(
+            20, math.ceil(args.min_messages * preflight_duration / args.duration))
         try:
-            pre_mean, _, pre_count = collector.sample(0.5, max(20, args.min_messages // 2))
+            pre_mean, _, pre_count = collector.sample(preflight_duration, preflight_min)
         except RuntimeError as exc:
             raise RuntimeError(
                 "运动前力数据门禁失败（%s）；请先启动 ati_netft_node.py" % exc)
-        print("力数据门禁通过: %d 点/0.5s, F=[% .3f % .3f % .3f]N" %
-              (pre_count, *pre_mean[:3]))
+        print("力数据门禁通过: %d 点/0.5s（要求 >=%d）, F=[% .3f % .3f % .3f]N" %
+              (pre_count, preflight_min, *pre_mean[:3]))
         for i, target in enumerate(targets, 1):
             print("[%02d/%02d] 移动..." % (i, len(targets)))
             moved = True
