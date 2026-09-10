@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-ROS 让 UR 末端在水平面(基座XY平面, Z不变)画圆 —— 字面量圆心版。
+让 UR 末端在水平面（基座 XY 平面、Z 不变）画圆 —— 用 URScript 的 movec（圆弧插补）。
 
-关键：这台机器人客户端接口禁止 get_actual_* 内省函数，
-因此本脚本从 30001 状态流的 Cartesian info 子包读取当前 TCP 位姿，
-把圆心/姿态作为字面量写进 URScript，绕开 get_actual_*。
+修正记录（2026-09-10，相对旧版）:
+  ① 旧版用 `n := 0` —— URScript 赋值是 `=`，`:=` 语法错误（本地手册验证）→ 已改 `=`
+  ② 旧版发裸脚本 —— 被 ur_command_node 包成 `def ros_cmd(): ... end` 但**不调用**，
+     机器人不动且不报错（本项目铁律 1）→ 已改成 def + 显式调用 `circle()`
+  ③ 发送走 ur_arm.send_script（自动补调用，和 nudge 验证同一条可靠路径）
 
-用法（需已 source ROS 环境）:
+用法（需已 source ROS 环境 + ur_command_node 在跑）:
     python3 ur_circle.py 0.02                 # 半径20mm，一直画(默认)
     python3 ur_circle.py 0.02 --rounds 3      # 画 3 圈后自动停下
     python3 ur_circle.py 0.05                 # 半径50mm
@@ -15,99 +17,59 @@ ROS 让 UR 末端在水平面(基座XY平面, Z不变)画圆 —— 字面量圆
 停止: 按急停，或
     ros2 service call /ur_link/dashboard/stop std_srvs/srv/Trigger
 """
-import socket
-import struct
+import os
 import sys
-import time
 
-import rclpy
-from rclpy.node import Node
-from std_msgs.msg import String
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from ur_arm import Arm, read_packet          # noqa: E402
 
 ROBOT_IP = "192.168.1.3"
 
 
-def get_tcp_pose(host=ROBOT_IP, timeout=4.0):
-    """从 30001 状态流读取 TCP 位姿(Cartesian info 子包 type=4)。"""
-    s = socket.create_connection((host, 30001), timeout=3)
-    s.settimeout(timeout)
-    buf = b""
-    t0 = time.time()
-    cart = None
-    while time.time() - t0 < timeout and cart is None:
-        try:
-            buf += s.recv(65536)
-        except socket.timeout:
-            break
-        # 逐帧
-        off = 0
-        while off + 4 <= len(buf):
-            size = struct.unpack(">I", buf[off:off+4])[0]
-            if not (5 <= size <= 100000) or off + size > len(buf):
-                break
-            f = buf[off:off+size]
-            off += size
-            if len(f) < 5 or f[4] != 16:
-                continue
-            p = 5
-            while p + 5 <= len(f):
-                sz = struct.unpack(">I", f[p:p+4])[0]
-                ty = f[p+4]
-                if sz < 5 or p + sz > len(f):
-                    break
-                if ty == 4 and sz - 5 >= 48:
-                    cart = struct.unpack(">dddddd", f[p+5:p+53])
-                    break
-                p += sz
-        if off:
-            buf = buf[off:]
-    s.close()
-    if not cart:
-        raise RuntimeError("读取 TCP 位姿失败(检查 robot_ip)")
-    return cart
-
-
-if __name__ == "__main__":
+def main():
     args = sys.argv[1:]
     if not args or args[0] in ("-h", "--help"):
         print("用法: python3 ur_circle.py 半径 [--rounds N]  例: ur_circle.py 0.02")
-        sys.exit(1)
+        return 1
     r = float(args[0])
     rounds = None
     if "--rounds" in args:
         rounds = int(args[args.index("--rounds") + 1])
 
-    cx, cy, cz, rx, ry, rz = get_tcp_pose()
-    print(f"当前 TCP 位姿: xyz=[{cx:.4f},{cy:.4f},{cz:.4f}] rpy=[{rx:.4f},{ry:.4f},{rz:.4f}]")
+    cx, cy, cz, rx, ry, rz = read_packet()
+    print("当前 TCP 位姿: xyz=[%.4f,%.4f,%.4f] 姿态=[%.4f,%.4f,%.4f]"
+          % (cx, cy, cz, rx, ry, rz))
 
-    def P(x, y, z):
-        return f"p[{x!r},{y!r},{z!r},{rx!r},{ry!r},{rz!r}]"
+    # 圆在水平面：4 个点（圆心(cx,cy,cz) 半径 r），两个 movec 拼一个整圆
+    start = "p[%r,%r,%r,%r,%r,%r]" % (cx + r, cy, cz, rx, ry, rz)
+    via1 = "p[%r,%r,%r,%r,%r,%r]" % (cx, cy + r, cz, rx, ry, rz)
+    to1 = "p[%r,%r,%r,%r,%r,%r]" % (cx - r, cy, cz, rx, ry, rz)
+    via2 = "p[%r,%r,%r,%r,%r,%r]" % (cx, cy - r, cz, rx, ry, rz)
 
-    start = P(cx + r, cy, cz)
-    via1 = P(cx, cy + r, cz)
-    to1 = P(cx - r, cy, cz)
-    via2 = P(cx, cy - r, cz)
-
-    body = (f"  movec({via1}, {to1}, a=0.3, v=0.05, r=0.001)\n"
-            f"  movec({via2}, {start}, a=0.3, v=0.05, r=0.001)")
+    lines = ["def circle():",
+             "  movel(%s, a=0.3, v=0.05)" % start,          # 先走到起点
+             "  n = 0"]
     if rounds is None:
-        loop = f"while True:\n{body}\nend"
+        lines.append("  while True:")
     else:
-        loop = f"n := 0\nwhile n < {rounds}:\n{body}\n  n := n + 1\nend"
+        lines.append("  while n < %d:" % rounds)
+    lines += [
+        "    movec(%s, %s, a=0.3, v=0.05, r=0.001)" % (via1, to1),
+        "    movec(%s, %s, a=0.3, v=0.05, r=0.001)" % (via2, start),
+        "    n = n + 1",
+        "  end",
+        "end",
+        "circle()",                                        # ← 必须调用，否则不动
+    ]
+    script = "\n".join(lines)
 
-    script = "\n".join([
-        f"movel({start}, a=0.3, v=0.05)",
-        loop,
-    ])
-
-    rclpy.init()
-    n = Node("ur_circle")
-    pub = n.create_publisher(String, "/ur_link/urscript", 10)
-    time.sleep(0.5)
-    msg = String()
-    msg.data = script
-    pub.publish(msg)
-    print(f"已发送画圆 URScript（半径 {r}m，圆心 [{cx:.4f},{cy:.4f},{cz:.4f}]）:")
+    arm = Arm(ip=ROBOT_IP)
+    arm.send_script(script, call=False)   # script 末尾已自带 circle()，这里不再补
+    print("已发送画圆 URScript（半径 %gm，圆心 [%.4f,%.4f,%.4f]）:" % (r, cx, cy, cz))
     print(script)
     print("\n停止: ros2 service call /ur_link/dashboard/stop std_srvs/srv/Trigger  或按急停")
-    rclpy.shutdown()
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
