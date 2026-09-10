@@ -145,7 +145,10 @@ ros2 run ur_link ur_command_node --ros-args -p robot_ip:=192.168.1.3 &
 │   ├── 08-六维力与3D相机.md      ★ RDT 协议实测、GVCP 发现、base/base_link 坑、手眼标定
 │   ├── 09-MechEye相机接入清单.md 相机一步步接入（含 SD卡 安装、四个官方坑）
 │   ├── 10-网页监控台.md          ★ 桥协议、实测数据、排查
-│   └── 11-同步数字孪生.md        ★ 真机只读同步、离线演示、独立 twin_* TF
+│   ├── 11-机器人自身标定.md      自身标定执行记录
+│   ├── 12-力传感器重力补偿.md    多姿态标定参数与补偿模型
+│   ├── 13-同步数字孪生.md        ★ 真机只读同步、离线演示、独立 twin_* TF
+│   └── 14-待办与已知问题.md      ★ 所有未解决/未验收事项的统一入口
 ├── scripts/
 │   ├── diagnose.py               ★ 一键体检（网络/端口/夹爪/机械臂）
 │   ├── rq_gripper.py             ★ 夹爪直控（可当库：open/close/status/object_detected）
