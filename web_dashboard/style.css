@@ -73,6 +73,10 @@ button {
 }
 button:hover { filter: brightness(1.12); }
 .chk { color: var(--muted); user-select: none; }
+.segmented { display: inline-flex; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+.segmented button { border-radius: 0; background: transparent; color: var(--muted); padding: 4px 9px; }
+.segmented button + button { border-left: 1px solid var(--line); }
+.segmented button.active { background: var(--accent); color: #06121f; }
 
 /* ---------- 相机 ---------- */
 .camera-panel { flex: 1; }

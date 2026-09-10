@@ -50,6 +50,10 @@
     <div class="panel-head">
       <h2>⚖️ ATI 六维力 / 力矩</h2>
       <div class="panel-actions">
+        <div class="segmented" aria-label="力数据模式">
+          <button id="mode-raw" class="active" type="button">原始</button>
+          <button id="mode-comp" type="button">重力补偿</button>
+        </div>
         <button id="btn-tare" title="软件去皮（不影响传感器）">去皮 Tare</button>
         <label class="chk"><input type="checkbox" id="auto-scale" checked> 自动量程</label>
       </div>
@@ -72,6 +76,7 @@
 
 <footer>
   <span>ROS 话题: <code>/ft_sensor/wrench</code> ·
+    <code>/ft_sensor/wrench_compensated</code> ·
     <code>/mechmind/color_image</code> ·
     <code>/mechmind/depth_map</code> ·
     <code>/mechmind/point_cloud</code></span>

@@ -2,11 +2,12 @@
 # ============================================================
 # 一键启动"视觉·力觉监控台"
 #
-#   起 4 个东西：
+#   起 5 个东西：
 #     1) ros_web_bridge.py    ROS话题 → 浏览器 WebSocket (ws://:9090) + 网页(:8080)
 #     2) ati_netft_node.py    ATI 六维力 → /ft_sensor/wrench
-#     3) mecheye 相机节点      (SDK 已装则起；没装自动跳过并在网页里显示"相机离线")
-#     4) 打开浏览器 http://127.0.0.1:8080/
+#     3) ft_gravity_compensator.py → /ft_sensor/wrench_compensated
+#     4) mecheye 相机节点      (SDK 已装则起；没装自动跳过并在网页里显示"相机离线")
+#     5) 打开浏览器 http://127.0.0.1:8080/
 #
 # 用法:
 #    bash scripts/start_dashboard.sh              # 完整起
@@ -38,6 +39,7 @@ set -u
 if [ "${1:-}" = "--stop" ]; then
     pkill -f ros_web_bridge.py 2>/dev/null || true
     pkill -f ati_netft_node.py 2>/dev/null || true
+    pkill -f ft_gravity_compensator.py 2>/dev/null || true
     pkill -f fake_mecheye_publisher.py 2>/dev/null || true
     pkill -f "mecheye_ros_interface.*start" 2>/dev/null || true
     echo "已停止所有监控台相关进程"
@@ -69,7 +71,18 @@ else
     echo "==> 力传感器节点已在运行"
 fi
 
-# ---------- ③ 相机 ----------
+# ---------- ③ 重力补偿 ----------
+if ! pgrep -f ft_gravity_compensator.py >/dev/null; then
+    echo "==> 启动力/力矩重力补偿 → /ft_sensor/wrench_compensated"
+    (cd "$SCRIPT_DIR/.." && python3 "$SCRIPT_DIR/ft_gravity_compensator.py" \
+        > "$LOG_DIR/ft_gravity_compensator.log" 2>&1) &
+    PIDS+=($!)
+    sleep 1
+else
+    echo "==> 重力补偿节点已在运行"
+fi
+
+# ---------- ④ 相机 ----------
 if [ "$NO_CAMERA" = "1" ]; then
     echo "==> 跳过相机"
 elif [ -d /opt/mech-mind/mech-eye-sdk ] && [ -f "$HOME/colcon_ws/install/setup.bash" ]; then
@@ -92,12 +105,13 @@ else
     echo "==> 相机：SDK 未装，跳过（网页会显示“相机离线”，力数据不受影响）"
 fi
 
-# ---------- ④ 浏览器 ----------
+# ---------- ⑤ 浏览器 ----------
 URL="http://127.0.0.1:8080/"
 echo
 echo "==========================================================="
 echo "  监控台地址: $URL"
 echo "  力数据: /ft_sensor/wrench（实时 200Hz）"
+echo "  补偿力: /ft_sensor/wrench_compensated（原始/补偿可切换）"
 echo "  相机  : Mech-Eye（需 SDK，服务触发式采集）"
 echo "  停止  : bash scripts/start_dashboard.sh --stop"
 echo "==========================================================="
