@@ -9,9 +9,11 @@
 
 // ---------------------------------------------------------------- 全局
 const WS_PORT = 9090;
-const CAPTURE_INTERVAL = 1500;      // 相机自动采集间隔 ms
-const WRENCH_WINDOW = 12;           // 折线图时间窗（秒）
-const WRENCH_MAX = 900;             // 折线图最大样本数
+const CAPTURE_POLL_MS = 200;        // 检查上一帧完成后立即采下一帧
+const AUX_CAPTURE_INTERVAL = 15000; // 深度与点云交替采集间隔 ms
+const WRENCH_WINDOW = 60;           // 折线图时间窗（秒）
+const WRENCH_MAX = 13000;           // 约 65 秒原始数据（输入约 200Hz）
+const CHART_MAX_POINTS = 1200;      // 绘图抽样上限，避免长窗口拖慢浏览器
 const RENDER_HZ = 15;               // 折线图刷新帧率
 
 const $ = (id) => document.getElementById(id);
@@ -122,13 +124,17 @@ function renderChart() {
   // 只保留时间窗内
   const tEnd = data[data.length - 1].t, tStart = tEnd - WRENCH_WINDOW;
   const seg = data.filter(p => p.t >= tStart);
-  const series = AXES.map(a => seg.map(p => [p.t, p[a.key]]));
+  const stride = Math.max(1, Math.ceil(seg.length / CHART_MAX_POINTS));
+  const plot = seg.filter((_, i) => i % stride === 0 || i === seg.length - 1);
+  const series = AXES.map(a => plot.map(p => [p.t, p[a.key]]));
   chart.setOption({
+    xAxis: { min: Math.max(0, tStart), max: Math.max(1, tEnd) },
     series: series.map((s, i) => ({ name: AXES[i].label, data: s })),
   });
   const last = seg[seg.length - 1];
   ftStatusEl.textContent = `F = (${last.fx.toFixed(1)}, ${last.fy.toFixed(1)}, ${last.fz.toFixed(1)}) N · T = (${last.tx.toFixed(2)}, ${last.ty.toFixed(2)}, ${last.tz.toFixed(2)}) N·m`;
-  ftRateEl.textContent = `${Math.round((seg.length / (tEnd - tStart)) || 0)} Hz`;
+  const duration = Math.max(0, tEnd - seg[0].t);
+  ftRateEl.textContent = `${Math.round((seg.length / duration) || 0)} Hz · ${Math.round(duration)}s`;
 }
 
 // 演示数据：6 路不同频率的正弦
@@ -194,26 +200,32 @@ function onPclStats(d) {
   }
 }
 
-// 自动采集：工业相机是服务触发，定时调 capture 服务
-let reqId = 0, camFailCount = 0;
+// 自动采集：只允许一个在途请求，防止慢速工业相机积压服务队列。
+let reqId = 0, activeCapture = null;
+let nextAuxCapture = Date.now() + AUX_CAPTURE_INTERVAL;
+let nextAuxKind = "depth";
 function autoCapture() {
-  if (!wsOk) return;
-  if (cameraOnline) {
-    captureAll();
-  } else {
-    // 尝试一次，看相机服务在不在
-    if (camFailCount < 3) { captureAll(); camFailCount++; }
+  if (!wsOk || activeCapture) return;
+  const now = Date.now();
+  if (now >= nextAuxCapture) {
+    const service = nextAuxKind === "depth" ? "/capture_depth_map" : "/capture_point_cloud";
+    nextAuxKind = nextAuxKind === "depth" ? "point_cloud" : "depth";
+    nextAuxCapture = now + AUX_CAPTURE_INTERVAL;
+    requestCapture(service);
+    return;
   }
+  requestCapture("/capture_color_image");
 }
-function captureAll() {
+
+function requestCapture(service) {
   reqId++;
-  wsSend({ op: "call_service", service: "/capture_color_image", kind: "mecheye_capture", request_id: reqId });
-  wsSend({ op: "call_service", service: "/capture_depth_map", kind: "mecheye_capture", request_id: reqId });
-  wsSend({ op: "call_service", service: "/capture_point_cloud", kind: "mecheye_capture", request_id: reqId });
+  activeCapture = { service, requestId: reqId };
+  wsSend({ op: "call_service", service, kind: "mecheye_capture", request_id: reqId });
 }
 function handleServiceReply(m) {
+  if (activeCapture && m.request_id === activeCapture.requestId) activeCapture = null;
   if (m.service === "/capture_color_image" || m.service === "/capture_depth_map") {
-    if (m.ok) { setCam(true); camFailCount = 0; }
+    if (m.ok) { setCam(true); }
     else { setCam(false); }
   }
   if (m.service === "/ft_sensor/tare") {
@@ -221,13 +233,16 @@ function handleServiceReply(m) {
   }
 }
 
-$("btn-capture").onclick = () => { if (wsOk) captureAll(); else alert("未连接桥"); };
+$("btn-capture").onclick = () => {
+  if (!wsOk) return alert("未连接桥");
+  if (!activeCapture) requestCapture("/capture_color_image");
+};
 $("btn-tare").onclick = () => {
   if (!wsOk) return alert("未连接桥");
   reqId++;
   wsSend({ op: "call_service", service: "/ft_sensor/tare", kind: "trigger", request_id: reqId });
 };
-setInterval(() => { if ($("auto-capture").checked) autoCapture(); }, CAPTURE_INTERVAL);
+setInterval(() => { if ($("auto-capture").checked) autoCapture(); }, CAPTURE_POLL_MS);
 
 // ---------------------------------------------------------------- 演示与看门狗
 // 2 秒没有真数据就进演示模式（页面仍可用，标注 DEMO）
