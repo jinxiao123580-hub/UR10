@@ -34,6 +34,7 @@ ROS → WebSocket 桥 —— 把 ROS 2 话题推到浏览器
 import argparse
 import asyncio
 import base64
+import functools
 import http.server
 import json
 import os
@@ -83,11 +84,17 @@ class RosWebBridge(Node):
 
     # ---------------- 推送到所有网页端 ----------------
     def push(self, payload):
+        """从 rclpy 回调线程推送到 asyncio 里的所有网页端
+
+        注意 websockets >= 14 改了 API：没有 send_str，只有 await ws.send()，
+        所以跨线程必须用 run_coroutine_threadsafe 把协程丢回事件循环。
+        """
         if not self.loop:
             return
+        text = json.dumps(payload)
         for ws in list(self.ws_clients):
             try:
-                self.loop.call_soon_threadsafe(ws.send_str, json.dumps(payload))
+                asyncio.run_coroutine_threadsafe(_safe_send(ws, text), self.loop)
             except Exception:
                 pass
 
@@ -263,17 +270,30 @@ def _depth_to_jpeg(msg):
 
 
 def _pcl_stats(msg):
-    """点云只发统计（网页画不了真 3D，够用）：点数 + 均值中心"""
+    """点云只发统计（网页画不了真 3D，够用）：点数 + 均值中心
+
+    注意：每个字段的字节偏移在 msg.fields[i].offset（不是 msg.offset），
+    而且点云里常混有 rgb/intensity 字段，所以必须按字段名取偏移。
+    """
     import struct as _st
     try:
-        pt = _st.Struct("<fff")
+        off = {f.name: f.offset for f in msg.fields if f.name in ("x", "y", "z")}
+        if len(off) != 3:
+            return {"count": 0, "has_data": False,
+                    "error": "点云缺少 x/y/z 字段（有：%s）" % ",".join(f.name for f in msg.fields)}
         n = int(msg.width * msg.height)
+        if n == 0:
+            return {"count": 0, "has_data": False}
         total = np.zeros(3, dtype=np.float64)
         count = 0
         step = max(1, n // 20000)          # 采样，避免卡死
+        data = msg.data
+        f32 = _st.Struct("<f")
         for i in range(0, n, step):
-            off = i * msg.point_step
-            x, y, z = pt.unpack_from(msg.data, off + msg.offset)
+            base = i * msg.point_step
+            x = f32.unpack_from(data, base + off["x"])[0]
+            y = f32.unpack_from(data, base + off["y"])[0]
+            z = f32.unpack_from(data, base + off["z"])[0]
             if np.isfinite(x) and np.isfinite(y) and np.isfinite(z) and not (x == 0 and y == 0 and z == 0):
                 total += (x, y, z)
                 count += 1
@@ -304,33 +324,40 @@ def _dump_resp(resp):
 
 
 # ---------------- WebSocket 处理 ----------------
-async def ws_handler(ws):
-    bridge = ws.bridge
+async def _safe_send(ws, text):
+    """发送失败（客户端已断开等）不抛异常，避免污染其它客户端"""
+    try:
+        await ws.send(text)
+    except Exception:
+        pass
+
+
+async def ws_handler(ws, bridge):
     bridge.ws_clients.add(ws)
     try:
         async for raw in ws:
             try:
                 req = json.loads(raw)
             except Exception:
-                await ws.send_str(json.dumps({"op": "error", "error": "JSON 解析失败"}))
+                await ws.send(json.dumps({"op": "error", "error": "JSON 解析失败"}))
                 continue
             op = req.get("op")
             if op == "subscribe":
                 res = bridge.do_subscribe(req.get("topic"), req.get("kind", "wrench"))
-                await ws.send_str(json.dumps({"op": "subscribed", "topic": req.get("topic"),
+                await ws.send(json.dumps({"op": "subscribed", "topic": req.get("topic"),
                                               "result": res}))
             elif op == "unsubscribe":
                 bridge.do_unsubscribe(req.get("topic"))
-                await ws.send_str(json.dumps({"op": "unsubscribed", "topic": req.get("topic")}))
+                await ws.send(json.dumps({"op": "unsubscribed", "topic": req.get("topic")}))
             elif op == "call_service":
                 fut = bridge.call_service(req.get("service"), req.get("kind", "trigger"),
                                           req.get("request_id"))
                 await asyncio.wait_for(asyncio.shield(fut), timeout=20.0)
             elif op == "ping":
-                await ws.send_str(json.dumps({"op": "pong"}))
+                await ws.send(json.dumps({"op": "pong"}))
             elif op == "status":
                 with bridge._lock:
-                    await ws.send_str(json.dumps({"op": "status", "topics": dict(bridge._stats)}))
+                    await ws.send(json.dumps({"op": "status", "topics": dict(bridge._stats)}))
     finally:
         bridge.ws_clients.discard(ws)
 
@@ -358,7 +385,8 @@ def main():
     async def serve():
         bridge.loop = asyncio.get_running_loop()
         print("[桥] WebSocket ws://127.0.0.1:%d/" % args.ws_port)
-        async with websockets.serve(ws_handler, "0.0.0.0", args.ws_port,
+        async with websockets.serve(functools.partial(ws_handler, bridge=bridge),
+                                    "0.0.0.0", args.ws_port,
                                     ping_interval=None, max_size=64 * 1024 * 1024):
             await asyncio.Future()
 

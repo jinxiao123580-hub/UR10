@@ -65,6 +65,7 @@ class NetFT:
         self.samples = max(0, min(255, samples))
         self.sock = None
         self.bias = [0.0] * 6          # 软件去皮偏移
+        self.last_ok = 0.0             # 上次成功收到包的时间
 
     def start(self):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -80,6 +81,22 @@ class NetFT:
                 pass
             self.sock = None
 
+    def restart(self):
+        """重新申请 RDT 数据流。
+
+        ⚠️ 实测：Net F/T 的 RDT 是**单播**的——它只把数据推给"最后一个发 start 的客户端"。
+        所以只要有别的程序（比如另一个脚本、或 GUI 里的 Demo 页）连过一次，
+        本进程的流就会被抢走且**不报错，只是收不到数据**。
+        这里重发一次 start 把流抢回来。
+        """
+        if self.sock:
+            try:
+                self.sock.sendto(CMD_START, (self.ip, RDT_PORT))
+                return True
+            except OSError:
+                pass
+        return False
+
     def read(self):
         """收一个包，返回 (wrench6, status_word, rdt_seq, ft_seq) 或 None
 
@@ -87,12 +104,20 @@ class NetFT:
         """
         if not self.sock:
             self.start()
-        while True:
+        skipped = 0
+        deadline = time.time() + 2.5        # 硬上限：再长的连续短包也不会把这里卡死
+        while time.time() < deadline:
             data, _ = self.sock.recvfrom(2048)
             if len(data) < 36:
+                # 短包（应答/缓冲头等）不是测量数据，跳过继续等；
+                # 但必须带截止时间，否则遇到持续短包会永远出不去（曾把节点卡死）
+                skipped += 1
+                if skipped > 50:
+                    raise socket.timeout("连续 %d 个短包，未见有效数据" % skipped)
                 continue
             rdt_seq, ft_seq, status = struct.unpack(">III", data[:12])
             raw = struct.unpack(">6i", data[12:36])
+            self.last_ok = time.time()
             w = [raw[0] / self.cpf - self.bias[0],
                  raw[1] / self.cpf - self.bias[1],
                  raw[2] / self.cpf - self.bias[2],
@@ -100,6 +125,7 @@ class NetFT:
                  raw[4] / self.cpt - self.bias[4],
                  raw[5] / self.cpt - self.bias[5]]
             return w, status, rdt_seq, ft_seq
+        raise socket.timeout("等待数据超时")
 
     def tare(self):
         """把当前读数当作零点（软件去皮，不改传感器本身）"""
@@ -165,6 +191,7 @@ def ros_main(args):
             self.pub = self.create_publisher(WrenchStamped, "ft_sensor/wrench", 10)
             self.create_service(Trigger, "ft_sensor/tare", self._on_tare)
             self.create_timer(1.0 / rate, self._tick)
+            self._warned_stream = False
             self.get_logger().info(
                 "ATI Net F/T @%s，发布 ft_sensor/wrench @%.0fHz，frame_id=%s"
                 % (ip, rate, self.frame_id))
@@ -180,13 +207,23 @@ def ros_main(args):
             try:
                 r = self.ft.read()
             except socket.timeout:
-                self.get_logger().warn("RDT 超时（检查 %s / RDT 是否启用）" % self.ft.ip, once=True)
+                # 自愈：Net F/T 的 RDT 只推给最后一个请求者，别的程序连过就会把流抢走。
+                # 超过 1 秒没数据就重新申请一次（不刷屏，改状态提示）。
+                if time.time() - self.ft.last_ok > 1.0:
+                    self.ft.restart()
+                    if not self._warned_stream:
+                        self._warned_stream = True
+                        self.get_logger().warn(
+                            "RDT 无数据 → 已重新申请数据流（Net F/T 只推给最后一个请求者）")
                 return
             except OSError as e:
                 self.get_logger().error("RDT 错误: %s" % e)
                 return
             if not r:
                 return
+            if self._warned_stream:
+                self._warned_stream = False
+                self.get_logger().info("RDT 数据流已恢复")
             w, status, rdt_seq, ft_seq = r
             msg = WrenchStamped()
             msg.header.stamp = self.get_clock().now().to_msg()
