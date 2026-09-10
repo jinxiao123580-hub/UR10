@@ -56,9 +56,9 @@
 1. 先跑 `python3 ~/UR10/scripts/setup_mecheye.py --check` 确认现状
 2. 让用户执行（SDK 需官网注册下载，你下载不了）：
    ```bash
-   # 下载：https://downloads.mech-mind.com.cn/?tab=tab-sdk  → Mech-Eye_API_2.6.0_amd64.zip
-   sudo apt-get install libarchive-tools && crc32 Mech-Eye_API_2.6.0_amd64.zip
-   unzip Mech-Eye_API_2.6.0_amd64.zip && sudo dpkg -i Mech-Eye_API_2.6.0_amd64.deb
+   # 下载：https://downloads.mech-mind.com.cn/?tab=tab-sdk  → Mech-Eye_API_2.5.0_amd64.zip
+   sudo apt-get install libarchive-zip-perl && crc32 Mech-Eye_API_2.5.0_amd64.zip
+   unzip Mech-Eye_API_2.5.0_amd64.zip && sudo dpkg -i Mech-Eye_API_2.5.0_amd64.deb
    ```
 3. 装好后跑 `python3 ~/UR10/scripts/setup_mecheye.py`（自动发现相机 → 打补丁 → 编译 → 生成 launch → 验证）
 4. 验收：`ros2 service call /capture_color_image mecheye_ros_interface/srv/CaptureColorImage`
@@ -131,6 +131,16 @@ bash ~/UR10/scripts/start_dashboard.sh                          # 网页看板 �
 ```
 
 机械臂相关命令前需：`source /opt/ros/humble/setup.bash && source ~/ros2_ws/install/setup.bash`
+
+⚠️ **进程状态是活的，别相信任何"应该还在跑"**：开工先自己查一遍。
+本机实测：长时间运行的监控台进程曾被外部终止（端口释放、网页不可达），
+而机械臂驱动 `ur_state_node`/`ur_command_node` 已连续跑了 5 小时以上。
+查法：
+
+```bash
+ss -tln | grep -E ':8080|:9090'         # 端口没占用 = 没在跑
+ps -eo pid,etime,cmd | grep -E '[u]r_state_node|[u]r_command_node|[r]os_web_bridge|[a]ti_netft'
+```
 
 ## 八、工作方式要求（这是本项目最看重的）
 

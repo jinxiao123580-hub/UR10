@@ -27,14 +27,18 @@ cleanup() {
 }
 trap cleanup EXIT
 
+# ROS setup files may read optional variables before defining them.
+set +u
 source /opt/ros/humble/setup.bash
 [ -f "$HOME/ros2_ws/install/setup.bash" ] && source "$HOME/ros2_ws/install/setup.bash"
 [ -f "$HOME/colcon_ws/install/setup.bash" ] && source "$HOME/colcon_ws/install/setup.bash"
+set -u
 
 # ---------- 停止模式 ----------
 if [ "${1:-}" = "--stop" ]; then
     pkill -f ros_web_bridge.py 2>/dev/null || true
     pkill -f ati_netft_node.py 2>/dev/null || true
+    pkill -f fake_mecheye_publisher.py 2>/dev/null || true
     pkill -f "mecheye_ros_interface.*start" 2>/dev/null || true
     echo "已停止所有监控台相关进程"
     exit 0
@@ -69,9 +73,13 @@ fi
 if [ "$NO_CAMERA" = "1" ]; then
     echo "==> 跳过相机"
 elif [ -d /opt/mech-mind/mech-eye-sdk ] && [ -f "$HOME/colcon_ws/install/setup.bash" ]; then
+    # Never leave the simulator publishing the same topics as the real camera.
+    pkill -f fake_mecheye_publisher.py 2>/dev/null || true
     if ! pgrep -f "mecheye_ros_interface" >/dev/null; then
         echo "==> 启动 Mech-Eye 相机节点（SDK 已装）"
-        ( source "$HOME/colcon_ws/install/setup.bash"
+        ( set +u
+          source "$HOME/colcon_ws/install/setup.bash"
+          set -u
           timeout 0 ros2 launch \
             "$HOME/colcon_ws/src/mecheye_ros2_interface/launch/start_camera_ur10.py" \
             > "$LOG_DIR/mecheye.log" 2>&1 ) &

@@ -90,22 +90,41 @@ python3 ~/UR10/scripts/ur_pick_place_full.py 1
 | P2 | 力控应用（碰撞检测 / 力引导插装） | 无阻塞，数据已通 |
 | P3 | 监控台扩展（点云 3D 预览 / 关节角面板 / CSV 记录） | 无阻塞 |
 
-### 🔧 环境现状（接手时**正在运行**的进程）
+### 🔧 环境现状（进程状态会变，**接手时先自己查一遍**）
 
-| 进程 | 启动方式 | 说明 |
-|---|---|---|
-| `ur_state_node` | 手动，已跑 5h+ | 发 `/joint_states`，TF 链依赖它 |
-| `ur_command_node` | 手动，已跑 5h+ | **发 URScript 必须它在跑** |
-| `ros_web_bridge.py` + `ati_netft_node.py` + `fake_mecheye_publisher.py` | `start_dashboard.sh` 同类方式 | 网页监控台；其中相机是**模拟器**（真相机待 SDK） |
-
-**停止/重启**：
+> ⚠️ 本节描述的是"**怎么查、怎么起**"，不是"此刻一定在跑"。
+> 长时间运行的进程可能已被终止（本机实测：监控台三件套曾被外部 SIGTERM 终止，端口释放）。
+> **开工第一步用下面的命令确认现场，不要相信任何"应该还在跑"。**
 
 ```bash
-bash ~/UR10/scripts/start_dashboard.sh --stop     # 停监控台三件套
-# 机械臂驱动（如需重启）：
-ros2 run ur_link ur_command_node --ros-args -p robot_ip:=192.168.1.3
-ros2 run ur_link ur_state_node   --ros-args -p robot_ip:=192.168.1.3
+# 一眼看全（端口没占用就说明没在跑）
+ss -tln | grep -E ':8080|:9090|:30001|:63352'
+ps -eo pid,etime,cmd | grep -E '[u]r_state_node|[u]r_command_node|[r]os_web_bridge|[a]ti_netft'
+python3 ~/UR10/scripts/diagnose.py         # 硬件侧体检（不依赖这些进程）
 ```
+
+| 进程 | 作用 | 依赖关系 |
+|---|---|---|
+| `ur_state_node` | 发 `/joint_states` | **TF 链依赖它**（`start_ur_tf.sh` 要先起它） |
+| `ur_command_node` | 收 `/ur_link/urscript` 发 30002 | **任何机械臂运动命令都需要它在跑** |
+| `ros_web_bridge.py` + `ati_netft_node.py` | 网页监控台（力数据） | 见 `docs/10` |
+| `fake_mecheye_publisher.py` | 页面的**模拟**相机（真相机待 SDK） | 与真相机话题同名，**别同时开** |
+
+**启动/停止**：
+
+```bash
+# 监控台三件套（力 + 相机 + 桥 + 网页）
+bash ~/UR10/scripts/start_dashboard.sh
+bash ~/UR10/scripts/start_dashboard.sh --stop
+
+# 机械臂驱动（两个都要，忘了 command_node 就会"发脚本没反应"）
+source /opt/ros/humble/setup.bash && source ~/ros2_ws/install/setup.bash
+ros2 run ur_link ur_state_node   --ros-args -p robot_ip:=192.168.1.3 &
+ros2 run ur_link ur_command_node --ros-args -p robot_ip:=192.168.1.3 &
+```
+
+> 💡 **一条经验**：起 ROS 节点时**别在多处重复启动同一个节点**。
+> 本机踩过的坑：两个 `ati_netft_node` 实例会互相抢 ATI 的 RDT 流（数据每 5 秒一跳，见铁律 4）。
 
 ---
 
@@ -272,8 +291,8 @@ python3 scripts/setup_mecheye.py --check     # 预检：自动发现相机 + 查
 官方接口已克隆在 `~/colcon_ws/src/mecheye_ros2_interface/`、**补丁已打好**（未编译，缺 SDK）。
 
 **缺的一步（需人工，sudo 要密码）**：
-1. <https://downloads.mech-mind.com.cn/?tab=tab-sdk> 注册下载 `Mech-Eye_API_2.6.0_amd64.zip`
-2. `sudo apt-get install libarchive-tools && crc32 <zip>` 校验 → `unzip` → `sudo dpkg -i *.deb`
+1. <https://downloads.mech-mind.com.cn/?tab=tab-sdk> 注册下载 `Mech-Eye_API_2.5.0_amd64.zip`
+2. `sudo apt-get install libarchive-zip-perl && crc32 <zip>` 校验 → `unzip` → `sudo dpkg -i *.deb`
 3. `python3 scripts/setup_mecheye.py`（自动编译 + 生成 launch + 验证）
 
 **SDK 装好后**：`ros2 launch ~/colcon_ws/src/mecheye_ros2_interface/launch/start_camera_ur10.py`
@@ -339,7 +358,7 @@ bash scripts/start_dashboard.sh          # 一键起 → http://127.0.0.1:8080/
 | 机械臂通路 | `python3 scripts/ur_arm.py nudge 0 0 -0.003` | "位移 0.0031m ✔ 动了" |
 | TF/FK | `bash scripts/start_ur_tf.sh ur10` + `python3 scripts/check_fk.py` | base 偏差 <10mm，并提示 base_link 镜像坑 |
 | 相机（发现） | `python3 scripts/setup_mecheye.py --check` | 报出 PRO XS / 2.5.0 / 序列号 |
-| 网页 | `curl -sI http://127.0.0.1:8080/` | HTTP 200 |
+| 网页 | `bash scripts/start_dashboard.sh` 后 `curl -sI http://127.0.0.1:8080/` | HTTP 200 |
 
 ---
 

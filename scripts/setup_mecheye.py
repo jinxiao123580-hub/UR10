@@ -37,12 +37,12 @@ SDK_HELP = """
    国内镜像: https://downloads.mech-mind.com.cn/?tab=tab-sdk
    国际站点: https://downloads.mech-mind.com/?tab=tab-sdk
 
- 下载得到 .zip（如 Mech-Eye_API_2.6.0_amd64.zip），然后：
+ 下载得到 Mech-Eye_API_2.5.0_amd64.zip，然后：
 
-   sudo apt-get install libarchive-tools      # 用于校验 CRC-32
-   crc32 Mech-Eye_API_2.6.0_amd64.zip         # 与下载页给的校验码比对
-   unzip Mech-Eye_API_2.6.0_amd64.zip         # 解压出 .deb
-   sudo dpkg -i Mech-Eye_API_2.6.0_amd64.deb  # 安装
+   sudo apt-get install libarchive-zip-perl   # 用于校验 CRC-32
+   crc32 Mech-Eye_API_2.5.0_amd64.zip         # 与下载页给的校验码比对
+   unzip Mech-Eye_API_2.5.0_amd64.zip         # 解压出 .deb
+   sudo dpkg -i Mech-Eye_API_2.5.0_amd64.deb  # 安装
    dpkg -l | grep mecheyeapi                  # 确认装上
    ls /opt/mech-mind/mech-eye-sdk/            # 本脚本就认这个路径
 

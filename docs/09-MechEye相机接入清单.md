@@ -38,13 +38,13 @@ SDK 要**官网注册后下载**，我这边下载不了。
 | 国内镜像（推荐，快） | <https://downloads.mech-mind.com.cn/?tab=tab-sdk> |
 | 国际站点 | <https://downloads.mech-mind.com/?tab=tab-sdk> |
 
-下载得到 **`.zip`**（如 `Mech-Eye_API_2.6.0_amd64.zip`），然后在**你自己的终端**执行：
+下载得到 **`Mech-Eye_API_2.5.0_amd64.zip`**，然后在**你自己的终端**执行：
 
 ```bash
-sudo apt-get install libarchive-tools          # 提供 crc32 命令
-crc32 Mech-Eye_API_2.6.0_amd64.zip             # 与下载页给出的校验码比对
-unzip Mech-Eye_API_2.6.0_amd64.zip             # 解压出 .deb
-sudo dpkg -i Mech-Eye_API_2.6.0_amd64.deb      # 安装
+sudo apt-get install libarchive-zip-perl       # 提供 crc32 命令
+crc32 Mech-Eye_API_2.5.0_amd64.zip             # 与下载页给出的校验码比对
+unzip Mech-Eye_API_2.5.0_amd64.zip             # 解压出 .deb
+sudo dpkg -i Mech-Eye_API_2.5.0_amd64.deb      # 安装
 dpkg -l | grep mecheyeapi                      # 确认已装
 ls /opt/mech-mind/mech-eye-sdk/                # 确认目录（脚本就认这个路径）
 ```
@@ -52,8 +52,8 @@ ls /opt/mech-mind/mech-eye-sdk/                # 确认目录（脚本就认这�
 > **版本怎么选？** 本机相机是 **2.5.0**。文档站各版本都有一份
 > （[2.5.0 安装指南](https://docs.mech-mind.net/zh/eye-3d-camera/2.5.0/api/software-installation.html)、
 > [2.6.0 安装指南](https://docs.mech-mind.net/zh/eye-3d-camera/2.6.0/api/software-installation.html)）。
-> 建议**先按相机版本 2.5.0 装**；若官方说 2.6.0 兼容 2.5.0 相机，装最新更好。
-> 拿不准就把型号（Mech-Eye PRO XS）和版本（2.5.0）报给梅卡曼德技术支持确认。
+> **本机已实测：必须安装 2.5.0。** SDK 2.6.0 启动时会明确报告
+> `Mech-Eye PRO XS` 不受该版本支持，并要求使用 2.5.0 或更低版本。
 
 > 顺便：官方 launch 用 `prefix="xterm -e"` 所以需要 `xterm`；
 > **我们的 launch 不用 xterm**，所以可以不装。
