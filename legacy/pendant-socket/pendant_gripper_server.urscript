@@ -1,0 +1,32 @@
+# ===== Robotiq 2F 夹爪远程控制服务器（示教器 Script 节点用，实测可用版）=====
+# 用法：
+#   1. 电脑先跑: python3 ~/ur_learn/scripts/ur_gripper_server.py 30010
+#   2. 本程序在示教器运行 → 机器人连上电脑 30010 端口
+#   3. 电脑终端输入: open / close / quit
+# 关键(实测坑)：socket_open 必须最前；rq_* 用 rq_set_pos(0=开,255=闭)。
+
+textmsg("gripper server start")
+status := socket_open("192.168.1.10", 30010, "g")   # 先连电脑
+rq_activate()                                        # 后激活夹爪
+sleep(1.0)
+
+while True:
+  cmd := socket_read_string("grip")                  # 等电脑命令(2s超时)
+  if cmd == "close":
+    rq_set_pos(255)
+    socket_send_string("closed", "grip")
+  elif cmd == "open":
+    rq_set_pos(0)
+    socket_send_string("opened", "grip")
+  elif cmd == "quit":
+    socket_send_string("bye", "grip")
+    socket_close("grip")
+    break
+  elif cmd == "":
+    pass                                             # 超时无命令
+  else:
+    textmsg("unknown cmd: ", cmd)
+    socket_send_string("unknown", "grip")
+  end
+  sleep(0.1)
+end

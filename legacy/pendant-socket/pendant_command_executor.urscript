@@ -1,0 +1,28 @@
+# ===== 通用命令执行器（示教器 Script 节点用）=====
+# "像 ROS 控制一样"的按需控制：电脑随时发 grip/release/move，机器人立刻执行。
+# 配合电脑端: ros2 run ur_link ur_gripper_cmd --ros-args -p port:=30010
+#          或 python3 ~/ur_learn/scripts/ur_socket_server.py 30010 (简单收发)
+# 命令: grip=闭合, release=张开, move+6浮点=移到位姿, stop=退出
+# 关键(实测): socket_open 必须最前；rq_set_pos(0开/255闭)；点位不写死，由电脑下发。
+
+socket_open("192.168.1.10", 30010, "g")
+rq_activate()
+sleep(1)
+while True:
+  c = socket_read_string("g")
+  if c == "grip":
+    rq_set_pos(255)
+    socket_send_string("ok", "g")
+  elif c == "release":
+    rq_set_pos(0)
+    socket_send_string("ok", "g")
+  elif c == "move":
+    pose = socket_read_ascii_float(6, "g")
+    movel(p[pose[1],pose[2],pose[3],pose[4],pose[5],pose[6]], a=0.3, v=0.05)
+    socket_send_string("ok", "g")
+  elif c == "stop":
+    socket_send_string("bye", "g")
+    break
+  end
+  sleep(0.1)
+end

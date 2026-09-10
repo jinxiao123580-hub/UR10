@@ -1,0 +1,54 @@
+# ===== 循环抓取-放置 + Robotiq 夹爪 + 电脑可选控制（示教器 Script 节点用）=====
+# 电脑端(可选, 用于看进度/发 stop):
+#   python3 ~/ur_learn/scripts/ur_gripper_server.py 30010
+# 用法: 复制到示教器"脚本(Script)"节点 → 保存 → 播放
+# 注意: socket_open 必须在最前(否则 rq_activate 会卡住导致连不上，实测坑)
+#       夹爪函数用 rq_set_pos(0=张开, 255=闭合)，UCG-1.8.13 版本有效
+# 循环: while run 无限循环抓放；电脑发 "stop" 可停止；示教器停止/急停亦可。
+
+# --- 连接电脑(先) ---
+status = socket_open("192.168.1.10", 30010, "g")
+
+# --- 激活夹爪(后) ---
+rq_activate()
+sleep(1)
+
+# --- 点位(字面量，来自 poses.json) ---
+pkx := 0.6474
+pky := -0.2685
+pkz := 0.2761
+plx := 0.6722
+ply := 0.0368
+plz := 0.2761
+rx := 1.9351
+ry := -2.3646
+rz := 0.0
+h := 0.05    # 安全高度(米)
+
+# --- 主循环: 抓取 → 放置 → 循环 ---
+run := True
+while run:
+  # 听电脑命令(2秒超时，没命令返回空串继续)
+  cmd := socket_read_string("g")
+  if cmd == "stop":
+    run := False
+  end
+
+  # 抓取
+  movel(p[pkx, pky, pkz+h, rx, ry, rz], a=0.3, v=0.05)   # 抓取点上方
+  movel(p[pkx, pky, pkz, rx, ry, rz], a=0.3, v=0.05)     # 下降到抓取点
+  sleep(0.3)
+  rq_set_pos(255)                                          # 夹爪闭合
+  socket_send_string("gripped", "g")
+  sleep(0.8)
+  movel(p[pkx, pky, pkz+h, rx, ry, rz], a=0.3, v=0.05)   # 抬起
+
+  # 放置
+  movel(p[plx, ply, plz+h, rx, ry, rz], a=0.3, v=0.05)   # 移到放置点上方
+  movel(p[plx, ply, plz, rx, ry, rz], a=0.3, v=0.05)     # 下降到放置点
+  sleep(0.3)
+  rq_set_pos(0)                                            # 夹爪张开
+  socket_send_string("released", "g")
+  sleep(0.8)
+  movel(p[plx, ply, plz+h, rx, ry, rz], a=0.3, v=0.05)   # 抬起
+end
