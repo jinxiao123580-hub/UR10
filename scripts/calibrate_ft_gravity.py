@@ -233,10 +233,19 @@ def run(args):
 
     collector = WrenchCollector(args.topic)
     samples = []
+    moved = False
     try:
         time.sleep(1.0)
+        try:
+            pre_mean, _, pre_count = collector.sample(0.5, max(20, args.min_messages // 2))
+        except RuntimeError as exc:
+            raise RuntimeError(
+                "运动前力数据门禁失败（%s）；请先启动 ati_netft_node.py" % exc)
+        print("力数据门禁通过: %d 点/0.5s, F=[% .3f % .3f % .3f]N" %
+              (pre_count, *pre_mean[:3]))
         for i, target in enumerate(targets, 1):
             print("[%02d/%02d] 移动..." % (i, len(targets)))
+            moved = True
             actual = move_and_wait(arm, target, args.acceleration, args.speed,
                                    args.settle)
             target_r = rotvec_to_matrix(target[3:])
@@ -253,11 +262,12 @@ def run(args):
                   % (count, *mean[:3], np.max(std[:3])))
         result = fit_gravity(samples)
     finally:
-        print("返回起始姿态...")
-        try:
-            move_and_wait(arm, start, args.acceleration, args.speed, 0.4)
-        except Exception as exc:
-            print("⚠ 返回起始姿态失败: %s" % exc, file=sys.stderr)
+        if moved:
+            print("返回起始姿态...")
+            try:
+                move_and_wait(arm, start, args.acceleration, args.speed, 0.4)
+            except Exception as exc:
+                print("⚠ 返回起始姿态失败: %s" % exc, file=sys.stderr)
         collector.close()
 
     output = os.path.abspath(os.path.expanduser(args.output))
