@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UR10 视觉 · 力觉 监控台</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
+</head>
+<body>
+<header>
+  <div class="title">
+    <h1>UR10 视觉 · 力觉 监控台</h1>
+    <span class="sub">Mech-Eye 3D 相机 / ATI Net F/T 六维力 · ROS 2</span>
+  </div>
+  <div class="status-area">
+    <span id="ws-badge" class="badge badge-off">连接中…</span>
+    <span id="demo-badge" class="badge badge-demo hidden">DEMO 数据</span>
+    <span id="cam-badge" class="badge badge-off">相机离线</span>
+  </div>
+</header>
+
+<main>
+  <!-- 左：相机 -->
+  <section class="panel camera-panel">
+    <div class="panel-head">
+      <h2>📷 Mech-Eye 相机</h2>
+      <div class="panel-actions">
+        <button id="btn-capture" title="手动采集一次">采集一次</button>
+        <label class="chk"><input type="checkbox" id="auto-capture" checked> 自动刷新(1.5s)</label>
+      </div>
+    </div>
+    <div class="cam-grid">
+      <div class="cam-box">
+        <div class="cam-label">彩色画面</div>
+        <canvas id="cam-color" width="640" height="480"></canvas>
+        <div id="cam-color-info" class="cam-info">等待数据…</div>
+      </div>
+      <div class="cam-box">
+        <div class="cam-label">深度图（伪彩色）</div>
+        <canvas id="cam-depth" width="640" height="480"></canvas>
+        <div id="cam-depth-info" class="cam-info">等待数据…</div>
+      </div>
+    </div>
+    <div id="pcl-info" class="pcl-info hidden"></div>
+  </section>
+
+  <!-- 右：六轴力 -->
+  <section class="panel ft-panel">
+    <div class="panel-head">
+      <h2>⚖️ ATI 六维力 / 力矩</h2>
+      <div class="panel-actions">
+        <button id="btn-tare" title="软件去皮（不影响传感器）">去皮 Tare</button>
+        <label class="chk"><input type="checkbox" id="auto-scale" checked> 自动量程</label>
+      </div>
+    </div>
+    <div class="ft-values" id="ft-values">
+      <div class="fv"><span class="fv-axis">Fx</span><b id="v-fx">--</b><i>N</i></div>
+      <div class="fv"><span class="fv-axis">Fy</span><b id="v-fy">--</b><i>N</i></div>
+      <div class="fv"><span class="fv-axis">Fz</span><b id="v-fz">--</b><i>N</i></div>
+      <div class="fv"><span class="fv-axis">Tx</span><b id="v-tx">--</b><i>N·m</i></div>
+      <div class="fv"><span class="fv-axis">Ty</span><b id="v-ty">--</b><i>N·m</i></div>
+      <div class="fv"><span class="fv-axis">Tz</span><b id="v-tz">--</b><i>N·m</i></div>
+    </div>
+    <div id="ft-chart"></div>
+    <div class="ft-foot">
+      <span id="ft-status" class="ft-status">等待 /ft_sensor/wrench 数据…</span>
+      <span id="ft-rate" class="ft-rate"></span>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <span>ROS 话题: <code>/ft_sensor/wrench</code> ·
+    <code>/mechmind/color_image</code> ·
+    <code>/mechmind/depth_map</code> ·
+    <code>/mechmind/point_cloud</code></span>
+  <span id="clock"></span>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
