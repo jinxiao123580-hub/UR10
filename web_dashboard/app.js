@@ -11,8 +11,8 @@
 const WS_PORT = 9090;
 const CAPTURE_POLL_MS = 200;        // 检查上一帧完成后立即采下一帧
 const AUX_CAPTURE_INTERVAL = 15000; // 深度与点云交替采集间隔 ms
-const WRENCH_WINDOW = 60;           // 折线图时间窗（秒）
-const WRENCH_MAX = 13000;           // 约 65 秒原始数据（输入约 200Hz）
+const WRENCH_WINDOW = 10;           // 固定宽度滚动时间窗（秒）
+const WRENCH_MAX = 2500;            // 约 12.5 秒原始数据（输入约 200Hz）
 const CHART_MAX_POINTS = 1200;      // 绘图抽样上限，避免长窗口拖慢浏览器
 const RENDER_HZ = 15;               // 折线图刷新帧率
 
@@ -128,7 +128,7 @@ function renderChart() {
   const plot = seg.filter((_, i) => i % stride === 0 || i === seg.length - 1);
   const series = AXES.map(a => plot.map(p => [p.t, p[a.key]]));
   chart.setOption({
-    xAxis: { min: Math.max(0, tStart), max: Math.max(1, tEnd) },
+    xAxis: { min: Math.max(0, tStart), max: Math.max(WRENCH_WINDOW, tEnd) },
     series: series.map((s, i) => ({ name: AXES[i].label, data: s })),
   });
   const last = seg[seg.length - 1];
