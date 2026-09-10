@@ -2,7 +2,7 @@
 
 > **本文件是交接的唯一入口。** 接手者请按顺序读完本文件 → 再看 `docs/` 里的细化文档。
 > 所有结论均标注了**验证方式**；凡未实测的，一律写明"未验证"。
-> 最后更新：2026-09-10 · 仓库提交 `fd2d3b6`
+> 最后更新：2026-09-10 · 当前状态以 `main` 分支最新提交为准
 
 ---
 
@@ -77,15 +77,14 @@ python3 ~/UR10/scripts/ur_pick_place_full.py 1
 | 4 | **抓放三种方向模式** | 单向 / `--swap`（搬回）/ `--pingpong`（往返）均实测 ✔ |
 | 5 | **六维力数据接入 ROS 2** | `/ft_sensor/wrench` 稳定 **200Hz**，实测 14 秒 2796 帧 ✔ |
 | 6 | **正运动学 TF 链** | `scripts/check_fk.py` → TF `base→tool0` 与真机 TCP 偏差 **2.5mm**、姿态 **0.0033rad** ✔ |
-| 7 | **网页监控台** | HTTP 200 + WS 全协议通；力 **200Hz**、彩色/深度 JPEG（11KB/6.5KB）、点云统计正确 ✔ |
-| 8 | **相机已识别但未驱动** | GVCP 广播拿到型号/版本/序列号 ✔（**SDK 未装，取不到图**） |
+| 7 | **网页监控台** | HTTP 200 + WS 服务调用闭环；真实彩色图 **1280×1024** JPEG、点云统计、力 200Hz 与 10 秒滚动曲线 ✔ |
+| 8 | **Mech-Eye 真机出图** | SDK **2.5.0** + ROS 2 接口编译通过；彩色/深度/点云服务均 `error_code=0` ✔ |
 
 ### ⏳ 待办（按优先级，详见 §6）
 
 | 优先级 | 任务 | 阻塞点 |
 |---|---|---|
-| **P0** | 装 Mech-Eye SDK → 出画面 | **需要人工**：官网注册下载 + `sudo dpkg -i` |
-| P1 | 手眼标定（相机坐标→机器人坐标） | 依赖 P0 |
+| **P1** | 手眼标定（相机坐标→机器人坐标） | P0 已完成，可开始 |
 | P2 | 视觉引导抓取（点云→目标位姿→抓取） | 依赖 P1 |
 | P2 | 力控应用（碰撞检测 / 力引导插装） | 无阻塞，数据已通 |
 | P3 | 监控台扩展（点云 3D 预览 / 关节角面板 / CSV 记录） | 无阻塞 |
@@ -108,7 +107,8 @@ python3 ~/UR10/scripts/diagnose.py         # 硬件侧体检（不依赖这些�
 | `ur_state_node` | 发 `/joint_states` | **TF 链依赖它**（`start_ur_tf.sh` 要先起它） |
 | `ur_command_node` | 收 `/ur_link/urscript` 发 30002 | **任何机械臂运动命令都需要它在跑** |
 | `ros_web_bridge.py` + `ati_netft_node.py` | 网页监控台（力数据） | 见 `docs/10` |
-| `fake_mecheye_publisher.py` | 页面的**模拟**相机（真相机待 SDK） | 与真相机话题同名，**别同时开** |
+| `mecheye_ros_interface` | Mech-Eye 真相机服务与话题 | SDK 2.5.0；由监控台脚本自动启动 |
+| `fake_mecheye_publisher.py` | 无相机时的页面模拟器 | 与真相机话题同名，**绝不能同时开**；启动脚本发现 SDK 后会主动停止它 |
 
 **启动/停止**：
 
@@ -274,9 +274,9 @@ ros2 service call /ft_sensor/tare std_srvs/srv/Trigger  # 软件去皮
 **活动配置是 `#16 End of line test`**（出厂测试用），`#1` 名为 `KUKA_FTCtrl_!DoNotChange!`
 （说明这盒子来自 KUKA 系统），正式用前建议在 `config.htm` 建自己的配置。
 
-### 5.4 相机（Mech-Eye PRO XS，**待装 SDK**）
+### 5.4 相机（Mech-Eye PRO XS，**已真机出图**）
 
-现状：**只有发现能力，取不到图**。
+现状：SDK **2.5.0** 已安装，ROS 2 接口已编译并按 IP 直连真机。
 
 ```bash
 python3 scripts/setup_mecheye.py --check     # 预检：自动发现相机 + 查 SDK/依赖
@@ -288,14 +288,14 @@ python3 scripts/setup_mecheye.py --check     # 预检：自动发现相机 + 查
 ```
 
 **已就绪**：依赖全齐（opencv/cv-bridge/pcl/pcl-conversions/colcon）、
-官方接口已克隆在 `~/colcon_ws/src/mecheye_ros2_interface/`、**补丁已打好**（未编译，缺 SDK）。
+官方接口位于 `~/colcon_ws/src/mecheye_ros2_interface/`，补丁、专用 launch 与编译均完成。
 
-**缺的一步（需人工，sudo 要密码）**：
+**重装步骤（需人工，sudo 要密码）**：
 1. <https://downloads.mech-mind.com.cn/?tab=tab-sdk> 注册下载 `Mech-Eye_API_2.5.0_amd64.zip`
 2. `sudo apt-get install libarchive-zip-perl && crc32 <zip>` 校验 → `unzip` → `sudo dpkg -i *.deb`
 3. `python3 scripts/setup_mecheye.py`（自动编译 + 生成 launch + 验证）
 
-**SDK 装好后**：`ros2 launch ~/colcon_ws/src/mecheye_ros2_interface/launch/start_camera_ur10.py`
+**启动**：`ros2 launch ~/colcon_ws/src/mecheye_ros2_interface/launch/start_camera_ur10.py`
 话题：`/mechmind/point_cloud`、`/mechmind/depth_map`(32FC1 米)、`/mechmind/color_image`(bgr8)。
 **⚠️ 工业相机是"服务触发式采集"**：`ros2 service call /capture_point_cloud ...` 才有数据，不是连续推流。
 
@@ -304,7 +304,9 @@ python3 scripts/setup_mecheye.py --check     # 预检：自动发现相机 + 查
 ```bash
 bash scripts/start_dashboard.sh          # 一键起 → http://127.0.0.1:8080/
 ```
-- 力数据 **200Hz** 折线（实测）+ 相机画面（当前为模拟器）
+- 力数据 **200Hz** 折线（实测）+ Mech-Eye 真实彩色/深度画面
+- 真相机彩色画面 **1280×1024**；页面已按现场安装方向做上下翻转
+- 力曲线为固定 **10 秒**滚动窗口，横轴随最新数据持续前移
 - 协议与排查见 [`docs/10-网页监控台.md`](docs/10-网页监控台.md)
 - 桥是自研的（**没用 rosbridge_suite，它要 sudo 装**）：`websockets` 库 + rclpy
 
@@ -312,11 +314,10 @@ bash scripts/start_dashboard.sh          # 一键起 → http://127.0.0.1:8080/
 
 ## 6. 下一步待办（含具体执行方案）
 
-### P0 · 装 Mech-Eye SDK 让相机出图（**需要人工**）
+### P0 · 装 Mech-Eye SDK 让相机出图（**已完成，2026-09-10**）
 
-见 §5.4。装完跑 `setup_mecheye.py` 即可。验收标准：
-`ros2 service call /capture_color_image mecheye_ros_interface/srv/CaptureColorImage`
-返回成功，且网页左侧出现真实画面（替换掉 "FAKE CAMERA"）。
+验收证据：彩色、深度、点云服务均返回 `error_code=0`；ROS 实收彩色图宽度 1280，
+点云 `frame_id=mechmind_camera/point_cloud`；WebSocket 实收 1280×1024 JPEG，假相机进程已停止。
 
 ### P1 · 手眼标定（P0 完成后）
 
@@ -366,7 +367,6 @@ bash scripts/start_dashboard.sh          # 一键起 → http://127.0.0.1:8080/
 
 | 项 | 说明 |
 |---|---|
-| 相机未出图 | SDK 未装（P0） |
 | 手眼标定未做 | 点云还在相机坐标系，**不能直接用于抓取**（P1） |
 | 力传感器未置零 | 读数含工装自重（Fz≈62N），**用前必须 tare** |
 | 配置是出厂测试项 | ATI 活动配置 `#16 End of line test`，建议建自己的 |

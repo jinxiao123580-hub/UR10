@@ -4,6 +4,8 @@
 > 本机相机实测信息：**IP `192.168.1.33`**，固件/版本 **2.5.0**，SN **RAM35238A3020004**，
 > MAC `24:c5:d3:55:00:00`，控制端口 **TCP 5577** 已开。
 
+> **当前状态（2026-09-10）**：SDK 2.5.0 已安装，接口已编译，彩色/深度/点云均已真机采集成功。
+
 ---
 
 ## 步骤 0 · 先跑预检（不改任何东西）
@@ -25,7 +27,7 @@ python3 scripts/setup_mecheye.py --check
    ros-humble-pcl-conversions ✔ / python3-colcon-common-extensions ✔
 ```
 
-**本机现状**：依赖**已全部齐全**，只差 Mech-Eye SDK。
+**本机现状**：SDK 2.5.0 与依赖均已安装。此预检输出保留作重装/排障参考。
 
 ---
 
@@ -96,6 +98,20 @@ ros2 service call /capture_color_image   mecheye_ros_interface/srv/CaptureColorI
 ros2 topic echo /mechmind/point_cloud --field header --once
 rviz2        # 加 PointCloud2 → /mechmind/point_cloud
 ```
+
+### 本机验收记录（2026-09-10）
+
+| 验收项 | 实测结果 |
+|---|---|
+| 相机连接 | `192.168.1.33`，PRO XS，SN `RAM35238A3020004`，固件 2.5.0 |
+| 彩色服务 | `CaptureColorImage_Response(error_code=0, error_description='')` |
+| 深度服务 | `CaptureDepthMap_Response(error_code=0, error_description='')` |
+| 点云服务 | `CapturePointCloud_Response(error_code=0, error_description='')` |
+| 彩色消息 | 宽度 1280；网页桥收到 1280×1024 JPEG |
+| 点云消息 | 有效时间戳；`frame_id=mechmind_camera/point_cloud` |
+
+服务耗时实测：彩色约 **2.435s**、深度约 **2.359s**、点云约 **4.512s**。
+因此刷新瓶颈主要在相机曝光/结构光采集与 GigE 传输，不在网页或台式机 CPU。
 
 ### 话题与 frame_id（注意这些 frame 名字）
 
