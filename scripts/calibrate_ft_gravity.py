@@ -241,7 +241,8 @@ def save_result(args, result, samples, valid, failures):
         "gravity_m_s2": GRAVITY,
         "calibration": result,
         "samples": serializable_samples,
-        "note": "ATI hardware Bias must remain zero.",
+        "input_topic": args.topic,
+        "note": "ATI hardware Bias must remain zero; calibration must use wrench_raw.",
     }
     with open(output, "w", encoding="utf-8") as stream:
         yaml.safe_dump(document, stream, sort_keys=False, allow_unicode=True)
@@ -433,7 +434,8 @@ def run(args):
                 "gravity_m_s2": GRAVITY, "calibration": result,
                 "validation_failures": failures,
                 "samples": serializable_samples,
-                "note": "ATI hardware Bias must remain zero."}
+                "input_topic": args.topic,
+                "note": "ATI hardware Bias must remain zero; calibration must use wrench_raw."}
     with open(output, "w", encoding="utf-8") as stream:
         yaml.safe_dump(document, stream, sort_keys=False, allow_unicode=True)
     print("拟合结果: mass=%.4fkg, CoM(sensor)=%s m" %
@@ -454,7 +456,7 @@ def main():
     parser.add_argument("--manual", action="store_true", help="手动换姿态，脚本只采样不运动")
     parser.add_argument("--resume", help="从既有 YAML 恢复手动采样")
     parser.add_argument("--self-test", action="store_true")
-    parser.add_argument("--topic", default="/ft_sensor/wrench")
+    parser.add_argument("--topic", default="/ft_sensor/wrench_raw")
     parser.add_argument("--angle-deg", type=float, default=40.0)
     parser.add_argument("--duration", type=float, default=1.0)
     parser.add_argument("--min-messages", type=int, default=100)

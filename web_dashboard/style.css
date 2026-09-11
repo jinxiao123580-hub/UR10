@@ -47,6 +47,7 @@ main {
   gap: 12px;
   padding: 12px;
   min-height: 0;
+  overflow: auto;
 }
 @media (max-width: 1100px) { main { grid-template-columns: 1fr; } }
 
@@ -138,6 +139,42 @@ button:hover { filter: brightness(1.12); }
   padding: 8px 14px;
   border-top: 1px solid var(--line);
   font-size: 12px; color: var(--muted);
+}
+
+/* ---------- 机械臂状态 ---------- */
+.robot-panel { grid-column: 1 / -1; min-height: 390px; }
+.muted, .section-caption span { color: var(--muted); font-size: 12px; }
+.robot-content { display: grid; grid-template-columns: minmax(480px, 1fr) minmax(480px, 1.1fr); min-height: 0; }
+.joint-section, .pose-section { padding: 12px 14px; min-width: 0; }
+.joint-section { border-right: 1px solid var(--line); }
+.section-caption { font-weight: 600; margin-bottom: 9px; }
+.section-caption span { margin-left: 8px; font-weight: 400; }
+.joint-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.joint-row { background: var(--panel2); border: 1px solid var(--line); border-radius: 6px; padding: 8px 10px; }
+.joint-top { display: grid; grid-template-columns: 86px 1fr auto; gap: 8px; align-items: baseline; }
+.joint-name { color: var(--muted); font-size: 12px; }
+.joint-value { font-size: 18px; font-variant-numeric: tabular-nums; }
+.joint-limit { color: var(--muted); font-size: 11px; }
+.limit-track { height: 6px; background: #0e1319; margin-top: 7px; position: relative; overflow: hidden; }
+.limit-track::after { content: ""; position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; background: #52606f; }
+.limit-fill { position: absolute; top: 0; bottom: 0; background: var(--accent); }
+.joint-row.warn .limit-fill { background: var(--warn); }
+.joint-row.danger .limit-fill { background: var(--err); }
+.pose-values { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 5px; }
+.pose-values div { background: var(--panel2); border: 1px solid var(--line); padding: 6px 7px; text-align: center; }
+.pose-values span, .pose-values i { color: var(--muted); font-size: 10px; font-style: normal; }
+.pose-values b { display: block; font-size: 15px; font-variant-numeric: tabular-nums; }
+#tcp-scene { width: 100%; height: 250px; margin-top: 8px; background: #10151b; border: 1px solid var(--line); cursor: grab; }
+#tcp-scene:active { cursor: grabbing; }
+@media (max-width: 1100px) {
+  .robot-panel { grid-column: 1; }
+  .robot-content { grid-template-columns: 1fr; }
+  .joint-section { border-right: 0; border-bottom: 1px solid var(--line); }
+}
+@media (max-width: 620px) {
+  .robot-content { display: block; }
+  .joint-grid { grid-template-columns: 1fr; }
+  .pose-values { grid-template-columns: repeat(3, 1fr); }
 }
 
 /* ---------- 底部 ---------- */

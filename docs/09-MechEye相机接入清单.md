@@ -107,11 +107,29 @@ rviz2        # 加 PointCloud2 → /mechmind/point_cloud
 | 彩色服务 | `CaptureColorImage_Response(error_code=0, error_description='')` |
 | 深度服务 | `CaptureDepthMap_Response(error_code=0, error_description='')` |
 | 点云服务 | `CapturePointCloud_Response(error_code=0, error_description='')` |
-| 彩色消息 | 宽度 1280；网页桥收到 1280×1024 JPEG |
-| 点云消息 | 有效时间戳；`frame_id=mechmind_camera/point_cloud` |
+| 2D 消息 | 1280×1024，标记为 bgr8；实测 B/G/R 每个像素完全相等，实际为单色图 |
+| 点云消息 | 1280×1024；436678 有效点；`frame_id=mechmind_camera/point_cloud` |
 
 服务耗时实测：彩色约 **2.435s**、深度约 **2.359s**、点云约 **4.512s**。
 因此刷新瓶颈主要在相机曝光/结构光采集与 GigE 传输，不在网页或台式机 CPU。
+
+### PRO XS 的“彩色”输出结论（2026-09-11）
+
+`scripts/validate_mecheye.py` 触发真机采集后得到：`encoding=bgr8`、
+`step=3840`，但 B/G/R 通道均值都为 `45.5309`，三通道不相等像素比例为
+`0.0`。因此灰度不是网页 JPEG 或 RGB/BGR 顺序造成的。
+
+ROS 驱动在 `capture_color_image_callback()` 中无条件调用 SDK 的
+`Frame2D.getColorImage()`。本机 SDK 2.5 的接口说明明确：当 2D 相机为
+Monochrome 时，该函数用 `Blue=Green=Red=Gray` 扩成三通道。因此该话题名
+和 bgr8 编码只表示容器格式，不证明传感器能输出真实颜色。软件无法从三路
+相同的灰度值恢复真实颜色；若应用必须识别颜色，需要增加独立 RGB 相机。
+网页可以做伪彩色显示，但必须明确标成“伪彩色”，不能称为真实彩色。
+
+同次点云采集服务返回 `error_code=0`：有效点 `436678`、无效点 `874042`，
+XYZ 范围分别为 `[-0.4078,0.3096]`、`[-0.2673,0.2633]`、
+`[0.2168,1.8554] m`。这证明点云有真实三维数值，但已知几何体的形状和尺度
+验收仍未完成，继续保留在统一问题清单。
 
 ### 话题与 frame_id（注意这些 frame 名字）
 

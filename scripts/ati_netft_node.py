@@ -209,13 +209,27 @@ def ros_main(args):
                             counts_per_torque=self.get_parameter("counts_per_torque").value)
             self.ft.start()
 
+            self.pub_raw = self.create_publisher(WrenchStamped, "ft_sensor/wrench_raw", 10)
             self.pub = self.create_publisher(WrenchStamped, "ft_sensor/wrench", 10)
+            self.pub_bias = self.create_publisher(WrenchStamped, "ft_sensor/software_bias", 1)
             self.create_service(Trigger, "ft_sensor/tare", self._on_tare)
             self.create_timer(1.0 / rate, self._tick)
+            self.create_timer(1.0, self._publish_bias)
             self._warned_stream = False
             self.get_logger().info(
-                "ATI Net F/T @%s，发布 ft_sensor/wrench @%.0fHz，frame_id=%s"
+                "ATI Net F/T @%s，发布 ft_sensor/wrench_raw + wrench @%.0fHz，frame_id=%s"
                 % (ip, rate, self.frame_id))
+
+        def _make_message(self, values):
+            msg = WrenchStamped()
+            msg.header.stamp = self.get_clock().now().to_msg()
+            msg.header.frame_id = self.frame_id
+            msg.wrench.force.x, msg.wrench.force.y, msg.wrench.force.z = values[:3]
+            msg.wrench.torque.x, msg.wrench.torque.y, msg.wrench.torque.z = values[3:]
+            return msg
+
+        def _publish_bias(self):
+            self.pub_bias.publish(self._make_message(self.ft.bias))
 
         def _on_tare(self, req, res):
             b, count, updated = self.ft.tare(timeout=5.0)
@@ -250,12 +264,12 @@ def ros_main(args):
                 self._warned_stream = False
                 self.get_logger().info("RDT 数据流已恢复")
             w, status, rdt_seq, ft_seq = r
-            msg = WrenchStamped()
-            msg.header.stamp = self.get_clock().now().to_msg()
-            msg.header.frame_id = self.frame_id
-            msg.wrench.force.x, msg.wrench.force.y, msg.wrench.force.z = w[0], w[1], w[2]
-            msg.wrench.torque.x, msg.wrench.torque.y, msg.wrench.torque.z = w[3], w[4], w[5]
-            self.pub.publish(msg)
+            raw = [value + bias for value, bias in zip(w, self.ft.bias)]
+            raw_msg = self._make_message(raw)
+            adjusted_msg = self._make_message(w)
+            adjusted_msg.header.stamp = raw_msg.header.stamp
+            self.pub_raw.publish(raw_msg)
+            self.pub.publish(adjusted_msg)
             if status:
                 self.get_logger().warn("传感器状态: %s (0x%08X)" % (decode_status(status), status),
                                        once=True)

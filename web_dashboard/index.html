@@ -72,14 +72,42 @@
       <span id="ft-rate" class="ft-rate"></span>
     </div>
   </section>
+
+  <section class="panel robot-panel">
+    <div class="panel-head">
+      <h2>UR10 实时状态</h2>
+      <div class="panel-actions">
+        <span id="ur-rate" class="muted">等待 30003 数据...</span>
+        <span id="ur-badge" class="badge badge-off">机械臂离线</span>
+      </div>
+    </div>
+    <div class="robot-content">
+      <div class="joint-section">
+        <div class="section-caption">关节角度 <span>标称限位，非安全平面回读</span></div>
+        <div id="joint-grid" class="joint-grid"></div>
+      </div>
+      <div class="pose-section">
+        <div class="section-caption">末端位姿 <span>base → 当前 TCP</span></div>
+        <div class="pose-values">
+          <div><span>X</span><b id="tcp-x">--</b><i>m</i></div>
+          <div><span>Y</span><b id="tcp-y">--</b><i>m</i></div>
+          <div><span>Z</span><b id="tcp-z">--</b><i>m</i></div>
+          <div><span>Rx</span><b id="tcp-rx">--</b><i>rad</i></div>
+          <div><span>Ry</span><b id="tcp-ry">--</b><i>rad</i></div>
+          <div><span>Rz</span><b id="tcp-rz">--</b><i>rad</i></div>
+        </div>
+        <canvas id="tcp-scene" width="760" height="360"></canvas>
+      </div>
+    </div>
+  </section>
 </main>
 
 <footer>
-  <span>ROS 话题: <code>/ft_sensor/wrench</code> ·
+  <span>ROS 话题: <code>/ft_sensor/wrench_raw</code> ·
     <code>/ft_sensor/wrench_compensated</code> ·
     <code>/mechmind/color_image</code> ·
     <code>/mechmind/depth_map</code> ·
-    <code>/mechmind/point_cloud</code></span>
+    <code>/mechmind/point_cloud</code> · <code>UR 30003</code></span>
   <span id="clock"></span>
 </footer>
 

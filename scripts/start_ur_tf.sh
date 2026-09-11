@@ -24,9 +24,11 @@ WS="${WS:-$HOME/ros2_ws}"
 DESC="$WS/src/Universal_Robots_ROS2_Description"
 URDF_OUT="$HOME/ur_learn/generated/${UR_TYPE}.urdf"
 
+set +u
 source /opt/ros/humble/setup.bash
 # shellcheck disable=SC1091
 [ -f "$WS/install/setup.bash" ] && source "$WS/install/setup.bash"
+set -u
 
 if [ ! -d "$DESC" ]; then
     echo "✘ 找不到 $DESC"

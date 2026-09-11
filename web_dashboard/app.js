@@ -79,7 +79,7 @@ function connect() {
   ws = new WebSocket(`${proto}://${location.hostname}:${WS_PORT}`);
   ws.onopen = () => {
     setWs(true);
-    wsSend({ op: "subscribe", topic: "/ft_sensor/wrench", kind: "wrench" });
+    wsSend({ op: "subscribe", topic: "/ft_sensor/wrench_raw", kind: "wrench" });
     wsSend({ op: "subscribe", topic: "/ft_sensor/wrench_compensated", kind: "wrench" });
     wsSend({ op: "subscribe", topic: "/mechmind/color_image", kind: "image" });
     wsSend({ op: "subscribe", topic: "/mechmind/depth_map", kind: "depth" });
@@ -96,12 +96,83 @@ function handleMessage(m) {
   if (m.op === "pong" || m.op === "subscribed" || m.op === "unsubscribed") return;
   if (m.op === "call_service") { handleServiceReply(m); return; }
   if (!m.topic) return;
-  if (m.topic === "/ft_sensor/wrench") onWrench(m.data, "raw");
+  if (m.topic === "/ft_sensor/wrench_raw") onWrench(m.data, "raw");
   else if (m.topic === "/ft_sensor/wrench_compensated") onWrench(m.data, "comp");
   else if (m.topic === "/mechmind/color_image") onColorImage(m.data);
   else if (m.topic === "/mechmind/depth_map") onDepthImage(m.data);
   else if (m.topic === "/mechmind/point_cloud") onPclStats(m.data);
+  else if (m.topic === "/ur_link/realtime_state") onRobotState(m.data);
 }
+
+// ---------------------------------------------------------------- UR10 实时状态
+const JOINTS = [
+  ["肩回转", 360], ["肩抬升", 360], ["肘关节", 180],
+  ["腕 1", 360], ["腕 2", 360], ["腕 3", 360],
+];
+const jointGrid = $("joint-grid");
+JOINTS.forEach(([name, limit], i) => {
+  jointGrid.insertAdjacentHTML("beforeend", `<div class="joint-row" id="joint-${i}">
+    <div class="joint-top"><span class="joint-name">J${i + 1} ${name}</span>
+    <b class="joint-value" id="joint-value-${i}">--</b><span class="joint-limit">±${limit}°</span></div>
+    <div class="limit-track"><span class="limit-fill" id="joint-fill-${i}"></span></div></div>`);
+});
+
+let robotState = null;
+let sceneYaw = -0.72, scenePitch = 0.48, sceneZoom = 1;
+function onRobotState(d) {
+  const badge = $("ur-badge");
+  if (!d.connected) {
+    badge.textContent = "机械臂离线"; badge.className = "badge badge-off";
+    $("ur-rate").textContent = d.error || "30003 无数据";
+    return;
+  }
+  robotState = d;
+  badge.textContent = "机械臂在线"; badge.className = "badge badge-on";
+  $("ur-rate").textContent = `${d.port} ${d.source_hz.toFixed(1)} Hz · 网页 20 Hz · ${d.frame_size} B`;
+  d.q.forEach((rad, i) => {
+    const deg = rad * 180 / Math.PI, limit = JOINTS[i][1], ratio = Math.abs(deg) / limit;
+    $(`joint-value-${i}`).textContent = `${deg >= 0 ? "+" : ""}${deg.toFixed(2)}°`;
+    const fill = $(`joint-fill-${i}`), clamped = Math.max(-1, Math.min(1, deg / limit));
+    fill.style.left = `${50 + Math.min(0, clamped) * 50}%`;
+    fill.style.width = `${Math.abs(clamped) * 50}%`;
+    const row = $(`joint-${i}`); row.classList.toggle("warn", ratio >= .8 && ratio < .95); row.classList.toggle("danger", ratio >= .95);
+  });
+  ["x", "y", "z", "rx", "ry", "rz"].forEach((key, i) => {
+    $(`tcp-${key}`).textContent = d.tcp[i].toFixed(i < 3 ? 4 : 3);
+  });
+  drawTcpScene();
+}
+
+function rotvecMatrix(v) {
+  const a = Math.hypot(...v); if (a < 1e-9) return [[1,0,0],[0,1,0],[0,0,1]];
+  const [x,y,z] = v.map(n => n / a), c = Math.cos(a), s = Math.sin(a), C = 1-c;
+  return [[c+x*x*C,x*y*C-z*s,x*z*C+y*s],[y*x*C+z*s,c+y*y*C,y*z*C-x*s],[z*x*C-y*s,z*y*C+x*s,c+z*z*C]];
+}
+function drawTcpScene() {
+  const cv = $("tcp-scene"), ctx = cv.getContext("2d"), rect = cv.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1, w = Math.max(320, rect.width), h = Math.max(220, rect.height);
+  cv.width = w*dpr; cv.height = h*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,w,h);
+  const project = ([x,y,z]) => {
+    const cy=Math.cos(sceneYaw), sy=Math.sin(sceneYaw), cp=Math.cos(scenePitch), sp=Math.sin(scenePitch);
+    const x1=cy*x-sy*y, y1=sy*x+cy*y, y2=cp*y1-sp*z, z2=sp*y1+cp*z;
+    const scale=145*sceneZoom, persp=1/(1+Math.max(-.8,z2)*.18);
+    return [w*.5+x1*scale*persp, h*.72-y2*scale*persp];
+  };
+  const line = (a,b,color,width=1) => { const p=project(a),q=project(b); ctx.beginPath();ctx.moveTo(...p);ctx.lineTo(...q);ctx.strokeStyle=color;ctx.lineWidth=width;ctx.stroke(); };
+  for(let n=-1;n<=1.001;n+=.25){ line([n,-1,0],[n,1,0],"#25303b"); line([-1,n,0],[1,n,0],"#25303b"); }
+  line([0,0,0],[1,0,0],"#d95757",2); line([0,0,0],[0,1,0],"#55b86b",2); line([0,0,0],[0,0,1],"#5598df",2);
+  [["X",[1,0,0],"#d95757"],["Y",[0,1,0],"#55b86b"],["Z",[0,0,1],"#5598df"]].forEach(([t,p,c])=>{const q=project(p);ctx.fillStyle=c;ctx.fillText(t,q[0]+4,q[1]-4);});
+  if (!robotState) return;
+  const p=robotState.tcp.slice(0,3), origin=project(p); line([0,0,0],p,"#91a0af",1.5);
+  ctx.beginPath();ctx.arc(origin[0],origin[1],5,0,Math.PI*2);ctx.fillStyle="#f2f5f8";ctx.fill();
+  const R=rotvecMatrix(robotState.tcp.slice(3)), len=.18, colors=["#ff6b6b","#63d47a","#63a9ef"];
+  for(let j=0;j<3;j++) line(p,[p[0]+R[0][j]*len,p[1]+R[1][j]*len,p[2]+R[2][j]*len],colors[j],3);
+}
+const scene = $("tcp-scene"); let drag = null;
+scene.addEventListener("pointerdown", e => { drag=[e.clientX,e.clientY]; scene.setPointerCapture(e.pointerId); });
+scene.addEventListener("pointermove", e => { if(!drag)return; sceneYaw+=(e.clientX-drag[0])*.008; scenePitch=Math.max(-1.2,Math.min(1.2,scenePitch+(e.clientY-drag[1])*.008)); drag=[e.clientX,e.clientY]; drawTcpScene(); });
+scene.addEventListener("pointerup", () => { drag=null; });
+scene.addEventListener("wheel", e => { e.preventDefault(); sceneZoom=Math.max(.55,Math.min(2,sceneZoom*(e.deltaY>0?.9:1.1))); drawTcpScene(); }, {passive:false});
 
 // ---------------------------------------------------------------- 六轴力
 const wrenchBuffers = { raw: wrenchBuf, comp: [] };
@@ -129,7 +200,7 @@ function onWrench(d, mode) {
 
 function renderChart() {
   const data = demoMode ? demoWrenchData() : wrenchBuffers[wrenchMode];
-  const topic = wrenchMode === "raw" ? "/ft_sensor/wrench" : "/ft_sensor/wrench_compensated";
+  const topic = wrenchMode === "raw" ? "/ft_sensor/wrench_raw" : "/ft_sensor/wrench_compensated";
   if (!data.length) { ftStatusEl.textContent = `等待 ${topic} 数据…`; return; }
   // 只保留时间窗内
   const tEnd = data[data.length - 1].t, tStart = tEnd - WRENCH_WINDOW;
@@ -293,7 +364,8 @@ setInterval(() => {
 // 时钟
 setInterval(() => { $("clock").textContent = new Date().toLocaleTimeString(); }, 1000);
 
-window.addEventListener("resize", () => chart.resize());
+window.addEventListener("resize", () => { chart.resize(); drawTcpScene(); });
 connect();
+drawTcpScene();
 drawPlaceholder($("cam-color"), "连接中…");
 drawPlaceholder($("cam-depth"), "连接中…");

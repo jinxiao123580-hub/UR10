@@ -110,7 +110,7 @@ URL="http://127.0.0.1:8080/"
 echo
 echo "==========================================================="
 echo "  监控台地址: $URL"
-echo "  力数据: /ft_sensor/wrench（实时 200Hz）"
+echo "  原始力: /ft_sensor/wrench_raw（实时 200Hz，不受 Tare 影响）"
 echo "  补偿力: /ft_sensor/wrench_compensated（原始/补偿可切换）"
 echo "  相机  : Mech-Eye（需 SDK，服务触发式采集）"
 echo "  停止  : bash scripts/start_dashboard.sh --stop"

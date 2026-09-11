@@ -38,7 +38,10 @@ import functools
 import http.server
 import json
 import os
+import socket
+import struct
 import threading
+import time
 
 import numpy as np
 import rclpy
@@ -90,8 +93,67 @@ class RosWebBridge(Node):
             Trigger, "/ft_sensor/tare")
         self._lock = threading.Lock()
         self._http = None
+        self._ur_stop = threading.Event()
+        self._ur_thread = threading.Thread(target=self._ur_realtime_loop, daemon=True)
+        self._ur_thread.start()
         print("[桥] rclpy 节点 ros_web_bridge 就绪；Mech-Eye 服务类型: %s"
               % ("可用" if MECHEYE_OK else "不可用(mecheye_ros_interface 未编译)"))
+
+    def _ur_realtime_loop(self):
+        """Read-only UR CB3 realtime stream; publish a browser-sized 20 Hz view."""
+        topic = "/ur_link/realtime_state"
+        ports = (30003, 30013, 30011, 30012)
+        port_index = 0
+        while not self._ur_stop.is_set():
+            sock = None
+            port = ports[port_index]
+            try:
+                sock = socket.create_connection(("192.168.1.3", port), timeout=2.0)
+                sock.settimeout(1.0)
+                buf = bytearray()
+                last_push = 0.0
+                frame_count = 0
+                rate_start = time.monotonic()
+                while not self._ur_stop.is_set():
+                    chunk = sock.recv(65536)
+                    if not chunk:
+                        raise ConnectionError("UR realtime socket closed")
+                    buf.extend(chunk)
+                    while len(buf) >= 4:
+                        size = struct.unpack_from(">I", buf, 0)[0]
+                        if size < 500 or size > 4096:
+                            raise ValueError("invalid UR realtime frame size %d" % size)
+                        if len(buf) < size:
+                            break
+                        frame = bytes(buf[:size])
+                        del buf[:size]
+                        if size < 540:
+                            continue
+                        frame_count += 1
+                        now = time.monotonic()
+                        if now - last_push < 0.05:
+                            continue
+                        q = struct.unpack_from(">6d", frame, 252)
+                        tcp = struct.unpack_from(">6d", frame, 444)
+                        speed = struct.unpack_from(">6d", frame, 492)
+                        elapsed = max(now - rate_start, 1e-6)
+                        self.push({"topic": topic, "data": {
+                            "connected": True,
+                            "q": q, "tcp": tcp, "tcp_speed": speed,
+                            "source_hz": frame_count / elapsed,
+                            "frame_size": size, "port": port,
+                            "timestamp": time.time(),
+                        }})
+                        last_push = now
+            except (OSError, ValueError, ConnectionError) as exc:
+                self.push({"topic": topic, "data": {
+                    "connected": False, "error": "%d: %s" % (port, exc),
+                    "timestamp": time.time()}})
+                port_index = (port_index + 1) % len(ports)
+                self._ur_stop.wait(2.0)
+            finally:
+                if sock:
+                    sock.close()
 
     # ---------------- 推送到所有网页端 ----------------
     def push(self, payload):
@@ -415,6 +477,7 @@ def main():
     except KeyboardInterrupt:
         pass
     finally:
+        bridge._ur_stop.set()
         bridge.destroy_node()
         rclpy.shutdown()
         print("\n[桥] 已退出")

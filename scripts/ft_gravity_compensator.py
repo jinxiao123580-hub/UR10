@@ -105,7 +105,7 @@ def main():
     parser.add_argument("--calibration", default="config/ft_gravity_calibration.yaml")
     parser.add_argument("--robot-ip", default=os.environ.get("UR_IP", "192.168.1.3"))
     parser.add_argument("--pose-hz", type=float, default=10.0)
-    parser.add_argument("--input-topic", default="/ft_sensor/wrench")
+    parser.add_argument("--input-topic", default="/ft_sensor/wrench_raw")
     parser.add_argument("--output-topic", default="/ft_sensor/wrench_compensated")
     args = parser.parse_args()
     if not math.isfinite(args.pose_hz) or args.pose_hz <= 0:
