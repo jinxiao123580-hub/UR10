@@ -1,0 +1,21 @@
+UR CB3 flight-report evidence
+Incident: 2026-09-14 16:20:31 CEST
+Controller: URSoftware 3.15.8.106339
+Error: C153A0, protective stop, Base joint position deviates from path
+
+Active TCP: p[0, 0, 0, 0, 0, 0]
+Payload mass: 3.50 kg
+Center of gravity: [0.0000, 0.0000, 0.1000] m
+Realtime samples: 3750 at 125 Hz
+Program-running samples: 153
+
+Maximum absolute target/actual joint-position error while program was running:
+j0 Base:     0.002194580 rad at controller timestamp 4600.000 s
+j1 Shoulder: 0.000190447 rad at controller timestamp 4599.632 s
+j2 Elbow:    0.000178326 rad at controller timestamp 4599.352 s
+j3 Wrist 1:  0.000240512 rad at controller timestamp 4599.800 s
+j4 Wrist 2:  0.000570310 rad at controller timestamp 4599.568 s
+j5 Wrist 3:  0.000205330 rad at controller timestamp 4599.576 s
+
+Source: /root/flightreports/recording20260914_16_20_31.zip on the UR controller.
+The full flight report is not committed because it contains controller-wide data.
