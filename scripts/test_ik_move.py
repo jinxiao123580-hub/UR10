@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Guarded 2 mm Cartesian IK preview; execution is deliberately not enabled yet."""
 import argparse
+import csv
+import datetime
+import os
 import socket
 import struct
 import threading
@@ -67,6 +70,8 @@ def main():
     ap.add_argument("--distance", type=float, default=0.002)
     ap.add_argument("--execute", action="store_true")
     args = ap.parse_args()
+    if args.execute:
+        ap.error("真机 IK 执行已禁用：首次 2 mm 测试触发过保护性停止")
     if not 0 < abs(args.distance) <= 0.002:
         ap.error("distance magnitude must be in (0, 0.002] m")
 
@@ -124,9 +129,23 @@ def main():
     final_tcp = np.mean([row[1] for row in rows[-20:]], axis=0)
     final_error = float(np.linalg.norm(final_tcp[:3] - target_base.translation))
     actual_delta = float(final_tcp[args.axis] - tcp[args.axis])
+    delta_xyz = final_tcp[:3] - tcp[:3]
+    out_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                           "outputs", "ik")
+    os.makedirs(out_dir, exist_ok=True)
+    path = os.path.join(out_dir, "ik-move-%s.csv" %
+                        datetime.datetime.now().strftime("%Y%m%d-%H%M%S"))
+    with open(path, "w", newline="") as stream:
+        writer = csv.writer(stream)
+        writer.writerow(["time_s", "x", "y", "z", "rx", "ry", "rz",
+                         "vx", "vy", "vz", "wx", "wy", "wz"])
+        origin = rows[0][0]
+        for timestamp, pose, velocity in rows:
+            writer.writerow([timestamp-origin, *pose, *velocity])
+    print("delta_xyz", np.round(delta_xyz, 7), "CSV", path)
     print("actual_delta=%.6fm target_position_error=%.6fm frames=%d" %
           (actual_delta, final_error, len(rows)))
-    if abs(actual_delta - args.distance) > 0.001 or final_error > 0.005:
+    if abs(actual_delta - args.distance) > 0.0005 or final_error > 0.001:
         raise RuntimeError("真机 IK 位姿验收失败")
     print("PASS: guarded IK servoj move")
 
