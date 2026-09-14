@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Guarded 2 mm Cartesian IK preview; execution is deliberately not enabled yet."""
+"""Experimental IK motion probe. Execution is disabled after a protective stop."""
 import argparse
 import csv
 import datetime
