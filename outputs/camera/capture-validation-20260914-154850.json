@@ -1,0 +1,128 @@
+{
+  "captured_at": "2026-09-14T15:48:49+0800",
+  "image": {
+    "frame_id": "mechmind_camera/color_map",
+    "encoding": "bgr8",
+    "width": 1280,
+    "height": 1024,
+    "step": 3840,
+    "bytes": 3932160,
+    "is_bigendian": false,
+    "channel_mean": [
+      57.797,
+      57.797,
+      57.797
+    ],
+    "channel_std": [
+      59.234,
+      59.234,
+      59.234
+    ],
+    "mean_channel_spread": 0.0,
+    "channels_identical_fraction": 1.0
+  },
+  "point_cloud": {
+    "frame_id": "mechmind_camera/point_cloud",
+    "width": 1280,
+    "height": 1024,
+    "point_step": 12,
+    "row_step": 15360,
+    "is_dense": false,
+    "fields": [
+      {
+        "name": "x",
+        "offset": 0,
+        "datatype": 7,
+        "count": 1
+      },
+      {
+        "name": "y",
+        "offset": 4,
+        "datatype": 7,
+        "count": 1
+      },
+      {
+        "name": "z",
+        "offset": 8,
+        "datatype": 7,
+        "count": 1
+      }
+    ],
+    "points": 1310720,
+    "finite_points": 747804,
+    "finite_fraction": 0.570529,
+    "xyz_min_m": [
+      -0.52124,
+      -0.058375,
+      0.201726
+    ],
+    "xyz_max_m": [
+      0.294094,
+      0.278654,
+      1.71937
+    ],
+    "xyz_median_m": [
+      0.03359,
+      -0.005521,
+      0.259467
+    ]
+  },
+  "textured_point_cloud": {
+    "frame_id": "mechmind_camera/textured_point_cloud",
+    "width": 1280,
+    "height": 1024,
+    "point_step": 16,
+    "row_step": 20480,
+    "is_dense": false,
+    "fields": [
+      {
+        "name": "x",
+        "offset": 0,
+        "datatype": 7,
+        "count": 1
+      },
+      {
+        "name": "y",
+        "offset": 4,
+        "datatype": 7,
+        "count": 1
+      },
+      {
+        "name": "z",
+        "offset": 8,
+        "datatype": 7,
+        "count": 1
+      },
+      {
+        "name": "rgb",
+        "offset": 12,
+        "datatype": 7,
+        "count": 1
+      }
+    ],
+    "points": 1310720,
+    "finite_points": 747517,
+    "finite_fraction": 0.57031,
+    "xyz_min_m": [
+      -0.521585,
+      -0.058515,
+      0.201738
+    ],
+    "xyz_max_m": [
+      0.294062,
+      0.282732,
+      1.7341
+    ],
+    "xyz_median_m": [
+      0.033564,
+      -0.00553,
+      0.259453
+    ],
+    "bgr_mean": [
+      64.317,
+      64.317,
+      64.317
+    ],
+    "bgr_identical_fraction": 1.0
+  }
+}

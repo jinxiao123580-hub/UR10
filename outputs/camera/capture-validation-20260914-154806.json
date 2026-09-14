@@ -1,0 +1,70 @@
+{
+  "captured_at": "2026-09-14T15:48:05+0800",
+  "image": {
+    "frame_id": "mechmind_camera/color_map",
+    "encoding": "bgr8",
+    "width": 1280,
+    "height": 1024,
+    "step": 3840,
+    "bytes": 3932160,
+    "is_bigendian": false,
+    "channel_mean": [
+      58.151,
+      58.151,
+      58.151
+    ],
+    "channel_std": [
+      59.444,
+      59.444,
+      59.444
+    ],
+    "mean_channel_spread": 0.0,
+    "channels_identical_fraction": 1.0
+  },
+  "point_cloud": {
+    "frame_id": "mechmind_camera/point_cloud",
+    "width": 1280,
+    "height": 1024,
+    "point_step": 12,
+    "row_step": 15360,
+    "is_dense": false,
+    "fields": [
+      {
+        "name": "x",
+        "offset": 0,
+        "datatype": 7,
+        "count": 1
+      },
+      {
+        "name": "y",
+        "offset": 4,
+        "datatype": 7,
+        "count": 1
+      },
+      {
+        "name": "z",
+        "offset": 8,
+        "datatype": 7,
+        "count": 1
+      }
+    ],
+    "points": 1310720,
+    "finite_points": 747479,
+    "finite_fraction": 0.570281,
+    "xyz_min_m": [
+      -0.520745,
+      -0.058379,
+      0.201726
+    ],
+    "xyz_max_m": [
+      0.293972,
+      0.277367,
+      1.707427
+    ],
+    "xyz_median_m": [
+      0.033612,
+      -0.005493,
+      0.259481
+    ]
+  }
+}
