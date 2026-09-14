@@ -77,7 +77,10 @@ def main():
         return
     stop = threading.Event(); rows = []; errors = []
     thread = threading.Thread(target=monitor, args=(args.host, stop, rows, errors), daemon=True)
-    thread.start(); time.sleep(0.5)
+    thread.start()
+    deadline = time.monotonic() + 2.0
+    while len(rows) < 20 and not errors and time.monotonic() < deadline:
+        time.sleep(0.05)
     if errors or len(rows) < 20:
         stop.set(); thread.join(1.0)
         raise RuntimeError("30003 运动前门禁失败: %s, frames=%d" % (errors, len(rows)))
