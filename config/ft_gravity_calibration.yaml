@@ -1,6 +1,8 @@
 schema_version: 1
-valid: true
-validation_failures: []
+valid: false
+validation_failures:
+- "独立多姿态验证未通过：不得用于力控或碰撞停止"
+- "仅 10 组拟合，后续 18 组验证 force_rms=1.618N、torque_rms=0.3313Nm"
 frames:
   base: base
   tool: tool0
