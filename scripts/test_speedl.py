@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Conservative native TCP velocity test; dry-run unless --execute is set."""
 import argparse
+import csv
+import datetime
+import os
 import socket
 import struct
 import threading
@@ -86,6 +89,18 @@ def main():
     if errors:
         raise RuntimeError("30003 监测失败: " + "; ".join(errors))
     active = [row for row in rows if row[0] >= sent]
+    out_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                           "outputs", "speedl")
+    os.makedirs(out_dir, exist_ok=True)
+    stamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+    csv_path = os.path.join(out_dir, "speedl-%s.csv" % stamp)
+    with open(csv_path, "w", newline="") as stream:
+        writer = csv.writer(stream)
+        writer.writerow(["time_s", "x", "y", "z", "rx", "ry", "rz",
+                         "vx", "vy", "vz", "wx", "wy", "wz"])
+        for timestamp, pose, velocity in rows:
+            writer.writerow([timestamp - sent, *pose, *velocity])
+    print("CSV: %s" % csv_path)
     after = np.mean([row[1] for row in active[-20:]], axis=0)
     peak = max(abs(row[2][args.axis]) for row in active)
     delta = after[args.axis] - before[args.axis]
@@ -94,6 +109,9 @@ def main():
     tolerance = max(abs(expected) * 0.6, 0.001 if args.axis < 3 else 0.01)
     if abs(delta - expected) > tolerance:
         raise RuntimeError("实际位移与指令不符: expected=%.6f actual=%.6f" % (expected, delta))
+    if peak > abs(args.speed) * 1.5 + 1e-4:
+        raise RuntimeError("峰值速度超限: command=%.6f peak=%.6f" %
+                           (abs(args.speed), peak))
     print("PASS: speedl 实际响应在门限内")
 
 
