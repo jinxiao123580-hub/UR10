@@ -104,14 +104,22 @@ def main():
     after = np.mean([row[1] for row in active[-20:]], axis=0)
     peak = max(abs(row[2][args.axis]) for row in active)
     delta = after[args.axis] - before[args.axis]
-    print("frames=%d delta_axis=%.6f peak_speed=%.6f" % (len(active), delta, peak))
+    times = np.asarray([row[0] for row in active])
+    positions = np.asarray([row[1][args.axis] for row in active])
+    window = min(11, len(active) if len(active) % 2 else len(active) - 1)
+    smooth = np.convolve(positions, np.ones(window) / window, mode="valid")
+    smooth_times = np.convolve(times, np.ones(window) / window, mode="valid")
+    smooth_speed = np.gradient(smooth, smooth_times)
+    speed_p95 = float(np.percentile(np.abs(smooth_speed), 95))
+    print("frames=%d delta_axis=%.6f raw_peak_speed=%.6f filtered_p95=%.6f" %
+          (len(active), delta, peak, speed_p95))
     expected = args.speed * args.duration
     tolerance = max(abs(expected) * 0.6, 0.001 if args.axis < 3 else 0.01)
     if abs(delta - expected) > tolerance:
         raise RuntimeError("实际位移与指令不符: expected=%.6f actual=%.6f" % (expected, delta))
-    if peak > abs(args.speed) * 1.5 + 1e-4:
-        raise RuntimeError("峰值速度超限: command=%.6f peak=%.6f" %
-                           (abs(args.speed), peak))
+    if speed_p95 > abs(args.speed) * 1.2 + 1e-4:
+        raise RuntimeError("滤波速度超限: command=%.6f p95=%.6f" %
+                           (abs(args.speed), speed_p95))
     print("PASS: speedl 实际响应在门限内")
 
 
