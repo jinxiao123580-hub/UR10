@@ -1,8 +1,98 @@
 # 交接文档 · UR10 视觉力觉抓取系统
 
-> **本文件是交接的唯一入口。** 接手者请按顺序读完本文件 → 再看 `docs/` 里的细化文档。
+> **本文件是交接的唯一入口。** 接手者请先读完本文件顶部的“最新状态”，再看 `docs/` 里的细化文档。
 > 所有结论均标注了**验证方式**；凡未实测的，一律写明"未验证"。
-> 最后更新：2026-09-10 · 当前状态以 `main` 分支最新提交为准
+> 最后更新：2026-09-16 · 当前状态以 `main` 分支最新提交为准
+
+---
+
+## 0A. 最新接手状态（2026-09-16，覆盖下方旧状态表）
+
+### 开工方法（用户明确要求）
+
+- 对重力标定、机器人控制、轨迹回放等新方案，**实施前先调研行业常用方法和
+  设备/软件官方推荐做法**；优先使用官方文档、论文和原始实现，记录来源、版本、
+  适用条件及与本机 CB3/ROS 2 Humble 的差异，再决定实现。
+- 不因“代码可运行”直接上真机。顺序固定为：资料依据 → 离线数值门禁 →
+  官方仿真/假硬件 → 单段低速真机 → 完整流程，每一级都保存数值证据。
+- 机器人运动优先采用 Universal Robots 官方 ROS 2 Driver 和标准轨迹控制器；
+  旧的电脑端流式 IK 入口继续禁用。
+
+### 2026-09-16 新增证据
+
+- 示教播放重复采集共 12 组、每组 5 个静态窗口；用户确认第 11 组在运动中误采，
+  已在 JSON 中标记排除。其余 11 组拟合：设计矩阵条件数 `8.207`，但力 RMS
+  `4.208 N`、最大残差 `15.411 N`，失败；第 4 组残差达 `20.642 N`。
+- 示教轨迹只读记录 `11170` 帧、`89.83 s`、`124.3 Hz`；起终点 TCP 平移仅
+  `0.0496 mm`，但关节未回到起点，真实姿态差 `8.860°`。原轨迹只有末尾一段
+  持续超过 3 秒的静止区间，因此不能直接当作多停靠采集程序。
+- 已从原轨迹挑选 12 个实际经过的姿态，设计矩阵条件数 `2.948`。完整轨迹的
+  wrist_2 最大 `351.391°`，距 ±360° 限位 `8.609°`；候选停靠点自身满足 10°
+  余量，但完整路径不满足 10° 门禁。
+- 已安装 Universal Robots 官方 ROS 2 Humble 驱动 `2.14.0`。纯官方环境中的
+  UR10 假硬件、125 Hz 控制循环和 `joint_trajectory_controller` 均启动成功。
+  本机 `/home/jx/ros2_ws/install/ur_description` 会覆盖新版官方描述，启动官方
+  驱动时必须隔离 `AMENT_PREFIX_PATH/CMAKE_PREFIX_PATH/COLCON_PREFIX_PATH`。
+- 官方 `ur_calibration` 工厂标定提取失败：`192.168.1.3:30001` 能返回
+  URControl 3.15 数据，但 2.14.0 提取节点未建立 TCP 流，未生成标定 YAML。
+  未解决前不得把官方默认 URDF 的笛卡尔精度当成真机证据。
+- `scripts/replay_ur_recorded_path.py` 当前只允许离线验证或 `--execute-fake`，没有
+  真机执行入口；它保留录制轨迹中间点、分段停靠并按原路径倒序返回。
+
+### 已验证、可以继续使用
+
+- ROS 控制 UR10、电脑直控 Robotiq 夹爪、完整抓放闭环均曾真机通过。
+- ATI 原始 RDT 数据稳定进入 ROS：`/ft_sensor/wrench_raw` 约 200 Hz；RDT 仍是单消费者。
+- UR 30003/30013 实时状态均已验证约 125 Hz；控制器原生 `speedl` 小范围双向位移已通过。
+- Pinocchio + SciPy 有界 IK 离线测试通过，但 IK 真机执行曾触发保护停，当前执行入口继续禁用。
+- Mech-Eye SDK 2.5.0、ROS 接口、彩色图/深度/普通点云/纹理点云服务均可触发。
+- 只读工具已经验证：
+  - `scripts/verify_ur_payload.py` 连续 25 帧读到控制器当前配置 `3.5 kg / [0,0,0.1] m`；
+  - `scripts/monitor_ur_safety.py` 静止真机约 20 Hz 读取安全状态；
+  - `scripts/validate_mecheye_capture.py` 记录图像和点云元数据；
+  - `scripts/record_ft_static_baseline.py` 记录同姿态 ATI 基线。
+
+### 当前明确禁止或不可作为结论
+
+- **不要执行 IK 真机运动**：最近一次 2 mm 流式 IK 试验触发控制器 `C153A0`，含义是 Base 关节位置偏离路径；`scripts/test_ik_move.py --execute` 已禁用。
+- **不要使用重力补偿输出做力控、碰撞停止或抓取判定**：旧模型独立多姿态验证失败，`config/ft_gravity_calibration.yaml` 已标记 `valid: false`，补偿进程已停止；只使用 `/ft_sensor/wrench_raw`。
+- **不要把 3.5 kg 当成真实测量结果**：它只是控制器当前配置。CB3 示教器没有 `Measure` 按钮，示教器无法自动给出新的质量/重心。
+- **不要把相机话题名 `color_image` 当成真彩色**：实测 bgr8 三通道逐像素完全相同，纹理点云 RGB 也完全相同，当前设备输出是单色数据。
+- **不要运行现有抓放程序进行真机演示，直到负载质量/重心重新确认**：`scripts/ur_pick_place_full.py` 内仍有估计值 `8.0 kg / [-0.03,0.03,-0.06]`，未被独立测量验证。
+
+### 最近关键证据
+
+| 事项 | 证据 |
+|---|---|
+| IK 保护停 | `outputs/ik/protective-stop-20260914-162031.txt`，错误 `C153A0` |
+| 控制器实际负载 | 30003/飞行记录：`3.5 kg / [0,0,0.1] m` |
+| 相机验收 | `outputs/camera/capture-validation-20260914-154850.json` |
+| ATI 静态基线 | `outputs/ft_baseline/baseline-20260914-162630.json` |
+| 当日索引 | `experiments/2026-09-14-当日工作汇总.md` |
+
+### 下一步唯一优先顺序
+
+1. 先调研并记录 UR 官方 ROS 2 Driver 在 CB3 3.15.8 上的工厂标定提取、
+   External Control、轨迹控制及仿真推荐流程，定位 `ur_calibration 2.14.0` 不连接问题。
+2. 完成 `replay_ur_recorded_path.py --execute-fake` 的整段动作验收，核对每段动作结果、
+   精确倒序返回、控制器状态和路径限位；加入 ATI 静态采集前先做代码审查。
+3. 建立包含约 20 cm 夹爪、30 cm 相机偏心和 15 cm 相机 Z 向尺寸的碰撞模型；
+   当前“地面无障碍”口头条件不等于已完成自碰撞/地面碰撞验证。
+4. 只有上述通过，才在用户现场监护下做单段低速真机试验；不得直接完整回放。
+5. 自动采集得到训练数据后，仍必须用未参与拟合的静态姿态独立验收；通过前
+   不恢复补偿进程，不将补偿用于力控、碰撞停止或抓取判断。
+
+### 交接时第一轮只读检查
+
+```bash
+cd ~/UR10
+git status --short
+python3 scripts/diagnose.py
+python3 scripts/verify_ur_payload.py
+python3 scripts/monitor_ur_safety.py --duration 3
+```
+
+原始证据、失败实验和当天过程放在 `experiments/` 与 `outputs/`；只有独立验证通过的稳定结论才能进入 `docs/`。
 
 ---
 
@@ -16,9 +106,9 @@ python3 ~/UR10/scripts/diagnose.py
 bash ~/UR10/scripts/start_dashboard.sh          # 浏览器打开 http://127.0.0.1:8080/
 bash ~/UR10/scripts/start_dashboard.sh --stop   # 全停
 
-# 3) 跑一轮抓放（需要 ur_command_node 在跑）
+# 3) 历史抓放命令（当前不要执行：负载 8kg 未重新验证）
 source /opt/ros/humble/setup.bash && source ~/ros2_ws/install/setup.bash
-python3 ~/UR10/scripts/ur_pick_place_full.py 1
+# python3 ~/UR10/scripts/ur_pick_place_full.py 1
 ```
 
 仓库：<https://github.com/jinxiao123580-hub/UR10>（本地 `~/UR10`，分支 `main`，SSH 走 443 已在 `~/.ssh/config` 配好）
@@ -65,7 +155,9 @@ python3 ~/UR10/scripts/ur_pick_place_full.py 1
 
 ---
 
-## 2. 当前状态：什么能用、什么待办
+## 2. 历史验收基线（当前状态以 §0A 为准）
+
+下表保留早期已通过的能力，不能覆盖 §0A 中新增的安全禁用项。
 
 ### ✅ 已完成并**真机验证**
 
@@ -77,7 +169,7 @@ python3 ~/UR10/scripts/ur_pick_place_full.py 1
 | 4 | **抓放三种方向模式** | 单向 / `--swap`（搬回）/ `--pingpong`（往返）均实测 ✔ |
 | 5 | **六维力数据接入 ROS 2** | `/ft_sensor/wrench` 稳定 **200Hz**，实测 14 秒 2796 帧 ✔ |
 | 6 | **正运动学 TF 链** | `scripts/check_fk.py` → TF `base→tool0` 与真机 TCP 偏差 **2.5mm**、姿态 **0.0033rad** ✔ |
-| 7 | **网页监控台** | HTTP 200 + WS 服务调用闭环；真实彩色图 **1280×1024** JPEG、点云统计、力 200Hz 与 10 秒滚动曲线 ✔ |
+| 7 | **网页监控台** | HTTP 200 + WS 服务调用闭环；图像 1280×1024、点云统计、力 200Hz 与 10 秒滚动曲线 ✔；当前图像实测为单色 |
 | 8 | **Mech-Eye 真机出图** | SDK **2.5.0** + ROS 2 接口编译通过；彩色/深度/点云服务均 `error_code=0` ✔ |
 
 ### ⏳ 待办（按优先级，详见 §6）
@@ -86,7 +178,7 @@ python3 ~/UR10/scripts/ur_pick_place_full.py 1
 |---|---|---|
 | **P1** | 手眼标定（相机坐标→机器人坐标） | P0 已完成，可开始 |
 | P2 | 视觉引导抓取（点云→目标位姿→抓取） | 依赖 P1 |
-| P2 | 力控应用（碰撞检测 / 力引导插装） | 无阻塞，数据已通 |
+| P2 | 力控应用（碰撞检测 / 力引导插装） | 重力补偿模型未验收，当前阻塞 |
 | P3 | 监控台扩展（点云 3D 预览 / 关节角面板 / CSV 记录） | 无阻塞 |
 
 ### 🔧 环境现状（进程状态会变，**接手时先自己查一遍**）
