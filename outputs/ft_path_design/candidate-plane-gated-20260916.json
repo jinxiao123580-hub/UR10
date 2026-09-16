@@ -1,0 +1,368 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-09-16T01:16:20.655489+00:00",
+  "purpose": "OFFLINE candidate only; not authorized for robot execution",
+  "urdf": "/home/jx/ur_learn/generated/ur10.urdf",
+  "seed_q_rad": [
+    -0.17308,
+    -1.869437,
+    -1.441179,
+    -4.532762,
+    4.796732,
+    -3.384877
+  ],
+  "checks": {
+    "joint_limit_margin_deg": 10.0,
+    "all_waypoints_inside_margin": true,
+    "gravity_design_matrix_condition_number": 2.9798487585761566,
+    "target_condition_number": 120.0,
+    "gravity_direction_tool_component_min": [
+      -0.6441271037254739,
+      -0.38722494936241814,
+      0.701731297653368
+    ],
+    "gravity_direction_tool_component_max": [
+      0.3893239241013203,
+      0.6972908752036584,
+      0.9963892174351823
+    ],
+    "full_range_axis_sign_coverage": false,
+    "fit_scope": "local/downward candidate only; do not fit or deploy a global model",
+    "minimum_nominal_tool0_z_m": 0.45918462168219204,
+    "attachment_conservative_radius_m": 0.38541019662496845,
+    "attachment_model": "max(gripper 0.200m, hypot(camera_xy 0.300m, camera_z 0.150m)) + plane margin 0.050m; camera offset direction and body size are unknown",
+    "minimum_conservative_plane_clearance_m": 0.07377442505722359,
+    "plane_clearance_pass": true,
+    "collision_check": "Plane clearance checked conservatively; no self/cell/cable collision model",
+    "dynamic_check": "NOT PERFORMED: RViz twin is kinematic only; no controller/dynamics model"
+  },
+  "waypoints": [
+    {
+      "index": 1,
+      "q_rad": [
+        -0.17308,
+        -1.869437,
+        -1.441179,
+        -4.532762,
+        4.796732,
+        -3.384877
+      ],
+      "tool0_xyz_m": [
+        -0.590512290211665,
+        0.27755144225313916,
+        0.5228452027217122
+      ],
+      "gravity_direction_tool": [
+        -0.08431195116299099,
+        -0.010001113437721408,
+        0.9963892174351823
+      ]
+    },
+    {
+      "index": 2,
+      "q_rad": [
+        -0.17308,
+        -1.869437,
+        -1.441179,
+        -4.532762,
+        4.796732,
+        -3.834877
+      ],
+      "tool0_xyz_m": [
+        -0.590512290211665,
+        0.27755144225313916,
+        0.5228452027217122
+      ],
+      "gravity_direction_tool": [
+        -0.07156831247027014,
+        -0.04567826648486711,
+        0.9963892174351823
+      ]
+    },
+    {
+      "index": 3,
+      "q_rad": [
+        -0.17308,
+        -1.689437,
+        -1.261179,
+        -4.882762,
+        5.246732000000001,
+        -3.734877
+      ],
+      "tool0_xyz_m": [
+        -0.47619873657986733,
+        0.2973484905434814,
+        0.7619162236668722
+      ],
+      "gravity_direction_tool": [
+        -0.43367385693662275,
+        -0.26758762795549706,
+        0.8604207384616341
+      ]
+    },
+    {
+      "index": 4,
+      "q_rad": [
+        -0.17308,
+        -2.049437,
+        -1.261179,
+        -4.182762,
+        5.246732000000001,
+        -3.034877
+      ],
+      "tool0_xyz_m": [
+        -0.7179924014956846,
+        0.33962109918987216,
+        0.45918462168219204
+      ],
+      "gravity_direction_tool": [
+        -0.4362283532661155,
+        0.40158771171550767,
+        0.8052528383097047
+      ]
+    },
+    {
+      "index": 5,
+      "q_rad": [
+        -0.17308,
+        -1.689437,
+        -1.261179,
+        -4.882762,
+        4.346732,
+        -3.734877
+      ],
+      "tool0_xyz_m": [
+        -0.49009989324952075,
+        0.21864406082042276,
+        0.7551607207347515
+      ],
+      "gravity_direction_tool": [
+        0.2848772707502172,
+        0.21694783846194282,
+        0.9336908353392989
+      ]
+    },
+    {
+      "index": 6,
+      "q_rad": [
+        -0.17308,
+        -1.869437,
+        -1.441179,
+        -4.932762,
+        4.796732,
+        -3.384877
+      ],
+      "tool0_xyz_m": [
+        -0.5637219916482991,
+        0.2728677140580559,
+        0.574867755827764
+      ],
+      "gravity_direction_tool": [
+        0.015808253932544487,
+        -0.38722494936241814,
+        0.9218497370498496
+      ]
+    },
+    {
+      "index": 7,
+      "q_rad": [
+        -0.17308,
+        -1.869437,
+        -1.441179,
+        -4.532762,
+        4.296732,
+        -3.384877
+      ],
+      "tool0_xyz_m": [
+        -0.5981829236590526,
+        0.2332132552739571,
+        0.5303677466447873
+      ],
+      "gravity_direction_tool": [
+        0.3893239241013203,
+        0.10755557080066908,
+        0.9147998039528056
+      ]
+    },
+    {
+      "index": 8,
+      "q_rad": [
+        -0.17308,
+        -1.689437,
+        -1.261179,
+        -4.182762,
+        4.346732,
+        -3.734877
+      ],
+      "tool0_xyz_m": [
+        -0.5726269013139699,
+        0.23307219696880263,
+        0.702587762807451
+      ],
+      "gravity_direction_tool": [
+        -0.14614589029950906,
+        0.6972908752036584,
+        0.701731297653368
+      ]
+    },
+    {
+      "index": 9,
+      "q_rad": [
+        -0.17308,
+        -1.869437,
+        -1.441179,
+        -4.132762,
+        5.296732,
+        -3.834877
+      ],
+      "tool0_xyz_m": [
+        -0.6218355242136516,
+        0.3267763705762831,
+        0.4992463415981891
+      ],
+      "gravity_direction_tool": [
+        -0.6441271037254739,
+        -0.016222265299654783,
+        0.7647464366407861
+      ]
+    },
+    {
+      "index": 10,
+      "q_rad": [
+        -0.17308,
+        -1.869437,
+        -1.441179,
+        -4.132762,
+        4.796732,
+        -3.384877
+      ],
+      "tool0_xyz_m": [
+        -0.6351436430651118,
+        0.28535430885894436,
+        0.48552012999847693
+      ],
+      "gravity_direction_tool": [
+        -0.17112115299024283,
+        0.3688016784020243,
+        0.9136207490020897
+      ]
+    },
+    {
+      "index": 11,
+      "q_rad": [
+        -0.17308,
+        -1.869437,
+        -1.441179,
+        -4.532762,
+        5.296732,
+        -2.9348769999999997
+      ],
+      "tool0_xyz_m": [
+        -0.5829342141763239,
+        0.3199752831444732,
+        0.5378149253907882
+      ],
+      "gravity_direction_tool": [
+        -0.5377003596637461,
+        0.12359592109324204,
+        0.8340278002000839
+      ]
+    },
+    {
+      "index": 12,
+      "q_rad": [
+        -0.17308,
+        -1.869437,
+        -1.441179,
+        -4.932762,
+        4.796732,
+        -2.9348769999999997
+      ],
+      "tool0_xyz_m": [
+        -0.5637219916482991,
+        0.2728677140580559,
+        0.574867755827764
+      ],
+      "gravity_direction_tool": [
+        -0.15419501047380332,
+        -0.3555516292271865,
+        0.9218497370498496
+      ]
+    }
+  ],
+  "segments": [
+    {
+      "max_joint_change_rad": 0.4500000000000002,
+      "samples": 50,
+      "minimum_tool0_z_m": 0.5228452027217121,
+      "minimum_attachment_clearance_m": 0.13743500609674364
+    },
+    {
+      "max_joint_change_rad": 0.4500000000000002,
+      "samples": 50,
+      "minimum_tool0_z_m": 0.5228452027217122,
+      "minimum_attachment_clearance_m": 0.13743500609674375
+    },
+    {
+      "max_joint_change_rad": 0.7000000000000002,
+      "samples": 50,
+      "minimum_tool0_z_m": 0.45918462168219204,
+      "minimum_attachment_clearance_m": 0.07377442505722359
+    },
+    {
+      "max_joint_change_rad": 0.9000000000000004,
+      "samples": 50,
+      "minimum_tool0_z_m": 0.45918462168219204,
+      "minimum_attachment_clearance_m": 0.07377442505722359
+    },
+    {
+      "max_joint_change_rad": 0.4500000000000002,
+      "samples": 50,
+      "minimum_tool0_z_m": 0.574867755827764,
+      "minimum_attachment_clearance_m": 0.1894575592027955
+    },
+    {
+      "max_joint_change_rad": 0.5,
+      "samples": 50,
+      "minimum_tool0_z_m": 0.5303677466447873,
+      "minimum_attachment_clearance_m": 0.1449575500198188
+    },
+    {
+      "max_joint_change_rad": 0.3500000000000001,
+      "samples": 50,
+      "minimum_tool0_z_m": 0.5303677466447873,
+      "minimum_attachment_clearance_m": 0.1449575500198188
+    },
+    {
+      "max_joint_change_rad": 0.9500000000000002,
+      "samples": 50,
+      "minimum_tool0_z_m": 0.4992463415981891,
+      "minimum_attachment_clearance_m": 0.11383614497322064
+    },
+    {
+      "max_joint_change_rad": 0.5,
+      "samples": 50,
+      "minimum_tool0_z_m": 0.48552012999847693,
+      "minimum_attachment_clearance_m": 0.10010993337350849
+    },
+    {
+      "max_joint_change_rad": 0.5,
+      "samples": 50,
+      "minimum_tool0_z_m": 0.48552012999847693,
+      "minimum_attachment_clearance_m": 0.10010993337350849
+    },
+    {
+      "max_joint_change_rad": 0.5,
+      "samples": 50,
+      "minimum_tool0_z_m": 0.5378149253907882,
+      "minimum_attachment_clearance_m": 0.15240472876581979
+    }
+  ],
+  "execution_boundary": [
+    "No URScript is emitted by this tool.",
+    "Before any physical replay, an operator must teach/verify each waypoint at reduced mode.",
+    "Do not use test_ik_move.py --execute or stream IK for this path.",
+    "A passing nominal-URDF report does not prove collision-free real motion.",
+    "This default path is intentionally wrist-first and may only be used as a local repeatability study."
+  ]
+}

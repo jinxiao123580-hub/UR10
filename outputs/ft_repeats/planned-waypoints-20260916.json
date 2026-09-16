@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-09-16T11:14:40+0800",
+  "mode": "passive_teach_pendant_playback",
+  "topic": "/ft_sensor/wrench_raw",
+  "duration_s": 2.0,
+  "repeats_per_group": 5,
+  "dwell_detection": {
+    "settle_s": 3.0,
+    "position_motion_mm": 0.5,
+    "orientation_motion_deg": 0.1,
+    "new_pose_separation_mm": 5.0,
+    "new_pose_separation_deg": 2.0
+  },
+  "groups": [],
+  "waypoint_plan": "/home/jx/UR10/outputs/ur_trajectory/teach-20260916-110054-waypoints.json",
+  "joint_match_tolerance_deg": 1.0,
+  "note": "Passive observer only: no URScript, robot, or gripper command was sent."
+}

@@ -1,0 +1,353 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-09-16T01:11:54.610855+00:00",
+  "purpose": "OFFLINE candidate only; not authorized for robot execution",
+  "urdf": "/home/jx/ur_learn/generated/ur10.urdf",
+  "seed_q_rad": [
+    -0.17308,
+    -1.869437,
+    -1.441179,
+    -4.532762,
+    4.796732,
+    -3.384877
+  ],
+  "checks": {
+    "joint_limit_margin_deg": 10.0,
+    "all_waypoints_inside_margin": true,
+    "gravity_design_matrix_condition_number": 2.3296727453106794,
+    "target_condition_number": 120.0,
+    "gravity_direction_tool_component_min": [
+      -0.6861852655720969,
+      -0.5985840976557566,
+      0.6466639048062022
+    ],
+    "gravity_direction_tool_component_max": [
+      0.3893239241013203,
+      0.6972908752036584,
+      0.9963892174351823
+    ],
+    "full_range_axis_sign_coverage": false,
+    "fit_scope": "local/downward candidate only; do not fit or deploy a global model",
+    "minimum_nominal_tool0_z_m": 0.2955158167362668,
+    "collision_check": "NOT PERFORMED: cell, worktable, ATI, gripper and cable geometry are unverified",
+    "dynamic_check": "NOT PERFORMED: RViz twin is kinematic only; no controller/dynamics model"
+  },
+  "waypoints": [
+    {
+      "index": 1,
+      "q_rad": [
+        -0.17308,
+        -1.869437,
+        -1.441179,
+        -4.532762,
+        4.796732,
+        -3.384877
+      ],
+      "tool0_xyz_m": [
+        -0.590512290211665,
+        0.27755144225313916,
+        0.5228452027217122
+      ],
+      "gravity_direction_tool": [
+        -0.08431195116299099,
+        -0.010001113437721408,
+        0.9963892174351823
+      ]
+    },
+    {
+      "index": 2,
+      "q_rad": [
+        -0.17308,
+        -1.869437,
+        -1.441179,
+        -4.532762,
+        4.796732,
+        -3.834877
+      ],
+      "tool0_xyz_m": [
+        -0.590512290211665,
+        0.27755144225313916,
+        0.5228452027217122
+      ],
+      "gravity_direction_tool": [
+        -0.07156831247027014,
+        -0.04567826648486711,
+        0.9963892174351823
+      ]
+    },
+    {
+      "index": 3,
+      "q_rad": [
+        -0.17308,
+        -2.049437,
+        -1.621179,
+        -4.182762,
+        4.346732,
+        -3.734877
+      ],
+      "tool0_xyz_m": [
+        -0.6278682119802879,
+        0.24272999462331107,
+        0.2955158167362668
+      ],
+      "gravity_direction_tool": [
+        0.2961210666121359,
+        0.2004092623593699,
+        0.9338888806860612
+      ]
+    },
+    {
+      "index": 4,
+      "q_rad": [
+        -0.17308,
+        -2.049437,
+        -1.261179,
+        -4.882762,
+        4.346732,
+        -3.034877
+      ],
+      "tool0_xyz_m": [
+        -0.6751115462730564,
+        0.2509895120811674,
+        0.531578221341267
+      ],
+      "gravity_direction_tool": [
+        0.29978782356500583,
+        -0.3669367163242889,
+        0.8806160951602605
+      ]
+    },
+    {
+      "index": 5,
+      "q_rad": [
+        -0.17308,
+        -1.869437,
+        -1.441179,
+        -4.532762,
+        4.296732,
+        -3.384877
+      ],
+      "tool0_xyz_m": [
+        -0.5981829236590526,
+        0.2332132552739571,
+        0.5303677466447873
+      ],
+      "gravity_direction_tool": [
+        0.3893239241013203,
+        0.10755557080066908,
+        0.9147998039528056
+      ]
+    },
+    {
+      "index": 6,
+      "q_rad": [
+        -0.17308,
+        -1.689437,
+        -1.261179,
+        -4.182762,
+        4.346732,
+        -3.734877
+      ],
+      "tool0_xyz_m": [
+        -0.5726269013139699,
+        0.23307219696880263,
+        0.702587762807451
+      ],
+      "gravity_direction_tool": [
+        -0.14614589029950906,
+        0.6972908752036584,
+        0.701731297653368
+      ]
+    },
+    {
+      "index": 7,
+      "q_rad": [
+        -0.17308,
+        -1.869437,
+        -1.441179,
+        -4.932762,
+        5.296732,
+        -2.9348769999999997
+      ],
+      "tool0_xyz_m": [
+        -0.5618986454498925,
+        0.31629765013659633,
+        0.5887175995097097
+      ],
+      "gravity_direction_tool": [
+        -0.5774064900153617,
+        -0.2667994078822365,
+        0.7716345127337347
+      ]
+    },
+    {
+      "index": 8,
+      "q_rad": [
+        -0.17308,
+        -1.689437,
+        -1.261179,
+        -4.182762,
+        5.246732000000001,
+        -3.734877
+      ],
+      "tool0_xyz_m": [
+        -0.5544710002141705,
+        0.3110327728501931,
+        0.7076649764279598
+      ],
+      "gravity_direction_tool": [
+        -0.6861852655720969,
+        0.3331299679292537,
+        0.6466639048062022
+      ]
+    },
+    {
+      "index": 9,
+      "q_rad": [
+        -0.17308,
+        -2.049437,
+        -1.621179,
+        -4.882762,
+        5.246732000000001,
+        -3.034877
+      ],
+      "tool0_xyz_m": [
+        -0.5904925942379367,
+        0.31733040159107956,
+        0.3954535054040278
+      ],
+      "gravity_direction_tool": [
+        -0.4560650927664562,
+        -0.5985840976557566,
+        0.6585603307166076
+      ]
+    },
+    {
+      "index": 10,
+      "q_rad": [
+        -0.17308,
+        -1.869437,
+        -1.441179,
+        -4.132762,
+        5.296732,
+        -2.9348769999999997
+      ],
+      "tool0_xyz_m": [
+        -0.6218355242136516,
+        0.3267763705762831,
+        0.4992463415981891
+      ],
+      "gravity_direction_tool": [
+        -0.4131031654534023,
+        0.4944781717503804,
+        0.7647464366407861
+      ]
+    },
+    {
+      "index": 11,
+      "q_rad": [
+        -0.17308,
+        -2.049437,
+        -1.261179,
+        -4.882762,
+        5.246732000000001,
+        -3.034877
+      ],
+      "tool0_xyz_m": [
+        -0.6635634131378756,
+        0.3301053191791135,
+        0.5379497143362199
+      ],
+      "gravity_direction_tool": [
+        -0.5129528237622178,
+        -0.279873818312162,
+        0.811510965063158
+      ]
+    },
+    {
+      "index": 12,
+      "q_rad": [
+        -0.17308,
+        -1.869437,
+        -1.441179,
+        -4.932762,
+        4.796732,
+        -3.834877
+      ],
+      "tool0_xyz_m": [
+        -0.5637219916482991,
+        0.2728677140580559,
+        0.574867755827764
+      ],
+      "gravity_direction_tool": [
+        0.18266400336743338,
+        -0.3417995379969164,
+        0.9218497370498496
+      ]
+    }
+  ],
+  "segments": [
+    {
+      "max_joint_change_rad": 0.4500000000000002,
+      "samples": 50,
+      "minimum_tool0_z_m": 0.5228452027217121
+    },
+    {
+      "max_joint_change_rad": 0.4500000000000002,
+      "samples": 50,
+      "minimum_tool0_z_m": 0.2955158167362668
+    },
+    {
+      "max_joint_change_rad": 0.7000000000000002,
+      "samples": 50,
+      "minimum_tool0_z_m": 0.2955158167362668
+    },
+    {
+      "max_joint_change_rad": 0.3500000000000001,
+      "samples": 50,
+      "minimum_tool0_z_m": 0.5303677466447873
+    },
+    {
+      "max_joint_change_rad": 0.3500000000000001,
+      "samples": 50,
+      "minimum_tool0_z_m": 0.5303677466447873
+    },
+    {
+      "max_joint_change_rad": 0.9500000000000002,
+      "samples": 50,
+      "minimum_tool0_z_m": 0.5887175995097097
+    },
+    {
+      "max_joint_change_rad": 0.8000000000000003,
+      "samples": 50,
+      "minimum_tool0_z_m": 0.5887175995097097
+    },
+    {
+      "max_joint_change_rad": 0.7000000000000002,
+      "samples": 50,
+      "minimum_tool0_z_m": 0.3954535054040278
+    },
+    {
+      "max_joint_change_rad": 0.75,
+      "samples": 50,
+      "minimum_tool0_z_m": 0.3954535054040278
+    },
+    {
+      "max_joint_change_rad": 0.75,
+      "samples": 50,
+      "minimum_tool0_z_m": 0.4992463415981891
+    },
+    {
+      "max_joint_change_rad": 0.8000000000000003,
+      "samples": 50,
+      "minimum_tool0_z_m": 0.5379497143362199
+    }
+  ],
+  "execution_boundary": [
+    "No URScript is emitted by this tool.",
+    "Before any physical replay, an operator must teach/verify each waypoint at reduced mode.",
+    "Do not use test_ik_move.py --execute or stream IK for this path.",
+    "A passing nominal-URDF report does not prove collision-free real motion.",
+    "This default path is intentionally wrist-first and may only be used as a local repeatability study."
+  ]
+}

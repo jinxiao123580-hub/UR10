@@ -1,0 +1,1 @@
+elapsed_s,wall_time_s,q1_rad,q2_rad,q3_rad,q4_rad,q5_rad,q6_rad,tcp_x_m,tcp_y_m,tcp_z_m,tcp_rx_rad,tcp_ry_rad,tcp_rz_rad,tcp_vx_m_s,tcp_vy_m_s,tcp_vz_m_s,tcp_wx_rad_s,tcp_wy_rad_s,tcp_wz_rad_s

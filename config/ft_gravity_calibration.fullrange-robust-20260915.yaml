@@ -1,0 +1,43 @@
+schema_version: 1
+valid: false
+validation_failures:
+  - >-
+    2026-09-15 online static counterexample: compensated mean
+    [-0.515154, 0.316319, 3.406533, 0.026464, 0.163838, -0.095168]
+    at a new no-contact pose; force RMS 2.000 N and torque RMS 0.110 N m.
+frames:
+  base: base
+  tool: tool0
+  sensor: ft_sensor
+gravity_m_s2: 9.80665
+scope: >-
+  Static, no-contact compensation only; cable route unchanged. Independently
+  validated across downward, side and upward poses on 2026-09-15. Not validated
+  for dynamic motion, force control, collision stopping, grasp decisions, or
+  sensor-to-tool wrench transformation.
+calibration:
+  mass_kg: 3.200135261074544
+  com_sensor_m: [-0.07975700509676664, 0.07559750603473539, 0.05889982777830996]
+  force_bias_n: [4.550053649917624, 8.785062368705987, 26.736809589973465]
+  torque_bias_nm: [-0.27545972993707, -0.16218777551686855, 0.07204745788143016]
+  rotation_sensor_from_tool:
+    - [0.6931613374165083, -0.720743699731835, 0.007475266404873096]
+    - [0.7207536571045248, 0.6931890784035891, 0.0017513858614774237]
+    - [-0.006444073355474708, 0.004173832633068821, 0.9999705260855144]
+  force_rms_n: 0.3864424286878062
+  force_max_n: 0.7160462212609104
+  torque_rms_nm: 0.05100675900515094
+  torque_max_nm: 0.1280856658670193
+  pose_spread_singular: [21.58785551585708, 15.041265982672238, 10.343960248084317]
+  design_condition: 9.146135030497273
+  sample_count: 9
+training_source:
+  source_candidate: config/ft_gravity_calibration.fullrange-20260915.yaml
+  selected_one_based_sample_indices: [2, 4, 6, 7, 8, 9, 10, 11, 12]
+  excluded_one_based_sample_indices: [1, 3, 5]
+  raw_data: outputs/ft_calibration/fullrange-20260915.csv
+  selection_method: exhaustive consensus-subset diagnostic; raw samples retained
+validation:
+  source: outputs/ft_calibration/fullrange-robust-validation-20260915.json
+  passed: false
+  note: Four-pose offline validation passed, but a subsequent online static pose failed.

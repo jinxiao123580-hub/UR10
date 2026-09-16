@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "candidate": "config/ft_gravity_calibration.downward-20260915.yaml",
+  "raw_data": "outputs/ft_calibration/downward-validation-20260915.csv",
+  "scope": "Static, no-contact, cable route unchanged, downward-workspace only. Not valid for upward or arbitrary orientations.",
+  "sample_count": 3,
+  "raw_message_count": 1202,
+  "per_pose": [
+    {
+      "index": 1,
+      "messages": 401,
+      "force_residual_n": [-0.34618, 0.84124, 0.42856],
+      "force_residual_norm_n": 1.00558,
+      "torque_residual_nm": [-0.00599, 0.00197, 0.12177],
+      "torque_residual_norm_nm": 0.12193
+    },
+    {
+      "index": 2,
+      "messages": 401,
+      "force_residual_n": [0.35451, 0.04534, -0.57967],
+      "force_residual_norm_n": 0.68099,
+      "torque_residual_nm": [-0.02935, -0.03203, 0.0515],
+      "torque_residual_norm_nm": 0.06738
+    },
+    {
+      "index": 3,
+      "messages": 400,
+      "force_residual_n": [1.31184, -0.47707, 0.5519],
+      "force_residual_norm_n": 1.50104,
+      "torque_residual_nm": [0.02064, -0.08569, 0.01977],
+      "torque_residual_norm_nm": 0.09033
+    }
+  ],
+  "aggregate": {
+    "force_rms_n": 0.643606,
+    "force_max_abs_n": 1.311838,
+    "torque_rms_nm": 0.055344,
+    "torque_max_abs_nm": 0.12177
+  },
+  "acceptance": {
+    "force_rms_limit_n": 1.0,
+    "torque_rms_limit_nm": 0.1,
+    "passed": true
+  }
+}
