@@ -41,7 +41,9 @@ class GravityCompensator:
         self.cal = load_calibration(args.calibration)
         self.robot_ip = args.robot_ip
         self.pose_period = 1.0 / args.pose_hz
+        self.max_pose_age = args.max_pose_age
         self._rotation_base_tool = None
+        self._pose_monotonic = None
         self._pose_lock = threading.Lock()
         self._stop = threading.Event()
         self._pose_thread = threading.Thread(target=self._poll_pose, daemon=True)
@@ -62,6 +64,7 @@ class GravityCompensator:
                     rotation = rotvec_to_matrix(pose[3:])
                     with self._pose_lock:
                         self._rotation_base_tool = rotation
+                        self._pose_monotonic = time.monotonic()
             except OSError as exc:
                 self.node.get_logger().warning("读取 UR TCP 失败: %s" % exc)
             delay = self.pose_period - (time.monotonic() - started)
@@ -70,7 +73,13 @@ class GravityCompensator:
     def _on_wrench(self, msg):
         with self._pose_lock:
             rotation_base_tool = self._rotation_base_tool
-        if rotation_base_tool is None:
+            pose_monotonic = self._pose_monotonic
+        pose_age = (float("inf") if pose_monotonic is None
+                    else time.monotonic() - pose_monotonic)
+        if rotation_base_tool is None or pose_age > self.max_pose_age:
+            self.node.get_logger().warning(
+                "跳过 wrench：UR TCP 姿态不可用或已过期 (%.3fs)" % pose_age,
+                throttle_duration_sec=2.0)
             return
         c = self.cal
         gravity_base = np.array([0.0, 0.0, -GRAVITY])
@@ -105,11 +114,15 @@ def main():
     parser.add_argument("--calibration", default="config/ft_gravity_calibration.yaml")
     parser.add_argument("--robot-ip", default=os.environ.get("UR_IP", "192.168.1.3"))
     parser.add_argument("--pose-hz", type=float, default=10.0)
+    parser.add_argument("--max-pose-age", type=float, default=0.5,
+                        help="TCP 姿态超过该秒数未更新时不发布补偿结果")
     parser.add_argument("--input-topic", default="/ft_sensor/wrench_raw")
     parser.add_argument("--output-topic", default="/ft_sensor/wrench_compensated")
     args = parser.parse_args()
     if not math.isfinite(args.pose_hz) or args.pose_hz <= 0:
         parser.error("--pose-hz 必须大于 0")
+    if not math.isfinite(args.max_pose_age) or args.max_pose_age <= 0:
+        parser.error("--max-pose-age 必须大于 0")
     import rclpy
     rclpy.init()
     try:

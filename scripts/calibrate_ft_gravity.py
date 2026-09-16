@@ -3,6 +3,7 @@
 """主动多姿态标定 ATI 末端工具的质量、重心、安装旋转和六维零偏。"""
 import argparse
 from collections import deque
+import csv
 import math
 import os
 import sys
@@ -137,7 +138,7 @@ class WrenchCollector:
             row = [w.force.x, w.force.y, w.force.z,
                    w.torque.x, w.torque.y, w.torque.z]
             with self.lock:
-                self.rows.append((time.monotonic(), row))
+                self.rows.append((time.monotonic(), time.time(), row))
 
         self.sub = self.node.create_subscription(WrenchStamped, topic, callback, 200)
         self.thread = threading.Thread(target=rclpy.spin, args=(self.node,), daemon=True)
@@ -147,10 +148,12 @@ class WrenchCollector:
         start = time.monotonic()
         time.sleep(duration)
         with self.lock:
-            block = np.array([row for stamp, row in self.rows if stamp >= start])
+            records = [(wall_time, row) for stamp, wall_time, row in self.rows
+                       if stamp >= start]
+            block = np.array([row for _, row in records])
         if len(block) < min_messages:
             raise RuntimeError("采样 %.1fs 仅收到 %d 条数据" % (duration, len(block)))
-        return np.mean(block, axis=0), np.std(block, axis=0), len(block)
+        return np.mean(block, axis=0), np.std(block, axis=0), len(block), records
 
     def close(self):
         import rclpy
@@ -249,10 +252,36 @@ def save_result(args, result, samples, valid, failures):
     return output
 
 
+def create_raw_csv(args):
+    """Create a per-message evidence file before manual sampling begins."""
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    path = args.raw_output or os.path.join(
+        root, "outputs", "ft_calibration",
+        "manual-%s.csv" % time.strftime("%Y%m%d-%H%M%S"))
+    path = os.path.abspath(os.path.expanduser(path))
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w", newline="", encoding="utf-8") as stream:
+        writer = csv.writer(stream)
+        writer.writerow(["sample_index", "wall_time_s", "tcp_x_m", "tcp_y_m",
+                         "tcp_z_m", "tcp_rx_rad", "tcp_ry_rad", "tcp_rz_rad",
+                         "fx_n", "fy_n", "fz_n", "tx_nm", "ty_nm", "tz_nm"])
+    return path
+
+
+def append_raw_csv(path, sample_index, tcp_pose, records):
+    with open(path, "a", newline="", encoding="utf-8") as stream:
+        writer = csv.writer(stream)
+        for wall_time, wrench in records:
+            writer.writerow([sample_index, "%.9f" % wall_time,
+                             *["%.12g" % value for value in tcp_pose],
+                             *["%.12g" % value for value in wrench]])
+
+
 def run_manual(args):
     arm = Arm()
     collector = WrenchCollector(args.topic)
     samples = []
+    raw_csv = create_raw_csv(args)
     if args.resume:
         with open(os.path.expanduser(args.resume), encoding="utf-8") as stream:
             saved = yaml.safe_load(stream)
@@ -267,6 +296,7 @@ def run_manual(args):
             })
         print("已从 %s 恢复 %d 组样本" % (args.resume, len(samples)))
     print("手动模式：本脚本不会发送任何机械臂运动命令。")
+    print("逐帧原始数据 CSV: %s" % raw_csv)
     print("用示教器/自由驱动换到安全姿态，停稳且末端无接触后按 Enter 采样；f 拟合；q 退出。")
     try:
         time.sleep(1.0)
@@ -280,7 +310,7 @@ def run_manual(args):
             if not pose_before:
                 print("✘ 读不到 TCP，本组放弃")
                 continue
-            mean, std, count = collector.sample(args.duration, args.min_messages)
+            mean, std, count, records = collector.sample(args.duration, args.min_messages)
             pose_after = arm.get_tcp_pose()
             if not pose_after:
                 print("✘ 读不到采样后 TCP，本组放弃")
@@ -296,6 +326,7 @@ def run_manual(args):
                       "wrench": mean, "std": std, "count": count,
                       "tcp_pose": list(pose_after)}
             samples.append(sample)
+            append_raw_csv(raw_csv, len(samples), pose_after, records)
             condition_text = ""
             if len(samples) >= 4:
                 gb = np.array([0.0, 0.0, -GRAVITY])
@@ -371,7 +402,8 @@ def run(args):
         preflight_min = max(
             20, math.ceil(args.min_messages * preflight_duration / args.duration))
         try:
-            pre_mean, _, pre_count = collector.sample(preflight_duration, preflight_min)
+            pre_mean, _, pre_count, _ = collector.sample(
+                preflight_duration, preflight_min)
         except RuntimeError as exc:
             raise RuntimeError(
                 "运动前力数据门禁失败（%s）；请先启动 ati_netft_node.py" % exc)
@@ -394,7 +426,7 @@ def run(args):
             if position_error > 0.003 or angle_error > 1.0:
                 raise RuntimeError("姿态 %d 未到位: %.1fmm / %.2fdeg" %
                                    (i, position_error * 1000, angle_error))
-            mean, std, count = collector.sample(args.duration, args.min_messages)
+            mean, std, count, _ = collector.sample(args.duration, args.min_messages)
             samples.append({"rotation_base_tool": rotvec_to_matrix(actual[3:]),
                             "wrench": mean, "std": std, "count": count,
                             "tcp_pose": list(actual)})
@@ -467,6 +499,8 @@ def main():
     parser.add_argument("--max-force-rms", type=float, default=1.0)
     parser.add_argument("--max-torque-rms", type=float, default=0.1)
     parser.add_argument("--output", default="config/ft_gravity_calibration.yaml")
+    parser.add_argument("--raw-output",
+                        help="manual mode per-message CSV; default: outputs/ft_calibration/")
     args = parser.parse_args()
     if args.self_test:
         self_test()

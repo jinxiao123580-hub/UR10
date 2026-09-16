@@ -37,9 +37,13 @@ import time
 
 DEFAULT_IP = "192.168.1.2"
 RDT_PORT = 49152
-# 命令包：0x12 0x34 | 命令(0x00) | 采样数 | 保留 4 字节
-CMD_START = bytes([0x12, 0x34, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00])
-CMD_STOP = bytes([0x12, 0x34, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
+# RDT request is big-endian: header | command | sample_count.
+# Net F/T firmware 2.0.12 uses command 0x0002 for high-speed real-time
+# streaming; count=0 means stream continuously until command 0x0000.  The
+# previous 0x0001 request is not the Net F/T real-time command and produced
+# only intermittent data on this controller.
+CMD_START = struct.pack(">HHI", 0x1234, 0x0002, 0)
+CMD_STOP = struct.pack(">HHI", 0x1234, 0x0000, 0)
 
 # 本机标定参数（来自 Net F/T 的 Configurations 页）
 DEFAULT_COUNTS_PER_FORCE = 1_000_000.0
@@ -106,14 +110,15 @@ class NetFT:
             self.start()
         skipped = 0
         deadline = time.monotonic() + max(0.0, timeout)
-        original_timeout = self.sock.gettimeout()
+        sock = self.sock
+        original_timeout = sock.gettimeout()
         try:
             while True:
                 remaining = deadline - time.monotonic()
                 if remaining <= 0:
                     raise socket.timeout("等待数据超时")
-                self.sock.settimeout(min(2.0, remaining))
-                data, _ = self.sock.recvfrom(2048)
+                sock.settimeout(min(2.0, remaining))
+                data, _ = sock.recvfrom(2048)
                 if len(data) < 36:
                     # 短包（应答/缓冲头等）不是测量数据。
                     skipped += 1
@@ -131,7 +136,12 @@ class NetFT:
                      raw[5] / self.cpt - self.bias[5]]
                 return w, status, rdt_seq, ft_seq
         finally:
-            self.sock.settimeout(original_timeout)
+            # stop() may close and clear self.sock while a receiver is waking.
+            # Restore the exact socket used for this read, if it remains open.
+            try:
+                sock.settimeout(original_timeout)
+            except OSError:
+                pass
 
     def tare(self, timeout=5.0, target_samples=20, min_samples=3):
         """在总超时内软件去皮，返回 (bias, 有效样本数, 是否更新)。"""
@@ -208,6 +218,10 @@ def ros_main(args):
                             counts_per_force=self.get_parameter("counts_per_force").value,
                             counts_per_torque=self.get_parameter("counts_per_torque").value)
             self.ft.start()
+            self._latest = None
+            self._latest_lock = threading.Lock()
+            self._receive_stop = threading.Event()
+            self._last_stream_request = time.monotonic()
 
             self.pub_raw = self.create_publisher(WrenchStamped, "ft_sensor/wrench_raw", 10)
             self.pub = self.create_publisher(WrenchStamped, "ft_sensor/wrench", 10)
@@ -215,7 +229,14 @@ def ros_main(args):
             self.create_service(Trigger, "ft_sensor/tare", self._on_tare)
             self.create_timer(1.0 / rate, self._tick)
             self.create_timer(1.0, self._publish_bias)
-            self._warned_stream = False
+            # RDT is UDP.  Reading it inside a ROS timer can starve the socket
+            # when executor scheduling is delayed, then make the Net F/T appear
+            # to lose its unicast stream.  Receive continuously in one thread;
+            # the ROS timer only publishes the latest physically received raw
+            # sample.  This also keeps a single UDP owner.
+            self._receiver = threading.Thread(target=self._receive_loop,
+                                              name="ati-rdt-receiver", daemon=True)
+            self._receiver.start()
             self.get_logger().info(
                 "ATI Net F/T @%s，发布 ft_sensor/wrench_raw + wrench @%.0fHz，frame_id=%s"
                 % (ip, rate, self.frame_id))
@@ -242,27 +263,34 @@ def ros_main(args):
             self.get_logger().info(res.message)
             return res
 
+        def _receive_loop(self):
+            while not self._receive_stop.is_set():
+                try:
+                    # Firmware 2.0.12 was observed to stop forwarding after a
+                    # finite burst despite count=0.  Renew to the *same UDP
+                    # socket* before that burst ends; this is an RDT read
+                    # request, not a sensor configuration write.
+                    if time.monotonic() - self._last_stream_request >= 1.0:
+                        self.ft.restart()
+                        self._last_stream_request = time.monotonic()
+                    r = self.ft.read(timeout=0.5)
+                except socket.timeout:
+                    if time.time() - self.ft.last_ok > 1.0:
+                        self.ft.restart()
+                    continue
+                except OSError as e:
+                    if self._receive_stop.is_set():
+                        break
+                    self.get_logger().error("RDT 错误: %s" % e)
+                    continue
+                with self._latest_lock:
+                    self._latest = r
+
         def _tick(self):
-            try:
-                r = self.ft.read()
-            except socket.timeout:
-                # 自愈：Net F/T 的 RDT 只推给最后一个请求者，别的程序连过就会把流抢走。
-                # 超过 1 秒没数据就重新申请一次（不刷屏，改状态提示）。
-                if time.time() - self.ft.last_ok > 1.0:
-                    self.ft.restart()
-                    if not self._warned_stream:
-                        self._warned_stream = True
-                        self.get_logger().warn(
-                            "RDT 无数据 → 已重新申请数据流（Net F/T 只推给最后一个请求者）")
-                return
-            except OSError as e:
-                self.get_logger().error("RDT 错误: %s" % e)
-                return
+            with self._latest_lock:
+                r = self._latest
             if not r:
                 return
-            if self._warned_stream:
-                self._warned_stream = False
-                self.get_logger().info("RDT 数据流已恢复")
             w, status, rdt_seq, ft_seq = r
             raw = [value + bias for value, bias in zip(w, self.ft.bias)]
             raw_msg = self._make_message(raw)
@@ -281,7 +309,9 @@ def ros_main(args):
     except KeyboardInterrupt:
         pass
     finally:
+        node._receive_stop.set()
         node.ft.stop()
+        node._receiver.join(timeout=2.0)
         node.destroy_node()
         rclpy.shutdown()
 
