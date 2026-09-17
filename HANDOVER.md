@@ -43,6 +43,9 @@
 - 冻结 Park 参数后新增一组完全独立样本，闭环误差 `2.614 mm / 0.401°`，再次通过
   `5 mm / 2°` 门禁。`scripts/publish_handeye_tf.py --identity-camera-frames` 已只读
   验证可发布 `base→tool0→color_map→point_cloud`；本机 `depthToTexture=I,0`。
+- 棋盘格 PnP 与组织点云逐角点几何验收 54/54 有效，XYZ 误差 RMS `0.692 mm`、
+  P95 `1.197 mm`、最大 `1.332 mm`。这确认本机图像/点云尺度与 frame 对应，但尚未
+  完成真实物体抓取点的物理触达验证。
 
 - 示教播放重复采集共 12 组、每组 5 个静态窗口；用户确认第 11 组在运动中误采，
   已在 JSON 中标记排除。其余 11 组拟合：设计矩阵条件数 `8.207`，但力 RMS
