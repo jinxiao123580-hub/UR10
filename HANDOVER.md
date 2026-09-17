@@ -40,6 +40,9 @@
   解仅差 `0.391 mm / 0.232°`，通过数值门禁。参数见
   `config/handeye_eye_in_hand_20260917.yaml`。该结论尚未通过已知空间点或抓取落点
   验证，因此不授权自主运动。
+- 冻结 Park 参数后新增一组完全独立样本，闭环误差 `2.614 mm / 0.401°`，再次通过
+  `5 mm / 2°` 门禁。`scripts/publish_handeye_tf.py --identity-camera-frames` 已只读
+  验证可发布 `base→tool0→color_map→point_cloud`；本机 `depthToTexture=I,0`。
 
 - 示教播放重复采集共 12 组、每组 5 个静态窗口；用户确认第 11 组在运动中误采，
   已在 JSON 中标记排除。其余 11 组拟合：设计矩阵条件数 `8.207`，但力 RMS

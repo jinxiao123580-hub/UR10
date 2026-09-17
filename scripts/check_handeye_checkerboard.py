@@ -141,7 +141,8 @@ def main():
         "camera_info": {"width": info_msg.width, "height": info_msg.height,
                         "frame_id": info_msg.header.frame_id,
                         "distortion_model": info_msg.distortion_model,
-                        "k": k.reshape(-1).tolist(), "d": d.reshape(-1).tolist()},
+                        "k": k.reshape(-1).tolist(), "d": d.reshape(-1).tolist(),
+                        "r": list(info_msg.r), "p": list(info_msg.p)},
         "files": {"image": original_path, "corners": marked_path},
     }
     if found:

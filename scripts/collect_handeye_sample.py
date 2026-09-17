@@ -167,7 +167,8 @@ def main():
                           "rotation_deg": args.max_motion_deg},
         "camera_info": {"width": info_msg.width, "height": info_msg.height,
                         "distortion_model": info_msg.distortion_model,
-                        "k": k.reshape(-1).tolist(), "d": d.reshape(-1).tolist()},
+                        "k": k.reshape(-1).tolist(), "d": d.reshape(-1).tolist(),
+                        "r": list(info_msg.r), "p": list(info_msg.p)},
         "files": {"image": image_path, "corners": corners_path},
     }
     rejection = []

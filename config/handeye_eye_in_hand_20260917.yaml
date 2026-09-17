@@ -1,11 +1,11 @@
 schema_version: 1
 setup: eye_in_hand
 parent_frame: tool0
-child_frame: mechmind_camera
+child_frame: mechmind_camera/color_map
 transform_direction: tool0_from_camera
 method: OpenCV_CALIB_HAND_EYE_PARK
 valid: true
-validation_scope: fixed_checkerboard_closure_only
+validation_scope: fixed_checkerboard_closure_and_postfit_sample
 translation_m: [0.045939349932685176, 0.25211692434178085, 0.20196937019063574]
 rotation_matrix:
   - [-0.999864674870403, 0.01169843323132937, 0.011566270195556635]
@@ -23,9 +23,14 @@ cross_method_check:
   compared_method: OpenCV_CALIB_HAND_EYE_HORAUD
   translation_difference_mm: 0.39098252820475243
   rotation_difference_deg: 0.231982042266254
+postfit_independent_sample:
+  sample_id: 20260917-110357-234050
+  translation_error_mm: 2.613924553832572
+  rotation_error_deg: 0.40098179073556267
+  passed_5mm_2deg_gate: true
 source_dataset: outputs/handeye/manual-eye-in-hand.json
 solver_result: outputs/handeye/solution-candidate.json
 safety_note: >-
-  This calibration passed a held-out fixed-board closure test. It has not yet
-  passed an independent known-point grasp or point-cloud geometry test and does
-  not authorize autonomous robot motion.
+  This calibration passed held-out and post-fit fixed-board closure tests. It
+  has not yet passed a point-cloud geometry or physical grasp-point test and
+  does not authorize autonomous robot motion.
