@@ -1,0 +1,91 @@
+{
+  "sample_id": "20260917-105059-003354",
+  "captured_at": "2026-09-17T10:51:00.958261+08:00",
+  "accepted": false,
+  "setup": "eye_in_hand",
+  "robot_transform": "base_to_tool0",
+  "camera_transform": "target_to_camera",
+  "board_squares": [
+    10,
+    7
+  ],
+  "inner_corners": [
+    9,
+    6
+  ],
+  "square_size_m": 0.006,
+  "detected": false,
+  "detected_corner_count": 0,
+  "robot": {
+    "frame_count": 64,
+    "duration_s": 0.507944838000185,
+    "max_position_motion_mm": 0.05153553211849372,
+    "max_rotation_motion_deg": 0.007576569948042376,
+    "q_actual_mean_rad": [
+      -0.979453984891073,
+      -1.557667214666504,
+      -2.508073732499977,
+      -0.7084124649511736,
+      3.452963136136532,
+      -4.390652165059943
+    ],
+    "base_to_tool0_tcp_mean": [
+      0.1910067746854606,
+      -0.4182655428183791,
+      0.3054852951614355,
+      1.0270788350980196,
+      1.2373175278210973,
+      2.1057120215509215
+    ],
+    "first_tcp_pose": [
+      0.19101063833829468,
+      -0.4182778528107791,
+      0.3054870020360184,
+      1.0271057236985972,
+      1.2373496534058808,
+      2.1056889399357406
+    ],
+    "last_tcp_pose": [
+      0.19099979232802053,
+      -0.41825394491349993,
+      0.3054814633751528,
+      1.0271120428579044,
+      1.2373060257389707,
+      2.10573990849122
+    ]
+  },
+  "motion_limits": {
+    "position_mm": 0.5,
+    "rotation_deg": 0.2
+  },
+  "camera_info": {
+    "width": 1280,
+    "height": 1024,
+    "distortion_model": "plumb_bob",
+    "k": [
+      1743.688303805104,
+      0.0,
+      538.1910185232366,
+      0.0,
+      1743.688303805104,
+      512.7044230258488,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "d": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "files": {
+    "image": "/home/jx/UR10/outputs/handeye/samples/20260917-105059-003354/image.png",
+    "corners": "/home/jx/UR10/outputs/handeye/samples/20260917-105059-003354/corners.png"
+  },
+  "rejection_reasons": [
+    "checkerboard not detected"
+  ]
+}
