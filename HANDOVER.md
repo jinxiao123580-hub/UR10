@@ -8,6 +8,20 @@
 
 ## 0A. 最新接手状态（2026-09-16，覆盖下方旧状态表）
 
+### 当前主目标（2026-09-17 用户指定）
+
+- 当前主目标改为 **Mech-Eye 与 UR10 手眼标定**；重力补偿暂停，不继续自动轨迹
+  采集或拟合。
+- 重力补偿数据已归档索引到 `archives/ft_gravity_20260916/README.md`，原始数据
+  保留原路径，校验值在同目录 `SHA256SUMS`；所有模型继续 `valid: false`。
+- 正式选择 eye-in-hand/eye-to-hand 前必须现场确认相机安装：若相机随末端运动，
+  使用 eye-in-hand、标定板固定在工作台；若相机固定在外部支架，使用 eye-to-hand、
+  标定板固定在末端。不得仅凭“偏心距以六轴末端为基准”推断安装类型。
+- 按官方/通行做法先准备标定板与目标检测 TF，至少采 15 个有效姿态；扩大各轴正负
+  旋转、尽量少平移、确保整块标定板可见，并保留未参与求解的姿态做独立验证。
+- 现场已有一块标定板，用户报告格子边长 `0.6 cm = 6.0 mm = 0.006 m`。尚需确认
+  图案类型（棋盘格/圆点）、横纵内角点或圆心数量；不能把方格数量误当内角点数量。
+
 ### 开工方法（用户明确要求）
 
 - 对重力标定、机器人控制、轨迹回放等新方案，**实施前先调研行业常用方法和
@@ -33,9 +47,13 @@
   UR10 假硬件、125 Hz 控制循环和 `joint_trajectory_controller` 均启动成功。
   本机 `/home/jx/ros2_ws/install/ur_description` 会覆盖新版官方描述，启动官方
   驱动时必须隔离 `AMENT_PREFIX_PATH/CMAKE_PREFIX_PATH/COLCON_PREFIX_PATH`。
-- 官方 `ur_calibration` 工厂标定提取失败：`192.168.1.3:30001` 能返回
-  URControl 3.15 数据，但 2.14.0 提取节点未建立 TCP 流，未生成标定 YAML。
-  未解决前不得把官方默认 URDF 的笛卡尔精度当成真机证据。
+- 官方 `ur_calibration 2.14.0` 与 `ur_client_library 2.15.0` 存在初始化兼容缺陷：
+  标定源码漏调 `pipeline.init()`，系统调用跟踪证实失败时零次 `connect()`。
+  添加官方接口要求的一行初始化后约 `0.4 s` 成功提取工厂标定，文件为
+  `config/ur10_factory_calibration.yaml`，hash `calib_15120592593058779304`。
+  补丁在 `patches/ur_calibration-2.14-client-2.15-pipeline-init.patch`。官方驱动
+  checksum 验收通过；112 个录制姿态的 `base→tool0` FK 对控制器 TCP 最大误差为
+  `0.017312 mm / 0.004694°`。`base_link` 错误约 `1.182 m / 180°`，必须用 `base`。
 - `scripts/replay_ur_recorded_path.py` 当前只允许离线验证或 `--execute-fake`，没有
   真机执行入口；它保留录制轨迹中间点、分段停靠并按原路径倒序返回。
 
@@ -72,15 +90,14 @@
 
 ### 下一步唯一优先顺序
 
-1. 先调研并记录 UR 官方 ROS 2 Driver 在 CB3 3.15.8 上的工厂标定提取、
-   External Control、轨迹控制及仿真推荐流程，定位 `ur_calibration 2.14.0` 不连接问题。
-2. 完成 `replay_ur_recorded_path.py --execute-fake` 的整段动作验收，核对每段动作结果、
-   精确倒序返回、控制器状态和路径限位；加入 ATI 静态采集前先做代码审查。
-3. 建立包含约 20 cm 夹爪、30 cm 相机偏心和 15 cm 相机 Z 向尺寸的碰撞模型；
-   当前“地面无障碍”口头条件不等于已完成自碰撞/地面碰撞验证。
-4. 只有上述通过，才在用户现场监护下做单段低速真机试验；不得直接完整回放。
-5. 自动采集得到训练数据后，仍必须用未参与拟合的静态姿态独立验收；通过前
-   不恢复补偿进程，不将补偿用于力控、碰撞停止或抓取判断。
+1. 现场确认相机是随末端运动（eye-in-hand）还是固定外置（eye-to-hand），确认现有
+   Mech-Mind 标定板型号、尺寸和是否能被当前单色 2D/点云稳定识别。
+2. 复核 Mech-Eye SDK 2.5.0 官方可用的标定板检测接口；若 SDK 没有 ROS 目标 TF，
+   再选择 Mech-Vision 标准标定或 easy_handeye2 + 独立 AprilTag/Aruco 检测方案。
+3. 先用 `freehand_robot_movement` 手动采集至少 15 个姿态，不启用自动运动；确认
+   `base→tool0`、`camera→target` 两条 TF 的时间同步、方向和单位。
+4. 比较多种 OpenCV 手眼求解器并报告平移/旋转一致性、重投影或闭环残差；使用
+   留出姿态和已知空间点独立验收，只有通过后才发布静态 TF。
 
 ### 交接时第一轮只读检查
 
