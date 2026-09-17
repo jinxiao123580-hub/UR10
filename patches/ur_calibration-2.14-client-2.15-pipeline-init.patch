@@ -1,0 +1,11 @@
+diff --git a/ur_calibration/src/calibration_correction.cpp b/ur_calibration/src/calibration_correction.cpp
+--- a/ur_calibration/src/calibration_correction.cpp
++++ b/ur_calibration/src/calibration_correction.cpp
+@@ -107,6 +107,7 @@ public:
+     INotifier notifier;
+ 
+     Pipeline<PrimaryPackage> pipeline(prod, &consumer, "Pipeline", notifier);
++    pipeline.init();
+     pipeline.run();
+     while (!consumer.isCalibrated()) {
+       rclcpp::sleep_for(rclcpp::Duration::from_seconds(0.1).to_chrono<std::chrono::nanoseconds>());
