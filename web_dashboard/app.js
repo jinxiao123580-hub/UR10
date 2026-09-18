@@ -80,7 +80,6 @@ function connect() {
   ws.onopen = () => {
     setWs(true);
     wsSend({ op: "subscribe", topic: "/ft_sensor/wrench_raw", kind: "wrench" });
-    wsSend({ op: "subscribe", topic: "/ft_sensor/wrench_compensated", kind: "wrench" });
     wsSend({ op: "subscribe", topic: "/mechmind/color_image", kind: "image" });
     wsSend({ op: "subscribe", topic: "/mechmind/depth_map", kind: "depth" });
     wsSend({ op: "subscribe", topic: "/mechmind/point_cloud", kind: "pcl_stats" });
@@ -97,11 +96,10 @@ function handleMessage(m) {
   if (m.op === "call_service") { handleServiceReply(m); return; }
   if (!m.topic) return;
   if (m.topic === "/ft_sensor/wrench_raw") onWrench(m.data, "raw");
-  else if (m.topic === "/ft_sensor/wrench_compensated") onWrench(m.data, "comp");
   else if (m.topic === "/mechmind/color_image") onColorImage(m.data);
   else if (m.topic === "/mechmind/depth_map") onDepthImage(m.data);
   else if (m.topic === "/mechmind/point_cloud") onPclStats(m.data);
-  else if (m.topic === "/ur_link/realtime_state") onRobotState(m.data);
+  else if (m.topic === "/ur_monitor/realtime_state") onRobotState(m.data);
 }
 
 // ---------------------------------------------------------------- UR10 实时状态
@@ -175,9 +173,8 @@ scene.addEventListener("pointerup", () => { drag=null; });
 scene.addEventListener("wheel", e => { e.preventDefault(); sceneZoom=Math.max(.55,Math.min(2,sceneZoom*(e.deltaY>0?.9:1.1))); drawTcpScene(); }, {passive:false});
 
 // ---------------------------------------------------------------- 六轴力
-const wrenchBuffers = { raw: wrenchBuf, comp: [] };
-const wrenchStarts = { raw: null, comp: null };
-let wrenchMode = "raw";
+const wrenchBuffers = { raw: wrenchBuf };
+const wrenchStarts = { raw: null };
 
 function onWrench(d, mode) {
   lastRealWrench = Date.now();
@@ -188,7 +185,6 @@ function onWrench(d, mode) {
   const buffer = wrenchBuffers[mode];
   buffer.push({ t, fx: d.fx, fy: d.fy, fz: d.fz, tx: d.tx, ty: d.ty, tz: d.tz });
   while (buffer.length > WRENCH_MAX) buffer.shift();
-  if (mode !== wrenchMode) return;
   // 当前值
   $("v-fx").textContent = d.fx.toFixed(2);
   $("v-fy").textContent = d.fy.toFixed(2);
@@ -199,8 +195,8 @@ function onWrench(d, mode) {
 }
 
 function renderChart() {
-  const data = demoMode ? demoWrenchData() : wrenchBuffers[wrenchMode];
-  const topic = wrenchMode === "raw" ? "/ft_sensor/wrench_raw" : "/ft_sensor/wrench_compensated";
+  const data = demoMode ? demoWrenchData() : wrenchBuffers.raw;
+  const topic = "/ft_sensor/wrench_raw";
   if (!data.length) { ftStatusEl.textContent = `等待 ${topic} 数据…`; return; }
   // 只保留时间窗内
   const tEnd = data[data.length - 1].t, tStart = tEnd - WRENCH_WINDOW;
@@ -213,7 +209,7 @@ function renderChart() {
     series: series.map((s, i) => ({ name: AXES[i].label, data: s })),
   });
   const last = seg[seg.length - 1];
-  const label = wrenchMode === "raw" ? "原始" : "重力补偿";
+  const label = "原始";
   ftStatusEl.textContent = `${label} · F = (${last.fx.toFixed(1)}, ${last.fy.toFixed(1)}, ${last.fz.toFixed(1)}) N · T = (${last.tx.toFixed(2)}, ${last.ty.toFixed(2)}, ${last.tz.toFixed(2)}) N·m`;
   const duration = Math.max(0, tEnd - seg[0].t);
   ftRateEl.textContent = `${Math.round((seg.length / duration) || 0)} Hz · ${Math.round(duration)}s`;
@@ -232,26 +228,6 @@ function demoWrenchData() {
 }
 
 setInterval(renderChart, 1000 / RENDER_HZ);
-
-function selectWrenchMode(mode) {
-  wrenchMode = mode;
-  $("mode-raw").classList.toggle("active", mode === "raw");
-  $("mode-comp").classList.toggle("active", mode === "comp");
-  const data = wrenchBuffers[mode];
-  if (data.length) onWrenchValues(data[data.length - 1]);
-}
-
-function onWrenchValues(d) {
-  $("v-fx").textContent = d.fx.toFixed(2);
-  $("v-fy").textContent = d.fy.toFixed(2);
-  $("v-fz").textContent = d.fz.toFixed(2);
-  $("v-tx").textContent = d.tx.toFixed(3);
-  $("v-ty").textContent = d.ty.toFixed(3);
-  $("v-tz").textContent = d.tz.toFixed(3);
-}
-
-$("mode-raw").onclick = () => selectWrenchMode("raw");
-$("mode-comp").onclick = () => selectWrenchMode("comp");
 
 // ---------------------------------------------------------------- 相机
 function drawCanvas(cv, jpeg, infoEl, label) {

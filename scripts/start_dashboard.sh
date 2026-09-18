@@ -5,9 +5,8 @@
 #   起 5 个东西：
 #     1) ros_web_bridge.py    ROS话题 → 浏览器 WebSocket (ws://:9090) + 网页(:8080)
 #     2) ati_netft_node.py    ATI 六维力 → /ft_sensor/wrench
-#     3) ft_gravity_compensator.py → /ft_sensor/wrench_compensated
-#     4) mecheye 相机节点      (SDK 已装则起；没装自动跳过并在网页里显示"相机离线")
-#     5) 打开浏览器 http://127.0.0.1:8080/
+#     3) mecheye 相机节点      (SDK 已装则起；没装自动跳过并在网页里显示"相机离线")
+#     4) 打开浏览器 http://127.0.0.1:8080/
 #
 # 用法:
 #    bash scripts/start_dashboard.sh              # 完整起
@@ -19,7 +18,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 WEB_DIR="$SCRIPT_DIR/../web_dashboard"
-LOG_DIR="$HOME/ur_learn/generated"
+LOG_DIR="$SCRIPT_DIR/../outputs/dashboard"
 mkdir -p "$LOG_DIR"
 
 PIDS=()
@@ -39,7 +38,6 @@ set -u
 if [ "${1:-}" = "--stop" ]; then
     pkill -f ros_web_bridge.py 2>/dev/null || true
     pkill -f ati_netft_node.py 2>/dev/null || true
-    pkill -f ft_gravity_compensator.py 2>/dev/null || true
     pkill -f fake_mecheye_publisher.py 2>/dev/null || true
     pkill -f "mecheye_ros_interface.*start" 2>/dev/null || true
     echo "已停止所有监控台相关进程"
@@ -64,25 +62,14 @@ fi
 
 # ---------- ② 力传感器 ----------
 if ! pgrep -f ati_netft_node.py >/dev/null; then
-    echo "==> 启动 ATI 力传感器节点 → /ft_sensor/wrench"
+    echo "==> 启动 ATI 力传感器节点 → /ft_sensor/wrench_raw"
     python3 "$SCRIPT_DIR/ati_netft_node.py" > "$LOG_DIR/ft_node.log" 2>&1 &
     PIDS+=($!)
 else
     echo "==> 力传感器节点已在运行"
 fi
 
-# ---------- ③ 重力补偿 ----------
-if ! pgrep -f ft_gravity_compensator.py >/dev/null; then
-    echo "==> 启动力/力矩重力补偿 → /ft_sensor/wrench_compensated"
-    (cd "$SCRIPT_DIR/.." && python3 "$SCRIPT_DIR/ft_gravity_compensator.py" \
-        > "$LOG_DIR/ft_gravity_compensator.log" 2>&1) &
-    PIDS+=($!)
-    sleep 1
-else
-    echo "==> 重力补偿节点已在运行"
-fi
-
-# ---------- ④ 相机 ----------
+# ---------- ③ 相机 ----------
 if [ "$NO_CAMERA" = "1" ]; then
     echo "==> 跳过相机"
 elif [ -d /opt/mech-mind/mech-eye-sdk ] && [ -f "$HOME/colcon_ws/install/setup.bash" ]; then
@@ -105,13 +92,13 @@ else
     echo "==> 相机：SDK 未装，跳过（网页会显示“相机离线”，力数据不受影响）"
 fi
 
-# ---------- ⑤ 浏览器 ----------
+# ---------- ④ 浏览器 ----------
 URL="http://127.0.0.1:8080/"
 echo
 echo "==========================================================="
 echo "  监控台地址: $URL"
 echo "  原始力: /ft_sensor/wrench_raw（实时 200Hz，不受 Tare 影响）"
-echo "  补偿力: /ft_sensor/wrench_compensated（原始/补偿可切换）"
+echo "  重力补偿: 未启动（当前模型未独立验证）"
 echo "  相机  : Mech-Eye（需 SDK，服务触发式采集）"
 echo "  停止  : bash scripts/start_dashboard.sh --stop"
 echo "==========================================================="

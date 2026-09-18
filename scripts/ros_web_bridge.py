@@ -7,7 +7,7 @@ ROS → WebSocket 桥 —— 把 ROS 2 话题推到浏览器
      rclpy 在后台线程转话题，asyncio 在主线跑 WebSocket 服务。
 
 协议（客户端 → 服务器，JSON）:
-    {"op":"subscribe","topic":"/ft_sensor/wrench","kind":"wrench"}
+    {"op":"subscribe","topic":"/ft_sensor/wrench_raw","kind":"wrench"}
     {"op":"subscribe","topic":"/mechmind/color_image","kind":"image"}
     {"op":"subscribe","topic":"/mechmind/depth_map","kind":"depth"}
     {"op":"subscribe","topic":"/mechmind/point_cloud","kind":"pcl_stats"}
@@ -18,7 +18,7 @@ ROS → WebSocket 桥 —— 把 ROS 2 话题推到浏览器
     {"op":"ping"}
 
 协议（服务器 → 客户端）:
-    {"topic":"/ft_sensor/wrench","data":{fx,fy,fz,tx,ty,tz,sec,nsec}}
+    {"topic":"/ft_sensor/wrench_raw","data":{fx,fy,fz,tx,ty,tz,sec,nsec}}
     {"topic":"/mechmind/color_image","data":{format:"jpeg",width,height,data:base64}}
     {"topic":"/mechmind/depth_map","data":{format:"jpeg",width,height,data:base64,min,max}}
     {"topic":"/mechmind/point_cloud","data":{count,px,py,pz,has_data}}
@@ -101,7 +101,7 @@ class RosWebBridge(Node):
 
     def _ur_realtime_loop(self):
         """Read-only UR CB3 realtime stream; publish a browser-sized 20 Hz view."""
-        topic = "/ur_link/realtime_state"
+        topic = "/ur_monitor/realtime_state"
         ports = (30003, 30013, 30011, 30012)
         port_index = 0
         while not self._ur_stop.is_set():

@@ -204,7 +204,7 @@ def main():
     print("\n" + "=" * 46)
     if ok_all:
         print("诊断结论: 全部正常，可以干活")
-        print("下一步: python3 ur_pick_place_full.py 1")
+        print("下一步: 先阅读 HANDOVER.md 顶部；不要运行 ur_pick_place_full.py")
     else:
         print("诊断结论: 有项目异常，见上方 ✘ / ⚠")
         print("排查指引: docs/06-排查手册.md")
