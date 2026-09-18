@@ -41,6 +41,7 @@ python3 scripts/validate_mecheye_capture.py
 - 相机图像虽有颜色话题名，但 PRO XS 的 2D 传感器是单色（硬件规格），实测 bgr8 三通道逐像素相同。
 - 视觉物体中心尚未独立验收；已完成的抓放含人工修正，不是自主抓取。
 - 保留的抓放示例是 [`scripts/position_pick_place.py`](scripts/position_pick_place.py)，仅为已确认点位的位置控制，不含力控；当前只通过 dry-run，尚未完成本机真机抓放验收。
+- 夹爪实时反馈验证使用 [`scripts/verify_gripper_motion.py`](scripts/verify_gripper_motion.py)，不移动机械臂。
 
 ## 文档导航
 

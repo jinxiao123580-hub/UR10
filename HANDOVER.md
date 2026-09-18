@@ -33,6 +33,8 @@
 - 当前保留的位置式抓放示例为 `scripts/position_pick_place.py`，使用控制器原生 `movel`
   和 Robotiq ASCII，不使用 ATI 或重力补偿；`config/position_pick_place.example.json` 中的
   点位仅用于离线示例。当前只通过 dry-run，尚未完成本机真机抓放验收，真机执行前必须现场重新确认。
+- 已完成夹爪独立开合反馈验证：空夹 `POS=3 → 22 → 103 → 191 → 230`，张开回到 `POS=3`，
+  目标闭合为 `PRE=255`；完整记录在 `outputs/gripper/motion-verification.json`。
 
 ### 当前严格禁止
 
