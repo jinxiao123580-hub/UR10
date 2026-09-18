@@ -30,6 +30,9 @@
   125 Hz。Mech-Eye 采集接口正常，但所谓颜色图和纹理点云实测均为单色。
 - 一次物块抓起、提升和原位放回曾通过，但使用的是“视觉候选 + 人工修正”。视觉候选到
   人工确认中心的 XY 偏差为 `35.84 mm`，因此自主视觉抓取尚未通过。
+- 当前保留的位置式抓放示例为 `scripts/position_pick_place.py`，使用控制器原生 `movel`
+  和 Robotiq ASCII，不使用 ATI 或重力补偿；`config/position_pick_place.example.json` 中的
+  点位仅用于离线示例，真机执行前必须现场重新确认。
 
 ### 当前严格禁止
 
@@ -38,7 +41,9 @@
   新数据只用 `/ft_sensor/wrench_raw`。
 - 不运行历史抓放程序；它含未独立验证的 `8.0 kg / [-0.03, 0.03, -0.06]` 负载估计。
 - 不把控制器回读的 `3.5 kg / [0, 0, 0.1] m` 当作独立测量结果。
-- 不把 Mech-Eye 的颜色话题当作真彩色。
+- 不把 Mech-Eye 的颜色话题当作真彩色：PRO XS 的 2D 传感器是单色，属硬件规格而非故障，
+  `/mechmind/color_image` 的 bgr8 三通道由 SDK 按 `Blue = Gray, Green = Gray, Red = Gray`
+  复制而来。型号证据见 `outputs/camera/model-identification-20260918.json`。
 
 ### 当前可直接执行的只读检查
 

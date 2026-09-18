@@ -23,8 +23,9 @@ python3 scripts/validate_mecheye_capture.py
 - 不执行电脑端流式 IK 真机运动。
 - 不把未独立验证的 ATI 重力补偿用于控制或抓取判定。
 - 不运行历史抓放脚本；其负载参数未验证。
-- 相机图像虽有颜色话题名，当前输出实测为单色。
+- 相机图像虽有颜色话题名，但 PRO XS 的 2D 传感器是单色（硬件规格），实测 bgr8 三通道逐像素相同。
 - 视觉物体中心尚未独立验收；已完成的抓放含人工修正，不是自主抓取。
+- 保留的抓放示例是 [`scripts/position_pick_place.py`](scripts/position_pick_place.py)，仅为已确认点位的位置控制，不含力控。
 
 ## 文档导航
 

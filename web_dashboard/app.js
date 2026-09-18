@@ -1,7 +1,7 @@
 /* UR10 视觉 · 力觉 监控台
  * 连接 scripts/ros_web_bridge.py 的 WebSocket，订阅：
  *   /ft_sensor/wrench       六维力（ATI Net F/T）
- *   /mechmind/color_image   相机彩色（Mech-Eye，服务触发）
+ *   /mechmind/color_image   2D 图（Mech-Eye，服务触发；PRO XS 为单色，bgr8 三通道相同）
  *   /mechmind/depth_map     深度图
  *   /mechmind/point_cloud   点云统计
  */
@@ -259,7 +259,7 @@ function drawPlaceholder(cv, text) {
 function onColorImage(d) {
   cameraFrames++;
   setCam(true);
-  drawCanvas($("cam-color"), d, $("cam-color-info"), "彩色画面");
+  drawCanvas($("cam-color"), d, $("cam-color-info"), "单色 2D 图");
 }
 function onDepthImage(d) {
   cameraFrames++;

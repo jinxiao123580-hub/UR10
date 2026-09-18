@@ -28,7 +28,11 @@
 - 不要运行 `scripts/ur_pick_place_full.py`。该脚本仍使用未验证的
   `8.0 kg / [-0.03,0.03,-0.06]` 负载估计值。
 - 不要把控制器当前回读的 `3.5 kg / [0,0,0.1] m` 当成独立测量结果。
-- 不要把 `/mechmind/color_image` 当成真彩色。实测 bgr8 三通道完全相同，纹理点云 RGB 也完全相同，当前相机输出是单色。
+- 不要把 `/mechmind/color_image` 当成真彩色。PRO XS 的 2D 传感器是单色（硬件规格，
+  官方规格表 `2D image color: Monochrome`，型号表无 `C` 后缀彩色版本），实测 bgr8
+  三通道完全相同、纹理点云 RGB 也完全相同，因为 SDK 的 `getColorImage()` 在
+  Monochrome 时按 `Blue = Gray, Green = Gray, Red = Gray` 复制。这不是待修复的故障，
+  不要为“恢复彩色”排查参数或链路。证据见 `outputs/camera/model-identification-20260918.json`。
 
 ## 已验证工具
 

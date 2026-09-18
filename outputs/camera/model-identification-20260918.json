@@ -1,0 +1,64 @@
+{
+  "captured_at": "2026-09-18T09:47:57+0800",
+  "purpose": "确定 Mech-Eye 相机 2D 图像只能得到单色的硬件原因（型号证据）",
+  "method": "GVCP DISCOVERY_CMD 广播发现，复用 scripts/setup_mecheye.py::discover_camera，只读不连接相机",
+  "command": "python3 scripts/setup_mecheye.py --check",
+  "discovery": [
+    {
+      "addr": "192.168.1.33",
+      "ip": "192.168.1.33",
+      "mac": "24:c5:d3:55:00:00",
+      "strings": [
+        "Mech-Mind Robotics",
+        "Mech-Eye PRO XS",
+        "2.5.0",
+        "Mech-Mind Robotics",
+        "RAM35238A3020004"
+      ],
+      "vendor": "Mech-Mind Robotics",
+      "model": "Mech-Eye PRO XS",
+      "version": "2.5.0",
+      "serial": "RAM35238A3020004"
+    }
+  ],
+  "conclusion": {
+    "model": "Mech-Eye PRO XS",
+    "material_code_color_suffix": null,
+    "two_d_image_color": "Monochrome",
+    "is_fault": false,
+    "statement": "该相机 2D 图像为单色是硬件规格，不是配置错误或链路故障。型号串无彩色物料号后缀（C），官方规格表亦标注 2D image color: Monochrome。"
+  },
+  "cause_chain": [
+    "PRO XS 的 2D 图像传感器为单色（Monochrome），配蓝光 459 nm 光源与窄带滤光片。",
+    "Mech-Eye SDK 的 Frame2D::getColorImage() 在 colorType() 为 Monochrome 时，按 Blue = Gray, Green = Gray, Red = Gray 把灰度复制成三通道。",
+    "官方 ROS 2 接口 src/MechMindCamera.cpp::capture_color_image_callback 无条件调用 getColorImage()，从不检查 colorType()，也没有 MONO8 分支。",
+    "publishColorMap() 用 cv::Mat(height, width, CV_8UC3, data) 按三通道解释并以 BGR8 发布到 /mechmind/color_image，frame_id 为 mechmind_camera/color_map。",
+    "纹理点云同理：PointXYZBGR 的 rgb 字段三通道相同。"
+  ],
+  "corroborating_evidence": {
+    "files": [
+      "outputs/camera/capture-validation-20260914-154806.json",
+      "outputs/camera/capture-validation-20260914-154850.json"
+    ],
+    "channel_mean": [57.797, 57.797, 57.797],
+    "channel_std": [59.234, 59.234, 59.234],
+    "mean_channel_spread": 0.0,
+    "channels_identical_fraction": 1.0,
+    "interpretation": "B=G=R 且逐像素相同、三通道统计量完全相等，只有一个灰度平面被复制三份。若是把单色缓冲区重新解释为三通道，三通道将互不相同；因此这与 SDK 文档所述 getColorImage() 的显式复制行为一致，独立证明 colorType() 为 Monochrome。"
+  },
+  "naming_caveat": "官方 ROS 2 接口在 SDK 2.0.2 时代将采集服务命名为 CaptureColorMap，2.3.4 起改名为 CaptureColorImage 并把该数据描述为 the 2D image，但话题名 /mechmind/color_image 与 frame_id mechmind_camera/color_map 沿用了 color 字样。话题名含 color 不代表数据是彩色。",
+  "references": [
+    "https://docs.mech-mind.net/en/eye-3d-camera/2.3.1/hardware/specifications-pro-xs.html",
+    "https://docs.mech-mind.net/ja/eye-3d-camera/2.5.4/hardware/specifications-pro-xs.html",
+    "https://docs.mech-mind.net/en/eye-3d-camera/2.5.0/hardware/camera-models.html",
+    "https://docs.mech-mind.net/api-reference/eye-api-camera-cpp/2.5.0/classmmind_1_1eye_1_1_frame2_d.html",
+    "https://docs.mech-mind.net/en/eye-3d-camera/2.5.0/api/ros2.html",
+    "https://github.com/MechMindRobotics/mecheye_ros2_interface/blob/main/src/MechMindCamera.cpp",
+    "https://community.mech-mind.com/t/1882"
+  ],
+  "consequences": [
+    "不得把 /mechmind/color_image 当作彩色识别依据，也不得为得到彩色继续排查参数或链路。",
+    "需要真彩色只能更换彩色型号（PRO S-GL / PRO M-GL / NANO-GL 的 C 后缀版本；PRO XS 无彩色版本）或外挂 RGB 相机。",
+    "单色对棋盘格、角点、边缘检测与点云质量更有利（无 Bayer 滤镜、SNR 更高、动态范围裁剪可预测）。"
+  ]
+}
