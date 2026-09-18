@@ -19,7 +19,10 @@ def main():
     program="def guarded_relative_movel():\n  movel(p[%s], a=%.6f, v=%.6f)\n  sleep(1.0)\nend\n" % (", ".join("%.9f"%x for x in target),a.acceleration,a.speed)
     print("before",[round(x,6) for x in before]); print("target",[round(x,6) for x in target],flush=True)
     with socket.create_connection(("192.168.1.3",30002),timeout=3) as s: s.sendall(program.encode("ascii"))
-    deadline=time.monotonic()+8; after=before
+    # Allow the controller to finish long, deliberately slow moves.  The old
+    # fixed 8 s watchdog could report a false failure while URScript was still
+    # executing the command on port 30002.
+    deadline=time.monotonic()+max(8.0, distance/max(a.speed, 1e-6)*3.0+3.0); after=before
     while time.monotonic()<deadline:
         _,after,velocity=reader.read()
         if math.dist(after[:3],target[:3])<0.001 and math.sqrt(sum(x*x for x in velocity[:3]))<0.002: break
