@@ -87,12 +87,11 @@ class PositionPickPlace:
 
     def run(self):
         pick, place = self.load_poses(self.args.poses)
-        if self.args.swap:
-            pick, place = place, pick
-            print("反向演示：从原放置点抓回原取物点。")
         self.validate(pick, place)
         print("位置抓放示例：不使用 ATI、重力补偿或碰撞判定。")
-        print("pick = %s\nplace = %s" % (pick, place))
+        print("pick = %s\nplace = %s\ncycles = %d%s" %
+              (pick, place, self.args.cycles,
+               " pingpong" if self.args.pingpong else ""))
         if self.args.dry_run:
             print("DRY-RUN：点位和参数有效，未连接机器人。")
             return 0
@@ -109,27 +108,34 @@ class PositionPickPlace:
                 raise RuntimeError("夹爪故障码 FLT=%s" % status["FLT"])
             if not gripper.activate():
                 raise RuntimeError("夹爪激活未确认")
-            gripper.open()
-            pick_up = list(pick); pick_up[2] += self.args.height
-            place_up = list(place); place_up[2] += self.args.height
-            self.move_and_verify(pick_up, "① 到取物点上方")
-            self.move_and_verify(pick, "② 下降到取物点")
-            print("③ 闭合夹爪（仅检查 Robotiq OBJ，不使用力传感器）")
-            gripper.close()
-            obj = gripper.object_detected()
-            pos = gripper.query("POS")
-            print("   POS=%s OBJ=%s" % (pos, obj))
-            if obj != 2 and not self.args.demo:
-                raise RuntimeError("夹爪未确认夹住物体：OBJ=%s POS=%s，停止搬运" % (obj, pos))
-            if obj != 2 and self.args.demo:
-                print("   演示模式：忽略 OBJ=%s，继续位置搬运（不代表夹持成功）" % obj)
-            self.move_and_verify(pick_up, "④ 抬起")
-            self.move_and_verify(place_up, "⑤ 到放置点上方")
-            self.move_and_verify(place, "⑥ 下降到放置点")
-            print("⑦ 张开夹爪")
-            gripper.open()
-            self.move_and_verify(place_up, "⑧ 抬起离开")
-            print("位置抓放完成。")
+            for cycle in range(1, self.args.cycles + 1):
+                reverse = self.args.swap or (self.args.pingpong and cycle % 2 == 0)
+                src, dst = (place, pick) if reverse else (pick, place)
+                src_up = list(src); src_up[2] += self.args.height
+                dst_up = list(dst); dst_up[2] += self.args.height
+                print("\n=== 第 %d/%d 轮：%s -> %s ===" %
+                      (cycle, self.args.cycles, "终点" if reverse else "起点",
+                       "起点" if reverse else "终点"), flush=True)
+                gripper.open()
+                self.move_and_verify(src_up, "① 到取物点上方")
+                self.move_and_verify(src, "② 下降到取物点")
+                print("③ 闭合夹爪（仅检查 Robotiq OBJ，不使用力传感器）")
+                gripper.close()
+                obj = gripper.object_detected()
+                pos = gripper.query("POS")
+                print("   POS=%s OBJ=%s" % (pos, obj))
+                if obj != 2 and not self.args.demo:
+                    raise RuntimeError("夹爪未确认夹住物体：OBJ=%s POS=%s，停止搬运" % (obj, pos))
+                if obj != 2 and self.args.demo:
+                    print("   演示模式：忽略 OBJ=%s，继续位置搬运（不代表夹持成功）" % obj)
+                self.move_and_verify(src_up, "④ 抬起")
+                self.move_and_verify(dst_up, "⑤ 到放置点上方")
+                self.move_and_verify(dst, "⑥ 下降到放置点")
+                print("⑦ 张开夹爪")
+                gripper.open()
+                self.move_and_verify(dst_up, "⑧ 抬起离开")
+                print("✔ 第 %d 轮完成" % cycle)
+            print("位置抓放完成，共 %d 轮。" % self.args.cycles)
             return 0
         finally:
             gripper.close_socket()
@@ -149,12 +155,19 @@ def parse_args():
                         help="演示模式：忽略 OBJ，不确认夹持；仅用于固定位置演示")
     parser.add_argument("--swap", action="store_true",
                         help="反向：从 place 点抓回 pick 点")
+    parser.add_argument("--pingpong", action="store_true",
+                        help="往返：奇数轮 pick→place，偶数轮 place→pick")
+    parser.add_argument("--cycles", type=int, default=1, help="执行轮数，默认 1")
     parser.add_argument("--dry-run", action="store_true", help="只检查 JSON 和门限，不连接硬件")
     return parser.parse_args()
 
 
 def main():
     args = parse_args()
+    if args.cycles < 1:
+        raise SystemExit("--cycles 必须 >= 1")
+    if args.swap and args.pingpong:
+        raise SystemExit("--swap 与 --pingpong 不能同时使用")
     task = PositionPickPlace(args)
     signal.signal(signal.SIGINT, task.stop_robot)
     signal.signal(signal.SIGTERM, task.stop_robot)
