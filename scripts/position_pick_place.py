@@ -116,8 +116,10 @@ class PositionPickPlace:
             obj = gripper.object_detected()
             pos = gripper.query("POS")
             print("   POS=%s OBJ=%s" % (pos, obj))
-            if obj != 2:
+            if obj != 2 and not self.args.demo:
                 raise RuntimeError("夹爪未确认夹住物体：OBJ=%s POS=%s，停止搬运" % (obj, pos))
+            if obj != 2 and self.args.demo:
+                print("   演示模式：忽略 OBJ=%s，继续位置搬运（不代表夹持成功）" % obj)
             self.move_and_verify(pick_up, "④ 抬起")
             self.move_and_verify(place_up, "⑤ 到放置点上方")
             self.move_and_verify(place, "⑥ 下降到放置点")
@@ -140,6 +142,8 @@ def parse_args():
     parser.add_argument("--acceleration", type=float, default=0.05, help="movel 加速度，单位 m/s²")
     parser.add_argument("--max-span", type=float, default=0.40, help="两点最大距离，单位 m")
     parser.add_argument("--position-tolerance", type=float, default=0.002, help="到位门限，单位 m")
+    parser.add_argument("--demo", action="store_true",
+                        help="演示模式：忽略 OBJ，不确认夹持；仅用于固定位置演示")
     parser.add_argument("--dry-run", action="store_true", help="只检查 JSON 和门限，不连接硬件")
     return parser.parse_args()
 
