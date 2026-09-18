@@ -87,6 +87,9 @@ class PositionPickPlace:
 
     def run(self):
         pick, place = self.load_poses(self.args.poses)
+        if self.args.swap:
+            pick, place = place, pick
+            print("反向演示：从原放置点抓回原取物点。")
         self.validate(pick, place)
         print("位置抓放示例：不使用 ATI、重力补偿或碰撞判定。")
         print("pick = %s\nplace = %s" % (pick, place))
@@ -144,6 +147,8 @@ def parse_args():
     parser.add_argument("--position-tolerance", type=float, default=0.002, help="到位门限，单位 m")
     parser.add_argument("--demo", action="store_true",
                         help="演示模式：忽略 OBJ，不确认夹持；仅用于固定位置演示")
+    parser.add_argument("--swap", action="store_true",
+                        help="反向：从 place 点抓回 pick 点")
     parser.add_argument("--dry-run", action="store_true", help="只检查 JSON 和门限，不连接硬件")
     return parser.parse_args()
 
