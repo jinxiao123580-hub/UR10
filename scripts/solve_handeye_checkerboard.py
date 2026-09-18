@@ -139,6 +139,101 @@ def closure(samples, gripper_from_camera):
     return values
 
 
+def observability(samples):
+    """Conditioning of the AX = X B design matrices for the training set.
+
+    With ``A_i = base_from_gripper_i``, ``B_i = camera_from_target_i`` and
+    ``X = tool0_from_camera`` the calibration satisfies ``A_i X B_i = C`` for a
+    constant ``C``.  Eliminating ``C`` gives, for every pair ``(i, j)``,
+
+        R_A X_R = X_R R_B ,  R_A = rot(A_i^-1 A_j) ,  R_B = rot(B_i B_j^-1)
+
+    which column-stacks into the homogeneous design matrix
+    ``M = kron(I, R_A) - kron(R_B^T, I)`` with ``vec(X_R)`` in its null space.
+    The rotation part is therefore only observable up to the separation between
+    the smallest and the second smallest singular value of the stacked ``M``:
+    ``null_space_gap`` is that ratio (bigger is better, 1.0 means degenerate).
+    The translation part uses ``(I - R_A) t_X = t_A - R_X t_B``, so the stacked
+    ``(I - R_A)`` is its design matrix; its condition number is finite and
+    meaningful.  ``axis_isotropy`` is the eigenvalue ratio of the scatter of the
+    relative rotation axes (1.0 = rotation excited about all three axes).
+    """
+    poses = [sample_transforms(sample) for sample in samples]
+    rotation_rows = []
+    translation_rows = []
+    axes = []
+    angles = []
+    for i in range(len(poses)):
+        for j in range(i + 1, len(poses)):
+            a_i, b_i = poses[i]
+            a_j, b_j = poses[j]
+            delta_a = np.linalg.inv(a_i) @ a_j
+            delta_b = b_i @ np.linalg.inv(b_j)
+            r_a = delta_a[:3, :3]
+            r_b = delta_b[:3, :3]
+            rotation_rows.append(np.kron(np.eye(3), r_a) -
+                                 np.kron(r_b.T, np.eye(3)))
+            translation_rows.append(np.eye(3) - r_a)
+            angle = rotation_angle_deg(r_a)
+            if angle > 1e-6:
+                rvec, _ = cv2.Rodrigues(r_a)
+                axes.append(rvec.reshape(3) / np.linalg.norm(rvec))
+                angles.append(angle)
+    if not rotation_rows:
+        return {"pairs": 0}
+    stacked_rotation = np.vstack(rotation_rows)
+    singular = np.linalg.svd(stacked_rotation, compute_uv=False)
+    stacked_translation = np.vstack(translation_rows)
+    translation_singular = np.linalg.svd(stacked_translation, compute_uv=False)
+    result = {
+        "pairs": len(rotation_rows),
+        "rotation_design": {},
+        "translation_design": {},
+    }
+    noise_floor = 1e-12 * float(singular[0])
+    at_floor = bool(singular[-1] <= noise_floor)
+    result["rotation_design"] = {
+        "shape": list(stacked_rotation.shape),
+        "singular_values": [float(x) for x in singular],
+        "largest": float(singular[0]),
+        "smallest": float(singular[-1]),
+        "smallest_over_largest": float(singular[-1] / singular[0]),
+        "null_space_at_numerical_floor": at_floor,
+        "null_space_gap": (None if at_floor else float(singular[-2] / singular[-1])),
+        "condition_number": (None if at_floor else float(singular[0] / singular[-1])),
+        "rank_at_1e-9_relative": int(np.sum(singular > 1e-9 * singular[0])),
+        "note": "homogeneous system: rank 8 is the well-posed case. "
+                "null_space_gap = sigma_8 / sigma_9 (larger is better); it is "
+                "reported as null when sigma_9 has reached the double-precision "
+                "floor, which means the null space is exact numerically (typical "
+                "of noise-free synthetic data) rather than badly conditioned.",
+    }
+    result["translation_design"] = {
+        "shape": list(stacked_translation.shape),
+        "singular_values": [float(x) for x in translation_singular],
+        "condition_number": (float(translation_singular[0] /
+                                   translation_singular[-1])
+                             if translation_singular[-1] > 0 else None),
+    }
+    result["relative_rotation_deg"] = {
+        "count": len(angles),
+        "min": float(np.min(angles)) if angles else None,
+        "median": float(np.median(angles)) if angles else None,
+        "max": float(np.max(angles)) if angles else None,
+    }
+    if len(axes) >= 3:
+        scatter = np.asarray(axes).T @ np.asarray(axes)
+        eigenvalues = np.sort(np.linalg.eigvalsh(scatter))[::-1]
+        result["relative_rotation_axis_isotropy"] = {
+            "eigenvalues": [float(x) for x in eigenvalues],
+            "min_over_max": (float(eigenvalues[-1] / eigenvalues[0])
+                             if eigenvalues[0] > 0 else None),
+            "note": "1.0 = relative rotations spread over all three axes, "
+                    "~0 = all relative rotations share one axis (degenerate)",
+        }
+    return result
+
+
 def matrix_json(value):
     rvec, _ = cv2.Rodrigues(value[:3, :3])
     return {"matrix_4x4": value.tolist(),
@@ -152,6 +247,9 @@ def main():
     parser.add_argument("--holdout", type=int, default=5)
     parser.add_argument("--duplicate-mm", type=float, default=0.5)
     parser.add_argument("--duplicate-deg", type=float, default=0.2)
+    parser.add_argument("--holdout-ids", default=None,
+                        help="comma-separated sample ids to hold out; makes the split "
+                             "explicit and order-independent instead of 'last N'")
     parser.add_argument("--output", default="outputs/handeye/solution-candidate.json")
     args = parser.parse_args()
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -163,8 +261,23 @@ def main():
     unique, duplicates = deduplicate(accepted, args.duplicate_mm, args.duplicate_deg)
     if len(unique) < args.holdout + 3:
         raise RuntimeError("not enough unique samples after deduplication")
-    train = unique[:-args.holdout]
-    holdout = unique[-args.holdout:]
+    if args.holdout_ids:
+        wanted = [value.strip() for value in args.holdout_ids.split(",") if value.strip()]
+        by_id = {sample["sample_id"]: sample for sample in unique}
+        missing = [value for value in wanted if value not in by_id]
+        if missing:
+            raise RuntimeError("holdout ids absent from the unique set: %s" %
+                               ", ".join(missing))
+        if len(wanted) < 5:
+            raise RuntimeError("the holdout set must keep at least 5 samples")
+        holdout = [by_id[value] for value in wanted]
+        held = set(wanted)
+        train = [sample for sample in unique if sample["sample_id"] not in held]
+        holdout_selection = "explicit --holdout-ids"
+    else:
+        train = unique[:-args.holdout]
+        holdout = unique[-args.holdout:]
+        holdout_selection = "last %d of the deduplicated order" % args.holdout
     document = {
         "schema_version": 1,
         "created_at": dt.datetime.now(dt.timezone.utc).astimezone().isoformat(),
@@ -176,8 +289,10 @@ def main():
         "deduplication": {"translation_mm": args.duplicate_mm,
                           "rotation_deg": args.duplicate_deg,
                           "removed": duplicates},
+        "holdout_selection": holdout_selection,
         "training_sample_ids": [x["sample_id"] for x in train],
         "holdout_sample_ids": [x["sample_id"] for x in holdout],
+        "observability": observability(train),
         "methods": {},
     }
     for name, method in METHODS.items():

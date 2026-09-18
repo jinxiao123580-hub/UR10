@@ -1,0 +1,188 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-09-18T12:08:19.322105+08:00",
+  "kind": "plan_observability_gate",
+  "guidance_only": true,
+  "reference_sample": "20260918-112826-092467",
+  "reference_source": "outputs/handeye/smoketest-20260918.json",
+  "guidance_calibration": "config/handeye_eye_in_hand_20260917.yaml",
+  "board_origin_base_estimate_m": [
+    0.5226958742174602,
+    -0.1143368207673778,
+    -0.01065771522622605
+  ],
+  "historical_tcp_z_floor_m": 0.202,
+  "modes": {
+    "design": {
+      "observability": {
+        "pairs": 325,
+        "rotation_design": {
+          "shape": [
+            2925,
+            9
+          ],
+          "singular_values": [
+            25.989729005855846,
+            25.988914330490104,
+            25.98815666332111,
+            25.987889216155303,
+            25.962966677577775,
+            25.962715945607027,
+            15.663380085924333,
+            9.817722028645509,
+            5.479901477334968e-14
+          ],
+          "largest": 25.989729005855846,
+          "smallest": 5.479901477334968e-14,
+          "smallest_over_largest": 2.1084873474826425e-15,
+          "null_space_at_numerical_floor": true,
+          "null_space_gap": null,
+          "condition_number": null,
+          "rank_at_1e-9_relative": 8,
+          "note": "homogeneous system: rank 8 is the well-posed case. null_space_gap = sigma_8 / sigma_9 (larger is better); it is reported as null when sigma_9 has reached the double-precision floor, which means the null space is exact numerically (typical of noise-free synthetic data) rather than badly conditioned."
+        },
+        "translation_design": {
+          "shape": [
+            975,
+            3
+          ],
+          "singular_values": [
+            25.988914330490097,
+            25.988156663321107,
+            9.817722028645509
+          ],
+          "condition_number": 2.6471430189876366
+        },
+        "relative_rotation_deg": {
+          "count": 323,
+          "min": 23.20073946763278,
+          "median": 90.40729203444872,
+          "max": 180.0
+        },
+        "relative_rotation_axis_isotropy": {
+          "eigenvalues": [
+            249.93335069129418,
+            46.4423287010587,
+            26.624320607647253
+          ],
+          "min_over_max": 0.10652568188281664,
+          "note": "1.0 = relative rotations spread over all three axes, ~0 = all relative rotations share one axis (degenerate)"
+        }
+      },
+      "flange_z_m": {
+        "min": 0.07872381667835587,
+        "max": 0.14361677103835588,
+        "mean": 0.11750099247321241
+      },
+      "distinct_rolls": [
+        -45.0,
+        -25.0,
+        25.0,
+        45.0
+      ],
+      "distance_m": {
+        "min": 0.35,
+        "max": 0.5800000000000001
+      },
+      "tilt_deg": {
+        "min": 14.99999999999997,
+        "max": 50.000000000000014
+      },
+      "azimuth_sectors_45deg": [
+        4,
+        3,
+        3,
+        3,
+        4,
+        3,
+        3,
+        3
+      ]
+    },
+    "clearance": {
+      "observability": {
+        "pairs": 325,
+        "rotation_design": {
+          "shape": [
+            2925,
+            9
+          ],
+          "singular_values": [
+            25.999290171928823,
+            25.999283724036882,
+            25.999129712447193,
+            25.998823805904255,
+            25.922249051675823,
+            25.9218953528974,
+            10.611642951404377,
+            6.344671696086487,
+            8.945655430025145e-14
+          ],
+          "largest": 25.999290171928823,
+          "smallest": 8.945655430025145e-14,
+          "smallest_over_largest": 3.440730639517105e-15,
+          "null_space_at_numerical_floor": true,
+          "null_space_gap": null,
+          "condition_number": null,
+          "rank_at_1e-9_relative": 8,
+          "note": "homogeneous system: rank 8 is the well-posed case. null_space_gap = sigma_8 / sigma_9 (larger is better); it is reported as null when sigma_9 has reached the double-precision floor, which means the null space is exact numerically (typical of noise-free synthetic data) rather than badly conditioned."
+        },
+        "translation_design": {
+          "shape": [
+            975,
+            3
+          ],
+          "singular_values": [
+            25.999283724036896,
+            25.999129712447196,
+            6.344671696086499
+          ],
+          "condition_number": 4.097813877442027
+        },
+        "relative_rotation_deg": {
+          "count": 323,
+          "min": 14.999999999999922,
+          "median": 91.72794107235089,
+          "max": 180.0
+        },
+        "relative_rotation_axis_isotropy": {
+          "eigenvalues": [
+            272.9075657775445,
+            41.42523534795702,
+            8.667198874498311
+          ],
+          "min_over_max": 0.031758734316523915,
+          "note": "1.0 = relative rotations spread over all three axes, ~0 = all relative rotations share one axis (degenerate)"
+        }
+      },
+      "flange_z_m": {
+        "min": 0.2552045334256011,
+        "max": 0.48904164961019536,
+        "mean": 0.37548605864968665
+      },
+      "distinct_rolls": [
+        188.0,
+        190.0,
+        192.0
+      ],
+      "distance_m": {
+        "min": 0.3499999999999999,
+        "max": 0.5800000000000001
+      },
+      "tilt_deg": {
+        "min": 14.99999999999997,
+        "max": 50.000000000000036
+      },
+      "azimuth_sectors_45deg": [
+        4,
+        3,
+        3,
+        3,
+        4,
+        3,
+        3,
+        3
+      ]
+    }
+  }
+}

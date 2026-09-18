@@ -21,6 +21,7 @@ import numpy as np
 FRAME_MIN_SIZE = 540
 FRAME_MAX_SIZE = 4096
 Q_ACTUAL_OFFSET = 252
+TCP_FORCE_OFFSET = 396
 TCP_POSE_OFFSET = 444
 TCP_VELOCITY_OFFSET = 492
 
@@ -32,6 +33,7 @@ class RealtimeReader:
         self.buffer = bytearray()
         self.reconnects = 0
         self.last_warning = 0.0
+        self.last_frame = None
         self.connect()
 
     def connect(self):
@@ -59,6 +61,7 @@ class RealtimeReader:
                     self.buffer.extend(chunk)
                 frame = bytes(self.buffer[:size])
                 del self.buffer[:size]
+                self.last_frame = frame
                 return decode_frame(frame)
             except (socket.timeout, OSError, ConnectionError) as exc:
                 now = time.monotonic()
@@ -83,6 +86,18 @@ class RealtimeReader:
                 pass
             self.sock = None
 
+    def read_extended(self):
+        """``(q, tcp_pose, tcp_velocity, tcp_force)``; force is None if absent.
+
+        ``tcp_force`` is the controller's own estimate at the TCP, in the TCP
+        frame.  It depends on the configured payload, and this repository has
+        never independently validated that payload, so treat the absolute value
+        as biased.  Magnitude *changes* against a resting baseline are far more
+        trustworthy (gravity keeps ``|F|`` roughly constant as the tool rotates).
+        """
+        q, tcp, velocity = self.read()
+        return q, tcp, velocity, decode_tcp_force(self.last_frame)
+
 
 def decode_frame(frame):
     if len(frame) < TCP_VELOCITY_OFFSET + 48:
@@ -90,6 +105,13 @@ def decode_frame(frame):
     return (struct.unpack_from(">6d", frame, Q_ACTUAL_OFFSET),
             struct.unpack_from(">6d", frame, TCP_POSE_OFFSET),
             struct.unpack_from(">6d", frame, TCP_VELOCITY_OFFSET))
+
+
+def decode_tcp_force(frame):
+    """``actual_TCP_force`` (Fx Fy Fz Mx My Mz, TCP frame) or None if too short."""
+    if frame is None or len(frame) < TCP_FORCE_OFFSET + 48:
+        return None
+    return struct.unpack_from(">6d", frame, TCP_FORCE_OFFSET)
 
 
 def write_json(path, document):

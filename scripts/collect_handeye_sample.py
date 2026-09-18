@@ -30,6 +30,59 @@ def atomic_json(path, value):
     os.replace(temporary, path)
 
 
+def rt(rotation_vector, translation):
+    """Build a 4x4 transform from an axis-angle rotation vector and a translation."""
+    transform = np.eye(4)
+    transform[:3, :3] = cv2.Rodrigues(np.asarray(rotation_vector, dtype=np.float64))[0]
+    transform[:3, 3] = np.asarray(translation, dtype=np.float64)
+    return transform
+
+
+def build_cloud_payload(sample_id, camera_xyz, cloud_resolution, cloud_frame_id,
+                        image_frame_id, cloud_is_dense, k, d, base_from_tool0,
+                        target_to_camera=None, corners_px=None,
+                        inner_corners=(9, 6), square_size_m=0.006):
+    """Assemble the offline-audit payload for one sample's raw organized cloud.
+
+    Everything needed to re-derive the sample without the camera or the robot:
+    the raw camera-frame xyz, the intrinsics, the FK transform of the mean
+    30003 pose, and (when the board was detected) the PnP pose plus the corner
+    pixels.  Kept separate from the capture path so the offline self-test can
+    build and round-trip the exact same schema without hardware.
+    """
+    payload = {
+        "schema_version": np.asarray(1, dtype=np.int64),
+        "sample_id": np.asarray(sample_id),
+        "camera_xyz_m": np.asarray(camera_xyz, dtype=np.float32),
+        "cloud_resolution": np.asarray(cloud_resolution, dtype=np.int64),
+        "cloud_frame_id": np.asarray(cloud_frame_id),
+        "image_frame_id": np.asarray(image_frame_id),
+        "cloud_is_dense": np.asarray(bool(cloud_is_dense)),
+        "k": np.asarray(k, dtype=np.float64),
+        "d": np.asarray(d, dtype=np.float64),
+        "base_from_tool0": np.asarray(base_from_tool0, dtype=np.float64),
+        "inner_corners": np.asarray(inner_corners, dtype=np.int64),
+        "square_size_m": np.asarray(float(square_size_m), dtype=np.float64),
+        "transforms_note": np.asarray(
+            "base_from_tool0 = FK of the mean 30003 TCP pose (read-only, no command); "
+            "camera_from_target = solvePnP pose target->camera; "
+            "camera_xyz_m = raw organized cloud in the camera frame, metres"),
+    }
+    if target_to_camera is not None:
+        payload["camera_from_target"] = rt(
+            np.asarray(target_to_camera[0], dtype=np.float64),
+            np.asarray(target_to_camera[1], dtype=np.float64))
+    if corners_px is not None:
+        payload["corners_px"] = np.asarray(corners_px, dtype=np.float64)
+    return payload
+
+
+def save_cloud_npz(path, **kwargs):
+    payload = build_cloud_payload(**kwargs)
+    np.savez_compressed(path, **payload)
+    return payload
+
+
 def rotation_distance_deg(a, b):
     ra, _ = cv2.Rodrigues(np.asarray(a, dtype=np.float64))
     rb, _ = cv2.Rodrigues(np.asarray(b, dtype=np.float64))
@@ -115,6 +168,14 @@ def main():
     parser.add_argument("--max-motion-deg", type=float, default=0.2)
     parser.add_argument("--min-robot-frames", type=int, default=20)
     parser.add_argument("--dataset", default="outputs/handeye/manual-eye-in-hand.json")
+    parser.add_argument("--save-cloud", action="store_true",
+                        help="also trigger /capture_point_cloud and store the raw organized "
+                             "cloud plus K/D/corners/transforms in cloud.npz; without it the "
+                             "sample cannot be re-checked offline (the 2026-09-17 gap)")
+    parser.add_argument("--cloud-timeout", type=float, default=20.0)
+    parser.add_argument("--no-robot-frames", action="store_true",
+                        help="skip robot_frames.json (the full 30003 frame log); the default "
+                             "is to write it so the sample stays auditable offline")
     args = parser.parse_args()
     pattern = (args.squares_x - 1, args.squares_y - 1)
     if min(pattern) < 2 or args.square_size_m <= 0:
@@ -130,18 +191,41 @@ def main():
 
     sampler = URSampler(args.host)
     rclpy.init()
-    node = CheckerboardCapture()
+    if args.save_cloud:
+        from validate_checkerboard_pointcloud import BoardCloudCapture
+        node = BoardCloudCapture()
+    else:
+        node = CheckerboardCapture()
+    cloud_msg = None
     try:
         sampler.start()
         sampler.wait_ready()
         sampler.begin_window()
         image_msg, info_msg = node.capture(args.timeout)
+        if args.save_cloud:
+            cloud_msg = node.capture_cloud(args.cloud_timeout)
     finally:
         sampler.stop()
         node.destroy_node()
         rclpy.shutdown()
 
     summary = robot_summary(sampler.rows)
+    frames_path = None
+    if not args.no_robot_frames:
+        frames_path = os.path.join(sample_dir, "robot_frames.json")
+        atomic_json(frames_path, {
+            "schema_version": 1,
+            "source": "UR realtime client 30003 (read-only, no command sent)",
+            "host": args.host,
+            "frame_count": len(sampler.rows),
+            "capture_duration_s": summary["duration_s"],
+            "first_monotonic_s": (sampler.rows[0]["monotonic_s"]
+                                  if sampler.rows else None),
+            "fields": ["monotonic_s", "q_rad", "tcp_pose", "tcp_velocity"],
+            "note": "tcp_pose is [x, y, z, rx, ry, rz] in m / axis-angle rad, "
+                    "base frame, controller TCP definition",
+            "frames": sampler.rows,
+        })
     bgr = image_to_bgr(image_msg)
     gray = cv2.cvtColor(bgr, cv2.COLOR_BGR2GRAY)
     k, d = camera_matrices(info_msg)
@@ -169,7 +253,8 @@ def main():
                         "distortion_model": info_msg.distortion_model,
                         "k": k.reshape(-1).tolist(), "d": d.reshape(-1).tolist(),
                         "r": list(info_msg.r), "p": list(info_msg.p)},
-        "files": {"image": image_path, "corners": corners_path},
+        "files": {"image": image_path, "corners": corners_path,
+                  "robot_frames": frames_path},
     }
     rejection = []
     if sampler.error:
@@ -205,6 +290,42 @@ def main():
                 "reprojection_max_px": float(np.max(residual)),
             }
             result["corners_px"] = corners.reshape(-1, 2).tolist()
+    cloud_path = None
+    if cloud_msg is not None:
+        from validate_checkerboard_pointcloud import organized_xyz
+        camera_xyz = organized_xyz(cloud_msg)
+        if (cloud_msg.width, cloud_msg.height) != (image_msg.width, image_msg.height):
+            rejection.append("image/cloud resolution mismatch")
+        tcp_mean = np.asarray(summary["base_to_tool0_tcp_mean"], dtype=np.float64)
+        base_from_tool0 = np.eye(4)
+        base_from_tool0[:3, :3] = cv2.Rodrigues(tcp_mean[3:])[0]
+        base_from_tool0[:3, 3] = tcp_mean[:3]
+        target_to_camera = None
+        corners_px = None
+        if "target_to_camera" in result:
+            target_to_camera = (
+                np.asarray(result["target_to_camera"]["rvec_rad"], dtype=np.float64),
+                np.asarray(result["target_to_camera"]["translation_m"],
+                           dtype=np.float64))
+            corners_px = np.asarray(result["corners_px"], dtype=np.float64)
+        cloud_path = os.path.join(sample_dir, "cloud.npz")
+        save_cloud_npz(
+            cloud_path, sample_id=stamp, camera_xyz=camera_xyz,
+            cloud_resolution=(cloud_msg.width, cloud_msg.height),
+            cloud_frame_id=cloud_msg.header.frame_id,
+            image_frame_id=image_msg.header.frame_id,
+            cloud_is_dense=bool(cloud_msg.is_dense),
+            k=k, d=d, base_from_tool0=base_from_tool0,
+            target_to_camera=target_to_camera, corners_px=corners_px,
+            inner_corners=pattern, square_size_m=args.square_size_m)
+        result["files"]["cloud"] = cloud_path
+        result["cloud"] = {
+            "resolution": [cloud_msg.width, cloud_msg.height],
+            "frame_id": cloud_msg.header.frame_id,
+            "finite_points": int(np.all(np.isfinite(camera_xyz), axis=2).sum()),
+            "finite_fraction": float(np.mean(np.all(np.isfinite(camera_xyz), axis=2))),
+            "npz_keys": sorted(np.load(cloud_path).files),
+        }
     cv2.imwrite(corners_path, marked)
     result["rejection_reasons"] = rejection
     result["accepted"] = not rejection

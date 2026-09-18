@@ -1,0 +1,119 @@
+{
+  "schema_version": 1,
+  "margin_mm": 30.0,
+  "per_slot": {
+    "7": [
+      -0.002088401541555651,
+      "camera_housing vs forearm_link_0"
+    ],
+    "6": [
+      -0.025559056768620435,
+      "camera_bracket vs forearm_link_0"
+    ],
+    "5": [
+      -0.025559056768620435,
+      "camera_bracket vs forearm_link_0"
+    ],
+    "4": [
+      0.03293238169352741,
+      "camera_bracket vs forearm_link_0"
+    ],
+    "3": [
+      0.0372799976835524,
+      "camera_bracket vs wrist_1_link_0"
+    ],
+    "2": [
+      0.022842836893615815,
+      "camera_bracket vs forearm_link_0"
+    ],
+    "22": [
+      0.03728528464277348,
+      "camera_bracket vs wrist_1_link_0"
+    ],
+    "13": [
+      0.037528165608391346,
+      "camera_bracket vs wrist_1_link_0"
+    ],
+    "21": [
+      0.03966798324136569,
+      "camera_bracket vs wrist_1_link_0"
+    ],
+    "20": [
+      0.037811579514194074,
+      "camera_bracket vs wrist_1_link_0"
+    ],
+    "1": [
+      0.037309765880205834,
+      "camera_bracket vs wrist_1_link_0"
+    ],
+    "25": [
+      0.037309765880205834,
+      "camera_bracket vs wrist_1_link_0"
+    ],
+    "19": [
+      0.037309765880205834,
+      "camera_bracket vs wrist_1_link_0"
+    ],
+    "18": [
+      0.03582859410332781,
+      "camera_bracket vs forearm_link_0"
+    ],
+    "10": [
+      0.03599296489057189,
+      "camera_bracket vs forearm_link_0"
+    ],
+    "14": [
+      -0.016111540756539228,
+      "camera_housing vs upper_arm_link_0"
+    ],
+    "8": [
+      -0.04056990388397337,
+      "camera_housing vs forearm_link_0"
+    ],
+    "12": [
+      -0.04056990388397337,
+      "camera_housing vs forearm_link_0"
+    ],
+    "11": [
+      0.031591549495177534,
+      "camera_housing vs forearm_link_0"
+    ],
+    "26": [
+      -0.004295074217357316,
+      "camera_bracket vs forearm_link_0"
+    ],
+    "16": [
+      -0.004295074217357316,
+      "camera_bracket vs forearm_link_0"
+    ],
+    "24": [
+      0.023142926535880678,
+      "camera_bracket vs forearm_link_0"
+    ],
+    "23": [
+      0.03457228151529857,
+      "camera_bracket vs forearm_link_0"
+    ],
+    "15": [
+      0.025647051739224675,
+      "camera_bracket vs upper_arm_link_0"
+    ],
+    "9": [
+      0.03942205880753387,
+      "camera_bracket vs wrist_1_link_0"
+    ],
+    "17": [
+      0.040759876995973755,
+      "camera_bracket vs wrist_1_link_0"
+    ]
+  },
+  "worst": {
+    "clearance_m": -0.04056990388397337,
+    "where": [
+      8,
+      "translate",
+      "camera_housing vs forearm_link_0"
+    ],
+    "below_margin": true
+  }
+}

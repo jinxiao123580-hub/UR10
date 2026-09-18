@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-09-18T11:34:58.879243+08:00",
+  "kind": "offline_self_test",
+  "checks": [
+    {
+      "name": "closure_origin_rms_under_1e-6_mm",
+      "passed": true,
+      "detail": {
+        "board_origin_mm_rms": 4.006676260261818e-13
+      }
+    },
+    {
+      "name": "closure_corner_scatter_under_1e-6_mm",
+      "passed": true,
+      "detail": {
+        "corner_world_scatter_mm_max": 8.005932084973442e-13
+      }
+    },
+    {
+      "name": "closure_orientation_under_1e-4_deg",
+      "passed": true,
+      "detail": {
+        "board_orientation_deg_max": 1.7075472925031877e-06
+      }
+    },
+    {
+      "name": "closure_detects_2mm_calibration_error",
+      "passed": true,
+      "detail": {
+        "board_origin_mm_rms": 1.3703533729491153
+      }
+    },
+    {
+      "name": "observability_flags_spread_design",
+      "passed": true,
+      "detail": {
+        "axis_isotropy_min_over_max": 0.05978023449531365
+      }
+    },
+    {
+      "name": "observability_flags_degenerate_design",
+      "passed": true,
+      "detail": {
+        "degenerate_axis_isotropy": 0.0,
+        "degenerate_relative_rotation_max_deg": 0.7448451336702738
+      }
+    },
+    {
+      "name": "cloud_npz_roundtrip_corner_rms_under_0.5mm",
+      "passed": true,
+      "detail": {
+        "status": "checked",
+        "corner_xyz_rms_mm": 0.1087069124423257,
+        "npz": "outputs/handeye/selftest-cloud-roundtrip.npz"
+      }
+    },
+    {
+      "name": "cloud_npz_has_audit_keys",
+      "passed": true,
+      "detail": {
+        "keys": [
+          "base_from_tool0",
+          "camera_from_target",
+          "camera_xyz_m",
+          "cloud_frame_id",
+          "cloud_is_dense",
+          "cloud_resolution",
+          "corners_px",
+          "d",
+          "image_frame_id",
+          "inner_corners",
+          "k",
+          "sample_id",
+          "schema_version",
+          "square_size_m",
+          "transforms_note"
+        ]
+      }
+    }
+  ],
+  "passed": true,
+  "passed_count": 8,
+  "total_count": 8
+}
