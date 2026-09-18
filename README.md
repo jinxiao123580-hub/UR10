@@ -58,6 +58,7 @@ python3 scripts/validate_mecheye_capture.py
 | [`docs/12-力传感器重力补偿.md`](docs/12-力传感器重力补偿.md) | 重力补偿的失败结论与限制 |
 | [`docs/14-待办与已知问题.md`](docs/14-待办与已知问题.md) | 未完成项目的唯一清单 |
 | [`docs/15-位置抓放展示流程.md`](docs/15-位置抓放展示流程.md) | 重启后固定点展示的完整终端指令 |
+| [`docs/16-历史ROS桥抓放方法.md`](docs/16-历史ROS桥抓放方法.md) | 原样保留的旧 ROS 抓放命令，仅供历史对照 |
 
 `experiments/` 和 `legacy/` 存放历史过程与失败实验，不是操作教程。新结论必须保存原始数据，
 经独立验证后才写入 `docs/`。

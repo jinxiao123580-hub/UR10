@@ -8,6 +8,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = [ROOT / "README.md", ROOT / "HANDOVER.md", *sorted((ROOT / "docs").glob("*.md"))]
+HISTORICAL_DOCS = {ROOT / "docs/16-历史ROS桥抓放方法.md"}
 RETIRED_COMMANDS = (
     "cd ~/ur_learn",
     "ros2 run ur_link ur_command_node",
@@ -19,6 +20,8 @@ RETIRED_COMMANDS = (
 def main() -> int:
     failures = []
     for path in DOCS:
+        if path in HISTORICAL_DOCS:
+            continue
         for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), start=1):
             stripped = line.strip()
             if stripped.startswith("#"):
