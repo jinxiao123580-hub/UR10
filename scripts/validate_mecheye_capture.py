@@ -9,8 +9,17 @@ import numpy as np
 import rclpy
 from rclpy.node import Node
 from sensor_msgs.msg import Image, PointCloud2, PointField
-from mecheye_ros_interface.srv import (
-    CaptureColorImage, CapturePointCloud, CaptureTexturedPointCloud)
+try:
+    from mecheye_ros_interface.srv import (
+        CaptureColorImage, CapturePointCloud, CaptureTexturedPointCloud)
+except ModuleNotFoundError as exc:
+    if exc.name == "mecheye_ros_interface":
+        raise SystemExit(
+            "缺少 mecheye_ros_interface；请先执行 "
+            "source /opt/ros/humble/setup.bash && "
+            "source ~/colcon_ws/install/setup.bash，再重新运行本脚本。"
+        ) from exc
+    raise
 
 
 class CaptureValidator(Node):

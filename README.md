@@ -15,6 +15,21 @@ cd ~/UR10
 python3 scripts/diagnose.py
 python3 scripts/verify_ur_payload.py
 python3 scripts/monitor_ur_safety.py --duration 3
+```
+
+相机验证需单独启动相机终端（重启后重新执行）：
+
+```bash
+# 终端 A：启动 Mech-Eye
+cd ~/UR10
+source /opt/ros/humble/setup.bash
+source ~/colcon_ws/install/setup.bash
+ros2 launch ~/colcon_ws/src/mecheye_ros2_interface/launch/start_camera_ur10.py
+
+# 终端 B：采集并保存验证数据
+cd ~/UR10
+source /opt/ros/humble/setup.bash
+source ~/colcon_ws/install/setup.bash
 python3 scripts/validate_mecheye_capture.py
 ```
 
