@@ -1,0 +1,216 @@
+<?xml version="1.0"?>
+<!--
+  ur10_cell.collision.xacro  —  碰撞检测版（RViz + MoveIt）
+
+  所有尺寸来自用户实测导出件 末端执行器.STEP（2026-09-19 SolidWorks 2021 导出，AP214）
+  的解析结果。该 STEP：5 个 PRODUCT / 4 个装配实例 / 18 个实体 / mm。
+
+  ★ 关键几何事实（我都实测过，已按它建模）★
+    1. 轴向是 +Y，不是 Z。整条链沿 +Y 向外延伸。
+    2. 2F85 夹爪的法兰安装面在 Y = -35 mm，指尖在 Y = +165.6 mm
+       → 法兰到指尖 200.6 mm（= Robotiq 手册 2F-85 最大高度）
+    3. 六轴力传感器：Y 0~50（厚 50）、Z 126（直径）、X=0（旋转体）
+       → 与 ATI Delta IP65 官方 ⌀126 × 52.2 吻合
+    4. 3D相机包络 Z 纵向 195 mm，且中心在 x=+80 → 含支架、偏心安装
+    5. 装配坐标系原点落在六轴力传感器的安装面上
+
+  尺寸来源：
+    末端执行器.STEP（用户实测导出）  ← 主要依据
+    Robotiq 官方 STEP               2F-85 指尖/行程
+    ATI 9620-05-Transducer Section   Delta IP65 ⌀126 × 52.2
+    Mech-Eye dimensions-pro-xs.png   PRO XS 160 × 87 × 52
+
+  坐标系约定：原版 URDF 用 +Z 向上堆叠；本文件的 USER_* 参数就是实测值换算成米。
+  如果 ur_description 的 tool0 朝向与本装配不一致，改文件末尾的 USER_* 参数即可。
+-->
+<robot xmlns:xacro="http://wiki.ros.org/xacro" name="ur10_digital_twin">
+  <xacro:arg name="tf_prefix" default="twin_"/>
+  <xacro:arg name="ur_type" default="ur10"/>
+  <!-- ★ clocking（本交接件唯一待解自由度）：
+       整个末端（耦合板/六轴力/耦合板/2F85/双指/相机）作为一个整体挂在 tool0 下，
+       tool_yaw 就是「末端整体绕法兰法线」的转角，弧度，运行时可选，不写死。
+       用法：xacro ur10_cell.collision.xacro tool_yaw:=0.7854
+       真机因定位销+4×M6 只有 4 个离散解（间隔 90°=1.5708 rad）。
+       参考方向 = ur_description tool0 的 +x；与 SW 装配系 +X 之间差一个常数，
+       待实物标记法（方案 B）测定后整体代入此参数。 -->
+  <xacro:arg name="tool_yaw" default="0"/>
+  <xacro:property name="tool_yaw" value="$(arg tool_yaw)"/>
+
+  <!-- ====== 实测值（米）。改这里就能整体平移/旋转端部链 ====== -->
+  <!-- 装配体原点 → 六轴力传感器安装面：Y=0, Z=0（STEP 实测） -->
+  <xacro:property name="FT_D"    value="0.050"/>     <!-- 传感器厚 50 mm -->
+  <xacro:property name="FT_R"    value="0.063"/>     <!-- 传感器半径 = 126/2 -->
+  <xacro:property name="PLATE_D" value="0.033"/>     <!-- 连接1 在链上的厚度 -->
+  <xacro:property name="GRIP_D"  value="0.0759"/>    <!-- 2F-85 机身厚 75.9 -->
+  <xacro:property name="GRIP_W"  value="0.1471"/>    <!-- 2F-85 宽 -->
+  <xacro:property name="FING_L"  value="0.089"/>     <!-- 指尖长 -->
+  <xacro:property name="CAM_X"   value="0.080"/>     <!-- 相机中心 x 偏移（实测） -->
+  <xacro:property name="CAM_Y"   value="-0.0474"/>   <!-- 相机中心 y 偏移（实测） -->
+  <xacro:property name="CAM_Z"   value="-0.0279"/>   <!-- 相机中心 z 偏移（实测） -->
+
+  <xacro:include filename="$(find ur_description)/urdf/ur_macro.xacro"/>
+
+  <material name="ati_blue"><color rgba="0.10 0.35 0.75 1"/></material>
+  <material name="gripper_gray"><color rgba="0.18 0.20 0.23 1"/></material>
+  <material name="finger_metal"><color rgba="0.65 0.68 0.72 1"/></material>
+  <material name="camera_dark"><color rgba="0.08 0.08 0.10 1"/></material>
+
+  <link name="world"/>
+  <xacro:ur_robot
+      name="ur10"
+      tf_prefix="$(arg tf_prefix)"
+      parent="world"
+      joint_limits_parameters_file="$(find ur_description)/config/$(arg ur_type)/joint_limits.yaml"
+      kinematics_parameters_file="$(find ur_description)/config/$(arg ur_type)/default_kinematics.yaml"
+      physical_parameters_file="$(find ur_description)/config/$(arg ur_type)/physical_parameters.yaml"
+      visual_parameters_file="$(find ur_description)/config/$(arg ur_type)/visual_parameters.yaml"
+      safety_limits="false"
+      safety_pos_margin="0.15"
+      safety_k_position="20"
+      force_abs_paths="false">
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </xacro:ur_robot>
+
+  <!-- ============ 1. 连接1：法兰耦合板 ============ -->
+  <!-- 实测包络 130 × 58 × 160 mm。用薄圆柱做碰撞体（旋转对称部分）。 -->
+  <link name="$(arg tf_prefix)ft_mount_plate">
+    <visual>
+      <origin xyz="0 0 $(PLATE_D/2)" rpy="0 0 0"/>
+      <geometry><cylinder radius="0.045" length="${PLATE_D}"/></geometry>
+      <material name="finger_metal"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 $(PLATE_D/2)" rpy="0 0 0"/>
+      <geometry><cylinder radius="0.045" length="${PLATE_D}"/></geometry>
+    </collision>
+  </link>
+  <!-- ★ 唯一的 clocking 旋钮：绕 tool0 z（法兰法线）转 tool_yaw。
+       下面整条末端链都挂在这个 joint 之后，随之整体旋转。 -->
+  <joint name="$(arg tf_prefix)tool0_to_ft_mount" type="fixed">
+    <parent link="$(arg tf_prefix)tool0"/>
+    <child link="$(arg tf_prefix)ft_mount_plate"/>
+    <origin xyz="0 0 0" rpy="0 0 ${tool_yaw}"/>
+  </joint>
+
+  <!-- ============ 2. ATI Delta IP65 六轴力传感器 ============ -->
+  <!-- 实测：厚 50 mm、直径 126 mm、旋转体（X=0）。
+       官方 Table 5.87：⌀126 × 52.2。两者一致，取实测 50。 -->
+  <link name="$(arg tf_prefix)ati_sensor">
+    <visual>
+      <origin xyz="0 0 $(PLATE_D + FT_D/2)" rpy="0 0 0"/>
+      <geometry><cylinder radius="${FT_R}" length="${FT_D}"/></geometry>
+      <material name="ati_blue"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 $(PLATE_D + FT_D/2)" rpy="0 0 0"/>
+      <geometry><cylinder radius="${FT_R}" length="${FT_D}"/></geometry>
+    </collision>
+  </link>
+  <joint name="$(arg tf_prefix)ft_mount_to_ati" type="fixed">
+    <parent link="$(arg tf_prefix)ft_mount_plate"/>
+    <child link="$(arg tf_prefix)ati_sensor"/>
+    <origin xyz="0 0 $(PLATE_D)" rpy="0 0 0"/>
+  </joint>
+
+  <!-- ============ 3. 传感器 → 夹爪 耦合板 ============ -->
+  <link name="$(arg tf_prefix)gripper_coupling">
+    <visual>
+      <origin xyz="0 0 $(PLATE_D + FT_D + PLATE_D/2)" rpy="0 0 0"/>
+      <geometry><cylinder radius="0.0364" length="${PLATE_D}"/></geometry>
+      <material name="finger_metal"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 $(PLATE_D + FT_D + PLATE_D/2)" rpy="0 0 0"/>
+      <geometry><cylinder radius="0.0364" length="${PLATE_D}"/></geometry>
+    </collision>
+  </link>
+  <joint name="$(arg tf_prefix)ati_to_coupling" type="fixed">
+    <parent link="$(arg tf_prefix)ati_sensor"/>
+    <child link="$(arg tf_prefix)gripper_coupling"/>
+    <origin xyz="0 0 $(PLATE_D + FT_D)" rpy="0 0 0"/>
+  </joint>
+
+  <!-- ============ 4. Robotiq 2F-85 夹爪主体 ============ -->
+  <!-- 实测机身：宽 147.1、厚 75.9。指尖另算。
+       法兰安装面 → 指尖 = 200.6 mm（= 官方 2F-85 最大高度，已交叉验证）。 -->
+  <link name="$(arg tf_prefix)gripper_base">
+    <visual>
+      <origin xyz="0 0 $(2*PLATE_D + FT_D + GRIP_D/2)" rpy="0 0 0"/>
+      <geometry><box size="0.1435 $(GRIP_W) $(GRIP_D)"/></geometry>
+      <material name="gripper_gray"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 $(2*PLATE_D + FT_D + GRIP_D/2)" rpy="0 0 0"/>
+      <geometry><box size="0.1435 $(GRIP_W) $(GRIP_D)"/></geometry>
+    </collision>
+  </link>
+  <joint name="$(arg tf_prefix)coupling_to_gripper" type="fixed">
+    <parent link="$(arg tf_prefix)gripper_coupling"/>
+    <child link="$(arg tf_prefix)gripper_base"/>
+    <origin xyz="0 0 $(2*PLATE_D + FT_D)" rpy="0 0 0"/>
+  </joint>
+
+  <!-- ============ 5. 左右手指（prismatic） ============ -->
+  <!-- 2F-85 单指行程 42.5 mm（开口 85 mm）。
+       指尖长度：法兰(200.6) − 机身厚(75.9) − 两板+传感(116) = 8.7 mm 露出部分。
+       这里给到 89 mm 全长（含嵌进机身的根部）。 -->
+  <link name="$(arg tf_prefix)left_finger">
+    <visual>
+      <origin xyz="0 0 $(2*PLATE_D + FT_D + GRIP_D + FING_L/2)" rpy="0 0 0"/>
+      <geometry><box size="0.018 0.022 $(FING_L)"/></geometry>
+      <material name="finger_metal"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 $(2*PLATE_D + FT_D + GRIP_D + FING_L/2)" rpy="0 0 0"/>
+      <geometry><box size="0.018 0.022 $(FING_L)"/></geometry>
+    </collision>
+  </link>
+  <joint name="$(arg tf_prefix)left_finger_joint" type="prismatic">
+    <parent link="$(arg tf_prefix)gripper_base"/>
+    <child link="$(arg tf_prefix)left_finger"/>
+    <origin xyz="0.0313 0 $(2*PLATE_D + FT_D + GRIP_D)" rpy="0 0 0"/>
+    <axis xyz="1 0 0"/>
+    <limit lower="0" upper="0.0425" effort="100" velocity="0.15"/>
+  </joint>
+
+  <link name="$(arg tf_prefix)right_finger">
+    <visual>
+      <origin xyz="0 0 $(2*PLATE_D + FT_D + GRIP_D + FING_L/2)" rpy="0 0 0"/>
+      <geometry><box size="0.018 0.022 $(FING_L)"/></geometry>
+      <material name="finger_metal"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 $(2*PLATE_D + FT_D + GRIP_D + FING_L/2)" rpy="0 0 0"/>
+      <geometry><box size="0.018 0.022 $(FING_L)"/></geometry>
+    </collision>
+  </link>
+  <joint name="$(arg tf_prefix)right_finger_joint" type="prismatic">
+    <parent link="$(arg tf_prefix)gripper_base"/>
+    <child link="$(arg tf_prefix)right_finger"/>
+    <origin xyz="-0.0313 0 $(2*PLATE_D + FT_D + GRIP_D)" rpy="0 0 0"/>
+    <axis xyz="-1 0 0"/>
+    <limit lower="0" upper="0.0425" effort="100" velocity="0.15"/>
+  </joint>
+
+  <!-- ============ 6. 偏心安装的 3D 相机（Mech-Eye PRO XS） ============ -->
+  <!-- ★ 实测：相机组件中心在装配坐标系 (x=+80, y=-47.4, z=-27.9) mm。
+       包络 160(X) × 136.5(Y) × 195(Z) —— Z 方向含支架，不只是相机本体。
+       相机本体本身是 160 × 87 × 52（官方尺寸图）。
+       这就是 docs/01-硬件与网络.md §7.1 说的"偏心安装"，也是标定问题的物理来源。 -->
+  <link name="$(arg tf_prefix)camera_link">
+    <visual>
+      <origin xyz="$(CAM_X) $(CAM_Y) $(CAM_Z)" rpy="0 0 0"/>
+      <geometry><box size="0.160 0.1365 0.195"/></geometry>
+      <material name="camera_dark"/>
+    </visual>
+    <collision>
+      <origin xyz="$(CAM_X) $(CAM_Y) $(CAM_Z)" rpy="0 0 0"/>
+      <geometry><box size="0.160 0.1365 0.195"/></geometry>
+    </collision>
+  </link>
+  <joint name="$(arg tf_prefix)camera_mount_joint" type="fixed">
+    <parent link="$(arg tf_prefix)ati_sensor"/>
+    <child link="$(arg tf_prefix)camera_link"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>
+</robot>
