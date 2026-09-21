@@ -27,8 +27,9 @@ TCP_VELOCITY_OFFSET = 492
 
 
 class RealtimeReader:
-    def __init__(self, host):
+    def __init__(self, host, port=30003):
         self.host = host
+        self.port = port
         self.sock = None
         self.buffer = bytearray()
         self.reconnects = 0
@@ -38,12 +39,21 @@ class RealtimeReader:
 
     def connect(self):
         self.close()
-        self.sock = socket.create_connection((self.host, 30003), timeout=3.0)
+        self.sock = socket.create_connection((self.host, self.port), timeout=3.0)
         self.sock.settimeout(1.0)
         self.buffer.clear()
         self.reconnects += 1
 
-    def read(self):
+    def read(self, max_wait_seconds=None):
+        """Return one decoded state frame.
+
+        ``max_wait_seconds`` is optional so existing continuous readers keep
+        their reconnect behaviour.  Interactive calibration callers can set a
+        finite limit instead of appearing to hang when a controller accepts a
+        TCP connection but temporarily stops publishing realtime frames.
+        """
+        deadline = (time.monotonic() + max_wait_seconds
+                    if max_wait_seconds is not None else None)
         while True:
             try:
                 while len(self.buffer) < 4:
@@ -64,17 +74,25 @@ class RealtimeReader:
                 self.last_frame = frame
                 return decode_frame(frame)
             except (socket.timeout, OSError, ConnectionError) as exc:
+                if deadline is not None and time.monotonic() >= deadline:
+                    raise TimeoutError(
+                        "UR %d did not provide a state frame within %.1f s" %
+                        (self.port, max_wait_seconds)) from exc
                 now = time.monotonic()
                 if now - self.last_warning >= 5.0:
-                    print("UR 30003 暂无状态，正在自动重连：%s" % exc, flush=True)
+                    print("UR %d 暂无状态，正在自动重连：%s" % (self.port, exc), flush=True)
                     self.last_warning = now
                 while True:
                     try:
                         self.connect()
                         break
                     except OSError as connect_error:
+                        if deadline is not None and time.monotonic() >= deadline:
+                            raise TimeoutError(
+                                "UR %d reconnect timed out after %.1f s" %
+                                (self.port, max_wait_seconds)) from connect_error
                         if time.monotonic() - self.last_warning >= 5.0:
-                            print("UR 30003 重连失败，继续等待：%s" % connect_error, flush=True)
+                            print("UR %d 重连失败，继续等待：%s" % (self.port, connect_error), flush=True)
                             self.last_warning = time.monotonic()
                         time.sleep(0.5)
 

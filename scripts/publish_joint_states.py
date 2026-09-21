@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Publish the controller's live joint state on /joint_states for RViz.
 
-Read-only: it opens 30003, reads ``q_actual``, and republishes it as a
+Read-only: it opens a UR realtime port, reads ``q_actual``, and republishes it as a
 ``sensor_msgs/JointState``.  It never opens 30002 and never commands motion.
 
 Pair it with ``robot_state_publisher`` (which turns the URDF plus these joint
@@ -33,6 +33,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--host", default="192.168.1.3")
+    parser.add_argument("--port", type=int, default=30003,
+                        help="UR read-only realtime port")
     parser.add_argument("--hz", type=float, default=50.0)
     parser.add_argument("--topic", default="/joint_states")
     args = parser.parse_args()
@@ -45,9 +47,9 @@ def main():
     rclpy.init()
     node = Node("ur10_joint_state_relay")
     publisher = node.create_publisher(JointState, args.topic, 10)
-    reader = RealtimeReader(args.host)
-    node.get_logger().info("publishing %s from %s:30003 at %.0f Hz" %
-                           (args.topic, args.host, args.hz))
+    reader = RealtimeReader(args.host, args.port)
+    node.get_logger().info("publishing %s from %s:%d at %.0f Hz" %
+                           (args.topic, args.host, args.port, args.hz))
     period = 1.0 / max(args.hz, 1.0)
     published = 0
     try:

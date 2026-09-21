@@ -29,8 +29,9 @@ URDF_SOURCE = os.path.expanduser("~/ur_learn/generated/ur10.urdf")
 URDF_PATCHED = "/home/jx/UR10/outputs/vision/ur10_meshpath.urdf"
 MESH_PREFIX = "/home/jx/ros2_ws/install/ur_description/share/ur_description/"
 
-# Camera assembly, metres.  20 x 20 cm housing is the operator's measurement; the
-# bracket is modelled as a thin box along the tool0 -> camera segment.
+# Geometry now comes from config/robot_attachments.yaml via robot_attachments.py,
+# so the collision gate and the RViz/MuJoCo picture are built from one source.  The
+# constants below stay as a fallback for callers that pass nothing.
 CAMERA_BOX = (0.20, 0.20, 0.15)
 BRACKET_WIDTH = 0.05
 
@@ -70,8 +71,19 @@ def _box_between(start, end, width):
 class SelfCollisionModel:
     """Robot collision meshes plus the camera assembly, with distance queries."""
 
-    def __init__(self, tool0_from_camera, camera_box=CAMERA_BOX,
-                 bracket_width=BRACKET_WIDTH):
+    def __init__(self, tool0_from_camera=None, camera_box=None,
+                 bracket_width=None, geometry=None, attachments_path=None):
+        if geometry is None:
+            from robot_attachments import load as _load_attachments
+            geometry = _load_attachments(attachments_path)
+        if tool0_from_camera is not None:
+            # Legacy callers pass the 4x4 tool0_from_camera directly.
+            geometry = dict(geometry)
+            geometry["tool0_from_camera"] = np.asarray(tool0_from_camera, dtype=float)
+        self.geometry_config = geometry
+        tool0_from_camera = np.asarray(geometry["tool0_from_camera"], dtype=float)
+        camera_box = tuple(camera_box or geometry["camera_housing"]["size_m"])
+        bracket_width = float(bracket_width or geometry["camera_bracket"]["width_m"])
         self.model = pin.buildModelFromUrdf(patched_urdf())
         self.geometry = pin.buildGeomFromUrdf(self.model, patched_urdf(),
                                               pin.GeometryType.COLLISION)
@@ -89,8 +101,31 @@ class SelfCollisionModel:
         bracket_id = self.geometry.addGeometryObject(pin.GeometryObject(
             "camera_bracket", parent_joint, tool0_placement * bracket_placement,
             bracket_shape))
-        self.camera_ids = (camera_id, bracket_id)
-        self.camera_names = ("camera_housing", "camera_bracket")
+        # The force sensor and the gripper are real bodies on the same flange and
+        # can also strike the arm, so they belong in the gate rather than only in
+        # the picture.
+        added = [("camera_housing", camera_id), ("camera_bracket", bracket_id)]
+        sensor = geometry.get("force_sensor") or {}
+        if sensor.get("enabled"):
+            half = sensor["height_m"] / 2.0
+            centre = np.array([0.0, 0.0, sensor["offset_m"] + half])
+            sensor_id = self.geometry.addGeometryObject(pin.GeometryObject(
+                "force_sensor", parent_joint, tool0_placement * pin.SE3(
+                    np.eye(3), centre),
+                pin.hppfcl.Cylinder(sensor["diameter_m"] / 2.0, sensor["height_m"])))
+            added.append(("force_sensor", sensor_id))
+        gripper = geometry.get("gripper") or {}
+        if gripper.get("enabled"):
+            size = gripper["size_m"]
+            centre = np.array([0.0, 0.0, gripper["offset_m"] + size[1] / 2.0])
+            gripper_id = self.geometry.addGeometryObject(pin.GeometryObject(
+                "gripper_body", parent_joint, tool0_placement * pin.SE3(
+                    np.eye(3), centre),
+                pin.hppfcl.Box(size[0], size[1], size[2])))
+            added.append(("gripper_body", gripper_id))
+        self.attachments = added
+        self.camera_ids = tuple(value for _name, value in added)
+        self.camera_names = tuple(name for name, _value in added)
         # Everything rigidly connected to the last two wrist links moves with the
         # camera, so only the earlier links can genuinely be struck by it.
         checkable = ("base_link", "shoulder_link", "upper_arm_link", "forearm_link",
@@ -122,6 +157,32 @@ class SelfCollisionModel:
                 label = "%s vs %s" % (first, second)
         return minimum, label
 
+    def closest_pair_points(self, q):
+        """(clearance, label, point_on_camera, point_on_arm) for the tightest pair.
+
+        The nearest points make the picture diagnostic: a number alone does not
+        show *where* the two bodies are about to meet.
+        """
+        pin.forwardKinematics(self.model, self.model_data, np.asarray(q, dtype=float))
+        pin.updateGeometryPlacements(self.model, self.model_data, self.geometry,
+                                     self.geometry_data)
+        minimum = float("inf")
+        best = (None, None, None)
+        for index, pair in enumerate(self.geometry.collisionPairs):
+            result = pin.computeDistance(self.geometry, self.geometry_data, index)
+            distance = float(result.min_distance)
+            if distance < minimum:
+                minimum = distance
+                first = self.geometry.geometryObjects[pair.first].name
+                second = self.geometry.geometryObjects[pair.second].name
+                points = [np.asarray(result.getNearestPoint1(), dtype=float),
+                          np.asarray(result.getNearestPoint2(), dtype=float)]
+                camera_first = first.startswith("camera")
+                best = ("%s vs %s" % (first, second),
+                        points[0] if camera_first else points[1],
+                        points[1] if camera_first else points[0])
+        return minimum, best[0], best[1], best[2]
+
 
 def main():
     import argparse
@@ -136,6 +197,9 @@ def main():
     parser.add_argument("--gate", default="outputs/vision/gate-half.json")
     parser.add_argument("--calibration",
                         default="config/handeye_eye_in_hand_20260917.yaml")
+    parser.add_argument("--attachments", default="config/robot_attachments.yaml",
+                        help="attachment geometry YAML; use a preliminary CAD envelope "
+                             "only for offline comparison, never as real-motion proof")
     parser.add_argument("--output",
                         default="outputs/vision/self-collision-report.json")
     parser.add_argument("--margin-mm", type=float, default=30.0)
@@ -148,14 +212,18 @@ def main():
     tool0_from_camera[:3, :3] = np.asarray(calibration["rotation_matrix"])
     tool0_from_camera[:3, 3] = np.asarray(calibration["translation_m"])
 
-    model = SelfCollisionModel(tool0_from_camera)
+    attachments_path = args.attachments if os.path.isabs(args.attachments) else \
+        os.path.join(root, args.attachments)
+    model = SelfCollisionModel(tool0_from_camera, attachments_path=attachments_path)
     ik = UR10IK()
     with open(os.path.join(root, args.gate), encoding="utf-8") as stream:
         gate = json.load(stream)
     segments = [value for value in gate["segments"]
                 if value.get("segment") != "slot_summary" and "end_tcp_m_rad" in value]
 
-    report = {"schema_version": 1, "margin_mm": args.margin_mm, "per_slot": {}}
+    report = {"schema_version": 1, "margin_mm": args.margin_mm,
+              "attachments": os.path.relpath(attachments_path, root),
+              "per_slot": {}}
     worst = (float("inf"), None)
     for value in segments:
         q, _, _, _ = ik.solve(BASE_FROM_URDF_ROOT.inverse() *

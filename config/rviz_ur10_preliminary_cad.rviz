@@ -27,10 +27,15 @@ Visualization Manager:
     - Class: rviz_default_plugins/TF
       Enabled: true
       Name: TF
-      Show Names: false
+      Show Names: true
       Show Axes: true
       Show Arrows: false
-      Marker Scale: 0.25
+      Marker Scale: 0.08
+    - Class: rviz_default_plugins/MarkerArray
+      Enabled: true
+      Name: Measured cube preview
+      Topic:
+        Value: /vision_grasp_preview
   Global Options:
     Background Color: 48; 48; 48
     Fixed Frame: world

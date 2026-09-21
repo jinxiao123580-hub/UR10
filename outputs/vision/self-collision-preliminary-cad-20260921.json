@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "margin_mm": 40.0,
+  "attachments": "config/robot_attachments.preliminary-cad-20260921.yaml",
+  "per_slot": {
+    "4": [
+      0.04721150036033308,
+      "force_sensor vs wrist_1_link_0"
+    ],
+    "3": [
+      0.04721150036033308,
+      "force_sensor vs wrist_1_link_0"
+    ],
+    "9": [
+      0.04721150036033308,
+      "force_sensor vs wrist_1_link_0"
+    ],
+    "24": [
+      0.04721150036033308,
+      "force_sensor vs wrist_1_link_0"
+    ],
+    "16": [
+      0.04721150036033308,
+      "force_sensor vs wrist_1_link_0"
+    ],
+    "2": [
+      0.04721150036033308,
+      "force_sensor vs wrist_1_link_0"
+    ],
+    "12": [
+      0.04721150036033308,
+      "force_sensor vs wrist_1_link_0"
+    ],
+    "20": [
+      0.04721150036033308,
+      "force_sensor vs wrist_1_link_0"
+    ],
+    "11": [
+      0.04721150036033308,
+      "force_sensor vs wrist_1_link_0"
+    ],
+    "17": [
+      0.04721150036033308,
+      "force_sensor vs wrist_1_link_0"
+    ],
+    "19": [
+      0.04721150036033308,
+      "force_sensor vs wrist_1_link_0"
+    ],
+    "10": [
+      0.04721150036033308,
+      "force_sensor vs wrist_1_link_0"
+    ],
+    "1": [
+      0.04721150036033308,
+      "force_sensor vs wrist_1_link_0"
+    ],
+    "25": [
+      0.04721150036033308,
+      "force_sensor vs wrist_1_link_0"
+    ],
+    "8": [
+      0.04721150036033308,
+      "force_sensor vs wrist_1_link_0"
+    ],
+    "18": [
+      0.04721150036033308,
+      "force_sensor vs wrist_1_link_0"
+    ],
+    "23": [
+      0.04721150036033308,
+      "force_sensor vs wrist_1_link_0"
+    ],
+    "22": [
+      0.04721150036033308,
+      "force_sensor vs wrist_1_link_0"
+    ],
+    "15": [
+      0.04721150036033308,
+      "force_sensor vs wrist_1_link_0"
+    ],
+    "14": [
+      0.04721150036033308,
+      "force_sensor vs wrist_1_link_0"
+    ],
+    "7": [
+      0.04721150036033308,
+      "force_sensor vs wrist_1_link_0"
+    ]
+  },
+  "worst": {
+    "clearance_m": 0.04721150036033308,
+    "where": [
+      4,
+      "lift",
+      "force_sensor vs wrist_1_link_0"
+    ],
+    "below_margin": false
+  }
+}

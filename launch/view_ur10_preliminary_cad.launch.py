@@ -18,7 +18,9 @@ def generate_launch_description():
              name="ur10_preliminary_model_publisher", output="screen",
              parameters=[{"robot_description": robot_description}]),
         ExecuteProcess(cmd=["python3", os.path.join(ROOT, "scripts/publish_joint_states.py"),
-                            "--hz", "50"], output="screen"),
+                            "--port", "30013", "--hz", "50"], output="screen"),
+        ExecuteProcess(cmd=["python3", os.path.join(ROOT, "scripts/publish_cube_preview.py")],
+                       output="screen"),
         ExecuteProcess(cmd=["rviz2", "-d", os.path.join(ROOT, "config/rviz_ur10_preliminary_cad.rviz")],
                        output="screen"),
     ])
