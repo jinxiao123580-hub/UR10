@@ -1,0 +1,43 @@
+schema_version: 1
+setup: eye_in_hand
+parent_frame: tool0
+child_frame: mechmind_camera/color_map
+transform_direction: tool0_from_camera
+method: OpenCV_CALIB_HAND_EYE_PARK
+valid: true
+validation_scope: held_out_numeric_gate_and_7_independent_fixed_board_samples
+translation_m: [0.04849423522761702, 0.25202240709668144, 0.19931610726118562]
+rotation_matrix:
+  - [-0.9999805717743221, 0.0022858209644294305, 0.005799232399023934]
+  - [-0.0062283186547267555, -0.4041846706805606, -0.9146561977232692]
+  - [0.0002532205253987276, -0.9146745470435744, 0.4041910549109148]
+rotation_vector_rad: [-0.005664005722325913, 1.7119240638122009, -2.6281156313433716]
+training_samples: 29
+holdout_samples: 6
+holdout_closure:
+  translation_rms_mm: 1.769
+  translation_max_mm: 2.489
+  rotation_rms_deg: 0.304
+  rotation_max_deg: 0.456
+cross_method_check:
+  compared_method: OpenCV_CALIB_HAND_EYE_HORAUD
+  translation_difference_mm: 0.665
+  rotation_difference_deg: 0.169
+postfit_independent_samples:
+  count: 7
+  board_origin_rms_mm: 1.815
+  board_origin_max_mm: 3.186
+  board_orientation_rms_deg: 0.421
+  board_orientation_max_deg: 0.542
+  passed_5mm_2deg_gate: true
+  raw_cloud_corner_rms_mm_mean: 1.250
+  raw_cloud_corner_rms_mm_max: 3.320
+  raw_cloud_samples_over_2mm: 2
+source_dataset: outputs/handeye/manual-eye-in-hand-20260921-r2.json
+solver_result: outputs/handeye/solution-manual-20260921-r2.json
+independent_validation: outputs/handeye/independent-closure-20260921.json
+safety_note: >-
+  This validates the tool0-to-camera transform for the fixed checkerboard only.
+  It does not authorize autonomous robot motion, grasping, collision clearance,
+  force control, or use of ATI gravity compensation. Two independent raw-cloud
+  corner checks exceeded 2 mm and remain a point-cloud quality limitation.
