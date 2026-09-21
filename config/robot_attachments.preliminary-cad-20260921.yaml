@@ -1,0 +1,29 @@
+# Conservative, visual/collision-only first pass based on uploaded CAD and photos.
+# It is intentionally separate from robot_attachments.yaml and is NOT a truth model
+# for real-robot clearance decisions.
+model_status: preliminary_cad_envelope_not_real_robot_validated
+cad_models_dir: ros2_ws/src/ur10_digital_twin/models/end_effector
+tool_yaw_deg: 270.0  # current +90° baseline, then operator-requested +180°
+handeye_calibration: config/handeye_eye_in_hand_20260921.yaml
+force_sensor:
+  enabled: true
+  diameter_mm: 126.0  # uploaded ATI mesh bounds
+  height_mm: 50.0
+  offset_mm: 0.0
+adapter:
+  enabled: false      # CAD connection plate origin is not yet registered to tool0
+gripper:
+  enabled: true
+  # conservative envelope of the uploaded closed 2F-85 mesh: width, axial length, depth
+  size_mm: [126.4, 166.3, 75.0]
+  # provisional: 50 mm ATI thickness + 33 mm coupler
+  offset_mm: 83.0
+camera_bracket:
+  width_mm: 50.0
+  length_mm: null
+camera_housing:
+  # retains margin around the uploaded 195 x 136.5 x 160 mm proxy
+  size_mm: [200.0, 200.0, 170.0]
+camera_offset_tool0_m: [0.04849423522761702, 0.25202240709668144, 0.19931610726118562]
+camera_rotation_source: handeye
+self_collision_margin_mm: 40.0
