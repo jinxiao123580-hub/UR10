@@ -47,11 +47,11 @@ def mean_rotation(rotvecs):
     return vector * angle / (2. * math.sin(angle))
 
 
-def capture_static(reader, duration):
+def capture_static(reader, duration, state_timeout):
     started = time.monotonic()
     rows = []
     while time.monotonic() - started < duration:
-        q, tcp, _ = reader.read()
+        q, tcp, _ = reader.read(max_wait_seconds=state_timeout)
         rows.append((q, tcp))
     if len(rows) < 20:
         raise RuntimeError("UR state frames too few: %d" % len(rows))
@@ -130,8 +130,14 @@ def main():
     parser.add_argument("--duration", type=float, default=1.0)
     parser.add_argument("--max-motion-mm", type=float, default=0.5)
     parser.add_argument("--max-motion-deg", type=float, default=0.2)
+    parser.add_argument("--state-timeout", type=float, default=15.0,
+                        help="maximum seconds to wait for one UR realtime state frame")
+    parser.add_argument("--port", type=int, default=30013,
+                        help="read-only UR realtime port (default: 30013, verified on this robot)")
     parser.add_argument("--tcp-name", default="left_fingertip_closed")
     parser.add_argument("--output")
+    parser.add_argument("--resume", action="store_true",
+                        help="continue the existing --output file, retaining accepted samples")
     args = parser.parse_args()
     if args.samples < args.holdout + 4:
         parser.error("samples must be >= holdout + 4")
@@ -145,15 +151,39 @@ def main():
                 "gripper_state_requirement": "Keep the gripper closed and do not change jaws/fingertips.",
                 "reference_requirement": "Same rigid physical point for every sample.",
                 "static_limits": {"motion_mm": args.max_motion_mm, "motion_deg": args.max_motion_deg},
+                "ur_realtime_port": args.port,
                 "samples": []}
+    if args.resume:
+        if not os.path.isfile(path):
+            parser.error("--resume requires an existing --output file")
+        with open(path, encoding="utf-8") as stream:
+            document = json.load(stream)
+        if document.get("tcp_name") != args.tcp_name:
+            parser.error("--tcp-name does not match the existing calibration file")
+        prior_port = document.get("ur_realtime_port")
+        if prior_port is not None and prior_port != args.port:
+            parser.error("--port does not match the existing calibration file")
+        document["ur_realtime_port"] = args.port
+        if document.get("result"):
+            parser.error("existing calibration is already finalized; use a new --output")
     print("固定尖点 TCP 标定（纯读取）。选择左指尖；夹爪必须保持闭合。")
     print("每次让同一指尖接触同一尖点，换明显不同姿态后按回车。最后 %d 个有效样本留作独立验证。" % args.holdout)
-    reader = RealtimeReader("192.168.1.3")
+    try:
+        reader = RealtimeReader("192.168.1.3", args.port)
+    except OSError as exc:
+        raise SystemExit(
+            "无法连接 UR 192.168.1.3:%d（%s）。"
+            "检查机器人已上电运行、电脑仍在机器人网段，以及网线/交换机；"
+            "已有 --output 样本未改动，恢复后使用同一命令加 --resume。" % (args.port, exc))
     try:
         while sum(item["accepted"] for item in document["samples"]) < args.samples:
             wanted = sum(item["accepted"] for item in document["samples"]) + 1
             input("\n对准固定尖点并停稳后按回车，采集有效样本 %d/%d：" % (wanted, args.samples))
-            sample = capture_static(reader, args.duration)
+            try:
+                sample = capture_static(reader, args.duration, args.state_timeout)
+            except TimeoutError as exc:
+                print("未采样：%s。检查控制器运行/远程状态后再按回车；已有样本已保留。" % exc)
+                continue
             sample["index"] = len(document["samples"]) + 1
             sample["accepted"] = (sample["max_motion_mm"] <= args.max_motion_mm and
                                   sample["max_motion_deg"] <= args.max_motion_deg)
