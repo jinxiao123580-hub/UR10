@@ -13,6 +13,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--measurement",
                         default="outputs/vision/cube-measurement-20260921-provisional-r2.json")
+    parser.add_argument("--hover-plan", default="outputs/vision/fingertip-hover-plan-20260922.json",
+                        help="optional non-executable fingertip hover plan to visualize")
     parser.add_argument("--frame", default="world")
     args = parser.parse_args()
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -62,7 +64,24 @@ def main():
     label.pose.orientation.w, label.scale.z = 1.0, 0.025
     label.color.r, label.color.g, label.color.b, label.color.a = 1.0, 0.85, 0.1, 1.0
     label.text = "measured 50 mm cube (preview only)"
-    publisher.publish(MarkerArray(markers=[cube, point, label]))
+    markers = [cube, point, label]
+    hover_path = (args.hover_plan if os.path.isabs(args.hover_plan)
+                  else os.path.join(root, args.hover_plan))
+    if os.path.isfile(hover_path):
+        with open(hover_path, encoding="utf-8") as stream:
+            hover = json.load(stream)
+        if hover.get("kind") in ("left_fingertip_hover_preview",
+                                 "gripper_grasp_center_hover_preview"):
+            location = hover["fingertip_hover_base_m"]
+            target = Marker()
+            target.header.frame_id, target.header.stamp = args.frame, now
+            target.ns, target.id, target.type, target.action = "fingertip_hover", 3, Marker.SPHERE, Marker.ADD
+            target.pose.position.x, target.pose.position.y, target.pose.position.z = map(float, location)
+            target.pose.orientation.w = 1.0
+            target.scale.x = target.scale.y = target.scale.z = 0.018
+            target.color.r, target.color.g, target.color.b, target.color.a = 0.05, 0.85, 1.0, 1.0
+            markers.append(target)
+    publisher.publish(MarkerArray(markers=markers))
     node.get_logger().info("published cube preview from %s" % path)
     rclpy.spin(node)
 

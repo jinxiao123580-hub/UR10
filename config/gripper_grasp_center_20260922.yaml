@@ -1,0 +1,13 @@
+# Manually measured closed-gripper grasp centre.  The operator measured 22 cm
+# outward/downward; this project defines tool0 +Z as the outward chain axis.
+schema_version: 1
+frame: gripper_grasp_center
+parent_frame: tool0
+translation_m: [0.0, 0.0, 0.220]
+orientation: inherits_tool0
+source: manual physical measurement, 2026-09-22
+status: position_only_manual_measurement
+authorization: visualization_and_offline_hover_only
+limitations:
+  - Does not independently calibrate jaw closing direction.
+  - Does not validate a controller TCP write or real-robot motion.

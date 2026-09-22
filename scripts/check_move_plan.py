@@ -50,10 +50,10 @@ MIN_SINGULAR_GATE_FRACTION = 0.15   # vs the current pose's smallest singular va
 SINGULARITY_FLOOR = 0.02            # absolute floor for the smallest singular value
 
 
-def read_state(host, timeout=5.0):
-    """Read one (q, tcp) pair using the repository's validated 30003 parser."""
+def read_state(host, port=30013):
+    """Read one (q, tcp) pair from a read-only UR realtime port."""
     from record_ur_trajectory import RealtimeReader
-    reader = RealtimeReader(host)
+    reader = RealtimeReader(host, port)
     try:
         q, tcp, _ = reader.read()
     finally:
@@ -93,7 +93,7 @@ def jacobian_singular_values(ik, q):
 
 
 def check_segment(ik, start_pose, end_pose, start_q, samples,
-                  self_collision=None, min_clearance_m=None):
+                  self_collision=None, min_clearance_m=None, joint6_range_rad=None):
     """Densely sample one straight-line segment and gate every sample.
 
     The camera-versus-arm clearance is checked at every sample, not just at the
@@ -131,6 +131,12 @@ def check_segment(ik, start_pose, end_pose, start_q, samples,
         if flange_z_base < FLANGE_Z_FLOOR_M:
             reasons.append("sample %d flange z %.4f m below floor" %
                            (index, flange_z_base))
+        if joint6_range_rad is not None:
+            low, high = joint6_range_rad
+            if not low <= solved[5] <= high:
+                reasons.append("sample %d J6 %.1f deg outside [%.1f, %.1f] deg" %
+                               (index, np.degrees(solved[5]), np.degrees(low),
+                                np.degrees(high)))
         if self_collision is not None:
             clearance, pair = self_collision.min_clearance(solved)
             if clearance < worst["min_camera_clearance_m"]:
@@ -149,6 +155,7 @@ def check_segment(ik, start_pose, end_pose, start_q, samples,
                      "min_singular": singular_min,
                      "condition_number": (singular_max / singular_min
                                           if singular_min > 0 else None),
+                     "joint6_deg": float(np.degrees(solved[5])),
                      "flange_z_base_m": flange_z_base})
         q = solved
     return {"worst": worst, "reasons": reasons, "samples": rows,
@@ -186,10 +193,20 @@ def build_waypoints(current, target, clearance_z, order):
                                                target.translation[1],
                                                clearance_z])), moved),
                 ("descend", moved, target)]
+    if order == "reorient_at_start":
+        reoriented_start = pin.SE3(target.rotation.copy(), current.translation.copy())
+        lifted_target = pin.SE3(target.rotation.copy(), np.array([
+            current.translation[0], current.translation[1], clearance_z]))
+        moved_target = pin.SE3(target.rotation.copy(), np.array([
+            target.translation[0], target.translation[1], clearance_z]))
+        return [("reorient_start", current, reoriented_start),
+                ("lift", reoriented_start, lifted_target),
+                ("translate", lifted_target, moved_target),
+                ("descend", moved_target, target)]
     raise ValueError("unknown order: %s" % order)
 
 
-MOVE_ORDERS = ("reorient_first", "translate_first")
+MOVE_ORDERS = ("reorient_first", "translate_first", "reorient_at_start")
 
 # Roll offsets tried when a slot fails: the roll is a free DOF, so these are
 # equivalent shots with a different wrist twist.
@@ -237,7 +254,8 @@ def to_matrix(pose):
 
 
 def try_slot(ik, start_pose, start_q, target, clearance_z, samples, orders,
-             baseline_min_singular, self_collision=None, min_clearance_m=None):
+             baseline_min_singular, self_collision=None, min_clearance_m=None,
+             joint6_range_rad=None):
     """Try the waypoint orders for one slot; return the first that passes."""
     for order in orders:
         trial_q = np.asarray(start_q, dtype=float)
@@ -247,7 +265,7 @@ def try_slot(ik, start_pose, start_q, target, clearance_z, samples, orders,
         for name, begin, end in build_waypoints(start_pose, target, clearance_z,
                                                 order):
             result = check_segment(ik, begin, end, trial_q, samples,
-                                   self_collision, min_clearance_m)
+                                   self_collision, min_clearance_m, joint6_range_rad)
             worst = result["worst"]
             singular_ok = (worst["min_singular"] >= SINGULARITY_FLOOR and
                            worst["min_singular"] >=
@@ -261,6 +279,10 @@ def try_slot(ik, start_pose, start_q, target, clearance_z, samples, orders,
             records.append({"segment": name, "order": order,
                             "start_tcp_m_rad": tcp_values(begin),
                             "end_tcp_m_rad": tcp_values(end),
+                            # Preserve the warm-started IK branch actually gated.
+                            # Downstream collision checks must never re-solve an
+                            # endpoint from an unrelated zero-joint seed.
+                            "end_q_rad": result["end_q"],
                             "worst": worst,
                             "singularity_gate_passed": bool(singular_ok),
                             "passed": bool(not result["reasons"] and singular_ok),
@@ -311,6 +333,8 @@ def main():
     parser.add_argument("--slots", default=None,
                         help="comma-separated slot numbers to check (default: all)")
     parser.add_argument("--host", default="192.168.1.3")
+    parser.add_argument("--port", type=int, default=30013,
+                        help="UR read-only realtime port (30013 is verified on this robot)")
     parser.add_argument("--clearance-z", type=float, default=0.55,
                         help="travelling height in the base frame; must exceed every "
                              "object on the table (the board is a few mm, the cube 50 mm)")
@@ -334,6 +358,12 @@ def main():
                         help="visit order: 'nearest' greedily picks the next slot with "
                              "the smallest joint-space step, which avoids the bad "
                              "transitions that make an otherwise reachable slot fail")
+    parser.add_argument("--path-orders", nargs="+", choices=MOVE_ORDERS,
+                        default=list(MOVE_ORDERS),
+                        help="waypoint-order candidates to try for each target")
+    parser.add_argument("--joint6-range-deg", type=float, nargs=2, metavar=("MIN", "MAX"),
+                        default=None,
+                        help="require every dense path sample to keep J6 in this degree range")
     parser.add_argument("--self-collision-margin-mm", type=float, default=40.0,
                         help="gate the camera-vs-arm clearance at EVERY path sample; "
                              "0 disables it")
@@ -356,6 +386,10 @@ def main():
                         help="matching 6 TCP values (m, rad) for --assume-q")
     parser.add_argument("--output", default=None)
     args = parser.parse_args()
+    if args.joint6_range_deg and args.joint6_range_deg[0] >= args.joint6_range_deg[1]:
+        parser.error("--joint6-range-deg requires MIN < MAX")
+    joint6_range_rad = (None if args.joint6_range_deg is None else
+                        tuple(np.radians(args.joint6_range_deg)))
 
     plan_path = args.plan if os.path.isabs(args.plan) else os.path.join(root, args.plan)
     with open(plan_path, encoding="utf-8") as stream:
@@ -385,7 +419,7 @@ def main():
             tcp_now = None
         assumed_state = True
     else:
-        q_now, tcp_now = read_state(args.host)
+        q_now, tcp_now = read_state(args.host, args.port)
     ik = UR10IK()
     if tcp_now is None:
         tcp_now = np.asarray(tcp_values(BASE_FROM_URDF_ROOT * ik.pose(q_now)))
@@ -417,7 +451,7 @@ def main():
         },
         "current": {"q_rad": list(q_now), "tcp_m_rad": list(tcp_now),
                     "source": ("assumed via --assume-q (robot unreachable)"
-                               if assumed_state else "read from 30003")},
+                               if assumed_state else "read from %d" % args.port)},
         "segments": [],
     }
     print("当前 TCP:", [round(x, 4) for x in tcp_now[:3]],
@@ -487,8 +521,8 @@ def main():
         for clearance in heights:
             ok, order, end_q, end_pose, records = try_slot(
                 ik, seed_pose_in, seed_q_in, target, clearance,
-                args.samples_per_segment, MOVE_ORDERS, baseline_min_singular,
-                self_collision, min_clearance_m)
+                args.samples_per_segment, args.path_orders, baseline_min_singular,
+                self_collision, min_clearance_m, joint6_range_rad)
             last_records = records
             if ok:
                 return (True, order, end_q, end_pose,
@@ -501,8 +535,8 @@ def main():
                     target_matrix, tool0_from_camera, offset))
                 ok, order, end_q, end_pose, records = try_slot(
                     ik, seed_pose_in, seed_q_in, candidate, args.clearance_z,
-                    args.samples_per_segment, MOVE_ORDERS, baseline_min_singular,
-                    self_collision, min_clearance_m)
+                    args.samples_per_segment, args.path_orders, baseline_min_singular,
+                    self_collision, min_clearance_m, joint6_range_rad)
                 if ok:
                     return (True, order, end_q, end_pose,
                             annotate(records, entry["slot"],
@@ -586,7 +620,7 @@ def main():
         document["segments"].extend(records)
         document["segments"].append({
             "slot": entry["slot"], "segment": "slot_summary", "feasible": False,
-            "orders_tried": list(MOVE_ORDERS),
+            "orders_tried": list(args.path_orders),
             "clearance_heights_tried": [args.clearance_z] + list(args.rescue_clearance),
             "roll_offsets_tried": (list(RESCUE_ROLL_OFFSETS_DEG)
                                    if tool0_from_camera is not None else []),
@@ -627,7 +661,7 @@ def main():
         document["segments"].extend(records)
         document["segments"].append({
             "slot": entry["slot"], "segment": "slot_summary", "feasible": False,
-            "orders_tried": list(MOVE_ORDERS),
+            "orders_tried": list(args.path_orders),
             "clearance_heights_tried": [args.clearance_z] + list(args.rescue_clearance),
             "roll_offsets_tried": (list(RESCUE_ROLL_OFFSETS_DEG)
                                    if tool0_from_camera is not None else []),

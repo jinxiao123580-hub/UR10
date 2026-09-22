@@ -1,0 +1,17 @@
+# Operator-confirmed observation/grasp roll at the final pre-close pose.
+# This is a base-frame tool0 pose reference, not a replacement hand-eye
+# calibration and not a controller TCP write.
+schema_version: 1
+frame: tool0
+source: operator_manual_rotation_with_live_partial_template_fit
+captured_from: outputs/vision/cube-track-20260922-manual-alignment.json
+partial_fit: outputs/vision/cube-partial-fit-20260922-manual-alignment.json
+tool0_tcp_base_m_rad:
+  [0.654883950857037, -0.088220752527826, 0.274835249077428,
+   3.128494078619056, 0.082420157897589, -0.020243948080129]
+role: manual_confirmed_camera_and_gripper_facing_direction_seed
+status: position_and_orientation_observed; requires_live_gate_before_any_reuse
+limitations:
+  - Fixed tool0_from_camera calibration remains config/handeye_eye_in_hand_20260921.yaml.
+  - Partial-cloud fitting checks bounded translation only; it does not independently solve cube yaw.
+  - This file does not authorize motion or gripper closure.

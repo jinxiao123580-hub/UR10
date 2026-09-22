@@ -223,12 +223,19 @@ def main():
 
     report = {"schema_version": 1, "margin_mm": args.margin_mm,
               "attachments": os.path.relpath(attachments_path, root),
+              "kinematic_source": "gated warm-started endpoint q when available",
               "per_slot": {}}
     worst = (float("inf"), None)
     for value in segments:
-        q, _, _, _ = ik.solve(BASE_FROM_URDF_ROOT.inverse() *
-                              pose_from_tcp_target(value["end_tcp_m_rad"]),
-                              np.zeros(6))
+        if "end_q_rad" in value:
+            q = np.asarray(value["end_q_rad"], dtype=float)
+        else:
+            # Legacy gate files lack the branch selected during their IK gate.
+            # Keep this fallback explicitly labelled; it is diagnostic only.
+            q, _, _, _ = ik.solve(BASE_FROM_URDF_ROOT.inverse() *
+                                  pose_from_tcp_target(value["end_tcp_m_rad"]),
+                                  np.zeros(6))
+            report["kinematic_source"] = "legacy endpoint re-solve from zero seed (diagnostic only)"
         clearance, pair = model.min_clearance(q)
         slot_worst = report["per_slot"].get(value["slot"])
         if slot_worst is None or clearance < slot_worst[0]:

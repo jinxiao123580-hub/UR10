@@ -15,6 +15,7 @@ import shutil
 import struct
 
 import numpy as np
+import yaml
 
 from self_collision import URDF_SOURCE
 from robot_attachments import load
@@ -70,6 +71,19 @@ def fingertip_tcp_link(offset_m):
 '''.format(xyz=fmt(offset_m))
 
 
+def grasp_center_link(offset_m):
+    """A visible, non-collision marker for the manually measured jaw centre."""
+    return '''  <link name="gripper_grasp_center">
+    <visual><geometry><sphere radius="0.009"/></geometry>
+      <material name="gripper_grasp_center_marker"><color rgba="0.10 0.80 1.00 1"/></material></visual>
+  </link>
+  <joint name="tool0_to_gripper_grasp_center" type="fixed">
+    <parent link="tool0"/><child link="gripper_grasp_center"/>
+    <origin xyz="{xyz}" rpy="0 0 0"/>
+  </joint>
+'''.format(xyz=fmt(offset_m))
+
+
 def main():
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     parser = argparse.ArgumentParser(description=__doc__)
@@ -78,6 +92,8 @@ def main():
     parser.add_argument("--fingertip-calibration",
                         default="outputs/tcp_calibration/fingertip-20260921.json",
                         help="validated fixed-point TCP JSON; adds a visual-only TCP marker")
+    parser.add_argument("--grasp-tcp", default="config/gripper_grasp_center_20260922.yaml",
+                        help="manual position-only gripper-centre TCP YAML")
     args = parser.parse_args()
     geometry = load(args.attachments, root=root)
     tcp_path = args.fingertip_calibration
@@ -91,8 +107,15 @@ def main():
     tcp_offset = np.asarray(tcp_result["tool0_to_fingertip_m"], dtype=float)
     if tcp_offset.shape != (3,):
         raise RuntimeError("expected a 3D tool0_to_fingertip_m offset: %s" % tcp_path)
+    grasp_path = args.grasp_tcp if os.path.isabs(args.grasp_tcp) else os.path.join(root, args.grasp_tcp)
+    with open(grasp_path, encoding="utf-8") as stream:
+        grasp = yaml.safe_load(stream) or {}
+    if grasp.get("parent_frame") != "tool0" or grasp.get("orientation") != "inherits_tool0":
+        raise RuntimeError("grasp TCP must be a tool0 position-only measurement: %s" % grasp_path)
+    grasp_offset = np.asarray(grasp.get("translation_m"), dtype=float)
+    if grasp_offset.shape != (3,):
+        raise RuntimeError("expected 3D translation_m in %s" % grasp_path)
     config_path = geometry["config_path"]
-    import yaml
     with open(config_path, encoding="utf-8") as stream:
         config = yaml.safe_load(stream) or {}
     model_dir = config.get("cad_models_dir")
@@ -139,6 +162,7 @@ def main():
     # The pivot calibration supplies position only.  Its frame axes deliberately
     # inherit tool0; do not treat them as a measured fingertip orientation.
     parts.append(fingertip_tcp_link(tcp_offset))
+    parts.append(grasp_center_link(grasp_offset))
     parts.append("</robot>\n")
     os.makedirs(os.path.dirname(output), exist_ok=True)
     with open(output, "w", encoding="utf-8") as stream:
@@ -147,6 +171,7 @@ def main():
     print("CAD mounting origin (mm):", np.round(origin_mm, 3).tolist())
     print("tool_yaw_deg:", config.get("tool_yaw_deg", 0.0))
     print("left_fingertip_tcp visual marker (m):", np.round(tcp_offset, 6).tolist())
+    print("gripper_grasp_center visual marker (m):", np.round(grasp_offset, 6).tolist())
 
 
 if __name__ == "__main__":

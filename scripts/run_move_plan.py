@@ -110,9 +110,10 @@ def collect_sample(root, dataset, attempts=3):
 class Watchdog(threading.Thread):
     """Reactive guard: straight-line deviation and TCP force transient."""
 
-    def __init__(self, max_deviation_m, max_force_delta_n):
+    def __init__(self, max_deviation_m, max_force_delta_n, port=30013,
+                 joint6_range_deg=None):
         super().__init__(daemon=True)
-        self.reader = RealtimeReader(DEVICE_HOST)
+        self.reader = RealtimeReader(DEVICE_HOST, port)
         self.max_deviation_m = max_deviation_m
         self.max_force_delta_n = max_force_delta_n
         self.stop_event = threading.Event()
@@ -130,6 +131,7 @@ class Watchdog(threading.Thread):
         self.j6_travel_deg = 0.0
         self.j6_span_deg = -1e9
         self.j6_span_min_deg = 1e9
+        self.joint6_range_deg = joint6_range_deg
 
     def set_segment(self, start_tcp, end_tcp):
         self.segment = (np.asarray(start_tcp[:3], dtype=float),
@@ -193,6 +195,10 @@ class Watchdog(threading.Thread):
                     })
                 if deviation > self.max_deviation_m:
                     self.trip("path_deviation", deviation * 1000.0)
+                elif (self.joint6_range_deg is not None and
+                      not self.joint6_range_deg[0] <= self.j6_last_deg <=
+                      self.joint6_range_deg[1]):
+                    self.trip("joint6_out_of_range_deg", self.j6_last_deg)
                 elif (force_delta is not None and
                       force_delta > self.max_force_delta_n):
                     self.trip("force_delta", force_delta)
@@ -227,7 +233,7 @@ def pose_error(actual, target):
     return position, float(np.arccos(cosine))
 
 
-def wait_for_arrival(target, speed, watchdog):
+def wait_for_arrival(target, speed, watchdog, port):
     """Wait until the arm is at ``target`` in BOTH position and orientation.
 
     Checking position alone is not enough, and that mistake is worth spelling out:
@@ -237,7 +243,7 @@ def wait_for_arrival(target, speed, watchdog):
     motions collide.  That is exactly how slot 17's 1.7 rad reorientation ended
     up crammed into its translation segment.
     """
-    reader = RealtimeReader(DEVICE_HOST)
+    reader = RealtimeReader(DEVICE_HOST, port)
     try:
         _q, tcp, _v = reader.read()
         distance, rotation = pose_error(tcp, target)
@@ -324,6 +330,10 @@ def main():
                              "(a proper prefix, so the chain stays faithful)")
     parser.add_argument("--speed", type=float, default=0.05, help="movel speed (m/s)")
     parser.add_argument("--acceleration", type=float, default=0.10)
+    parser.add_argument("--port", type=int, default=30013,
+                        help="UR read-only realtime port for state/watchdog")
+    parser.add_argument("--joint6-range-deg", type=float, nargs=2, metavar=("MIN", "MAX"),
+                        default=None, help="watchdog stop if actual J6 leaves this range")
     parser.add_argument("--relative-dz", type=float, default=None,
                         help="L2 test mode: one pure +Z movel of this many metres "
                              "instead of the plan; ignores --gate")
@@ -357,9 +367,18 @@ def main():
         parser.error("speed must be within 0.005..0.08 m/s")
     if not (0.01 <= args.acceleration <= 0.50):
         parser.error("acceleration must be within 0.01..0.50 m/s^2")
+    if args.joint6_range_deg and args.joint6_range_deg[0] >= args.joint6_range_deg[1]:
+        parser.error("--joint6-range-deg requires MIN < MAX")
 
-    q_now, tcp_now = read_state(DEVICE_HOST)
+    q_now, tcp_now = read_state(DEVICE_HOST, args.port)
     print("当前 TCP: %s" % [round(x, 4) for x in tcp_now[:3]])
+    if (args.joint6_range_deg is not None and
+            not args.joint6_range_deg[0] <= np.degrees(q_now[5]) <=
+            args.joint6_range_deg[1]):
+        print("拒绝执行：当前 J6 %.1f° 不在 [%.1f, %.1f]°" %
+              (np.degrees(q_now[5]), args.joint6_range_deg[0],
+               args.joint6_range_deg[1]))
+        return 2
 
     gate_document = None
     if args.relative_dz is not None:
@@ -419,7 +438,8 @@ def main():
         print("加 --execute 才会真正运动。")
         return 0
 
-    watchdog = Watchdog(args.max_deviation_mm / 1000.0, args.max_force_delta_n)
+    watchdog = Watchdog(args.max_deviation_mm / 1000.0, args.max_force_delta_n,
+                        args.port, args.joint6_range_deg)
     watchdog.start()
     baseline = watchdog.measure_force_baseline()
     print("静止受力基线 |F| = %.3f N（用于变化量判据）" % (baseline or float("nan")))
@@ -470,7 +490,7 @@ def main():
                     args.acceleration, args.speed)
                 send_urscript(program)
                 final, arrived, verdict = wait_for_arrival(step_tcp, args.speed,
-                                                           watchdog)
+                                                           watchdog, args.port)
                 if not arrived:
                     verdict = "%s@step%d/%d" % (verdict, step_index,
                                                 len(sub_waypoints))
