@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "kind": "gripper_grasp_center_hover_preview",
+  "motion_sent": false,
+  "authorization": "none: offline visual/IK check only; not a grasp or controller TCP write",
+  "limitations": [
+    "opposing fingertip and jaw centre are not calibrated",
+    "fingertip orientation inherits tool0 and is not measured",
+    "preliminary CAD collision model is not real-motion proof"
+  ],
+  "inputs": {
+    "cube": "outputs/vision/cube-measurement-20260921-provisional-r2.json",
+    "tcp": "config/gripper_grasp_center_20260922.yaml",
+    "handeye": "config/handeye_eye_in_hand_20260921.yaml"
+  },
+  "target_frame": "gripper_grasp_center",
+  "orientation_source": "manual: gripper vertical down; roll near cube-capture wrist; camera optical-axis look-at roll -16.0 deg",
+  "fingertip_hover_base_m": [
+    0.6509154666026641,
+    -0.0888325585064716,
+    0.1841793440124273
+  ],
+  "cube_top_center_base_m": [
+    0.6483113545731083,
+    -0.0885337152452139,
+    0.03420224811694489
+  ],
+  "approach_normal_base": [
+    0.01736074686370558,
+    -0.001992288408384693,
+    0.9998473059698828
+  ],
+  "camera_view_candidate": {
+    "target": "cube_top_center",
+    "selected_roll_deg": -16.0,
+    "optical_axis_cosine": 0.9708029601956527,
+    "camera_to_target_distance_m": 0.30822066084153416,
+    "camera_origin_base_m": [
+      0.49665229551613355,
+      -0.2936999333795736,
+      0.20713671117156401
+    ],
+    "interpretation": "candidate scoring only; live cloud gates remain required"
+  },
+  "standoff_mm": 150.0,
+  "plan": [
+    {
+      "slot": 1,
+      "role": "gripper_grasp_center_hover_only",
+      "target_tcp_pose_m_rad": [
+        0.6547348309126793,
+        -0.08927086195631624,
+        0.40414575132580155,
+        2.865724148267322,
+        -1.2742414063153558,
+        -0.026146880187473145
+      ]
+    }
+  ]
+}

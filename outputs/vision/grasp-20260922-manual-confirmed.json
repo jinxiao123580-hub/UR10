@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "timestamp": "2026-09-22T10:59:00+08:00",
+  "status": "grasp_and_lift_manually_confirmed",
+  "operator_observation": "cube is physically clamped between the fingers and lifted clear of the table",
+  "gripper_telemetry": {
+    "sid": 9,
+    "act": 1,
+    "gto": 1,
+    "sta": 3,
+    "flt": 0,
+    "pos": 230,
+    "pre": 255,
+    "obj": 3,
+    "interpretation": "OBJ=3 was a false negative for this verified grasp; do not use it alone as a no-object verdict."
+  },
+  "robot_motion_authorization": "none: robot remains stationary until an explicit lift command",
+  "evidence": {
+    "final_approach": "outputs/vision/motion/run-20260922-105649.json",
+    "partial_template_fit": "outputs/vision/cube-partial-fit-20260922-manual-alignment.json",
+    "lift_verification": "outputs/vision/motion/run-20260922-110306.json"
+  }
+}

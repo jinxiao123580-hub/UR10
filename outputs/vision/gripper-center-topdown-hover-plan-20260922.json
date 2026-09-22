@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "kind": "gripper_grasp_center_hover_preview",
+  "motion_sent": false,
+  "authorization": "none: offline visual/IK check only; not a grasp or controller TCP write",
+  "limitations": [
+    "opposing fingertip and jaw centre are not calibrated",
+    "fingertip orientation inherits tool0 and is not measured",
+    "preliminary CAD collision model is not real-motion proof"
+  ],
+  "inputs": {
+    "cube": "outputs/vision/cube-measurement-20260921-provisional-r2.json",
+    "tcp": "config/gripper_grasp_center_20260922.yaml",
+    "handeye": "config/handeye_eye_in_hand_20260921.yaml"
+  },
+  "target_frame": "gripper_grasp_center",
+  "orientation_source": "manual: gripper vertical down; roll near cube-capture wrist",
+  "fingertip_hover_base_m": [
+    0.6500474292594789,
+    -0.08873294408605237,
+    0.13418697871393317
+  ],
+  "cube_top_center_base_m": [
+    0.6483113545731083,
+    -0.0885337152452139,
+    0.03420224811694489
+  ],
+  "approach_normal_base": [
+    0.01736074686370558,
+    -0.001992288408384693,
+    0.9998473059698828
+  ],
+  "standoff_mm": 100.0,
+  "plan": [
+    {
+      "slot": 1,
+      "role": "gripper_grasp_center_hover_only",
+      "target_tcp_pose_m_rad": [
+        0.6538667935694942,
+        -0.089171247535897,
+        0.3541533860273074,
+        2.6585793839460443,
+        -1.659476577727454,
+        -0.024732428072787922
+      ]
+    }
+  ]
+}

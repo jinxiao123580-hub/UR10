@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "status": "table_contact_manually_confirmed",
+  "operator_observation": "force transient observed; cube contacted the table during staged placement",
+  "robot_action": "stopped after the completed 5 mm staged descent; no further motion sent",
+  "gripper_state": "post-reboot inactive; no activation or open command sent after contact",
+  "actual_position_note": "preceding +X translation halted early: approximately +38 mm X and +8 mm Y from its start, not the requested +50 mm X",
+  "evidence": {
+    "last_descent": "outputs/vision/motion/run-20260922-111827.json",
+    "preceding_stalled_translation": "outputs/vision/motion/run-20260922-110830.json"
+  },
+  "next_action_authorization": "none: require operator confirmation that the cube is stably supported before gripper activation/release"
+}

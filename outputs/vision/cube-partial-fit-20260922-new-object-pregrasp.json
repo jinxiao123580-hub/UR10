@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "mode": "bounded_translation_only_partial_cloud_fit",
+  "status": "partial_fit_consistent",
+  "motion_authorization": "none: partial-cloud consistency/refinement only; never authorizes contact or grasp",
+  "template": "outputs/vision/cube-track-20260922-new-object.json",
+  "partial": "outputs/vision/cube-track-20260922-new-object-pregrasp.json",
+  "template_center_base_m": [
+    0.5811730878733647,
+    0.03890326000156859,
+    0.011319665355041126
+  ],
+  "fitted_center_base_m": [
+    0.581261738706952,
+    0.03864467007872055,
+    0.011186846296061618
+  ],
+  "translation_correction_mm": [
+    0.0886508335872227,
+    -0.2585899228480376,
+    -0.13281905897950808
+  ],
+  "max_shift_mm": 5.0,
+  "table_z_base_m": -0.013662936816347325,
+  "template_cube_surface_points": 50000,
+  "partial_cube_surface_points": 50000,
+  "nearest_template_residual_mm": {
+    "p50": 0.19525599438844657,
+    "p80": 0.2933324647779891,
+    "p95": 0.406931990734425
+  },
+  "bound_not_hit": true,
+  "iterations": [
+    {
+      "trimmed_p80_mm": 0.366024310710968,
+      "delta_m": [
+        2.4163928215192865e-05,
+        -8.233814091124225e-05,
+        -0.00011051881272561292
+      ],
+      "points": 40000
+    },
+    {
+      "trimmed_p80_mm": 0.3206251434035128,
+      "delta_m": [
+        5.227838049953748e-05,
+        -0.00016383685808275816,
+        -0.00012772683969312915
+      ],
+      "points": 40000
+    },
+    {
+      "trimmed_p80_mm": 0.3018225921359025,
+      "delta_m": [
+        7.433184504312962e-05,
+        -0.0002233764370574154,
+        -0.00013150513355994486
+      ],
+      "points": 40000
+    },
+    {
+      "trimmed_p80_mm": 0.29572849524217065,
+      "delta_m": [
+        8.86508335872227e-05,
+        -0.0002585899228480376,
+        -0.00013281905897950808
+      ],
+      "points": 40000
+    }
+  ],
+  "limitations": [
+    "translation only; cube yaw is not observable from a symmetric partial view",
+    "template and partial clouds must be from an unchanged scene",
+    "a rejected strict full-cube observation remains rejected for contact planning"
+  ]
+}

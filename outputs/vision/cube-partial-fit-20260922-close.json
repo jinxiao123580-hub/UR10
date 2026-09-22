@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "mode": "bounded_translation_only_partial_cloud_fit",
+  "status": "partial_fit_consistent",
+  "motion_authorization": "none: partial-cloud consistency/refinement only; never authorizes contact or grasp",
+  "template": "outputs/vision/cube-track-20260922-template-full.json",
+  "partial": "outputs/vision/cube-track-20260922-close-templatefit.json",
+  "template_center_base_m": [
+    0.6499020985944125,
+    -0.08903620266017458,
+    0.01154195179040121
+  ],
+  "fitted_center_base_m": [
+    0.6498262111942406,
+    -0.08911966772595184,
+    0.011537151015134561
+  ],
+  "translation_correction_mm": [
+    -0.07588740017200335,
+    -0.08346506577726343,
+    -0.004800775266648738
+  ],
+  "max_shift_mm": 5.0,
+  "table_z_base_m": -0.01344897466740229,
+  "template_cube_surface_points": 50000,
+  "partial_cube_surface_points": 50000,
+  "nearest_template_residual_mm": {
+    "p50": 0.17559563920273766,
+    "p80": 0.2835634060612359,
+    "p95": 16.96339974187186
+  },
+  "bound_not_hit": true,
+  "iterations": [
+    {
+      "trimmed_p80_mm": 0.2955465968712119,
+      "delta_m": [
+        -6.773767751266924e-05,
+        -6.71512518046341e-05,
+        -2.0654334458442003e-06
+      ],
+      "points": 40000
+    },
+    {
+      "trimmed_p80_mm": 0.28372451205096033,
+      "delta_m": [
+        -7.588740017200335e-05,
+        -8.346506577726343e-05,
+        -4.800775266648738e-06
+      ],
+      "points": 40000
+    }
+  ],
+  "limitations": [
+    "translation only; cube yaw is not observable from a symmetric partial view",
+    "template and partial clouds must be from an unchanged scene",
+    "a rejected strict full-cube observation remains rejected for contact planning"
+  ]
+}

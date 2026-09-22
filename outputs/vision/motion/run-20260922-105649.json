@@ -1,0 +1,1079 @@
+{
+  "schema_version": 1,
+  "kind": "gated_trajectory_replay",
+  "started_at": "2026-09-22T10:56:49.948093+08:00",
+  "gate": "outputs/vision/template-fit-final19p3-live-gate-20260922.json",
+  "visit_order_replayed": [
+    1
+  ],
+  "replay_note": "segments and visit order are taken verbatim from the gate report; the executor does not recompute waypoints",
+  "parameters": {
+    "speed_m_s": 0.005,
+    "acceleration_m_s2": 0.01,
+    "max_deviation_mm": 6.0,
+    "max_force_delta_n": 2.5,
+    "relative_dz_m": null
+  },
+  "force_baseline_n": 7.5793072918288225,
+  "start_tcp_m_rad": [
+    0.6549034726643738,
+    -0.08825627551337789,
+    0.2941149867819065,
+    2.8667464827960027,
+    -1.27196308776489,
+    -0.026360655547227364
+  ],
+  "watchdog": {
+    "meaning": "reactive only; not collision avoidance"
+  },
+  "segments": [
+    {
+      "slot": 1,
+      "segment": "base_down_19.3mm",
+      "gate_order": "direct_base_z_descent",
+      "gate_clearance_z_m": null,
+      "gate_roll_rescue_offset_deg": null,
+      "commanded_tcp_m_rad": [
+        0.6549007750055352,
+        -0.08824196788550034,
+        0.274810151161482,
+        2.8667995491859473,
+        -1.2719128769246981,
+        -0.026386165351437445
+      ],
+      "start_tcp_m_rad": [
+        0.6549007750055352,
+        -0.08824196788550034,
+        0.294110151161482,
+        2.8667995491859473,
+        -1.2719128769246981,
+        -0.026386165351437445
+      ],
+      "final_tcp_m_rad": [
+        0.6549157821404006,
+        -0.08824703200955003,
+        0.27547360011908784,
+        2.8667207969184685,
+        -1.2720156412166628,
+        -0.026446717011745325
+      ],
+      "sub_waypoint_count": 2,
+      "final_error_mm": 0.6636379877595403,
+      "final_rotation_error_deg": 0.005385130695273839,
+      "duration_s": 4.740237034000529,
+      "verdict": "arrived",
+      "arrived": true,
+      "watchdog_samples": 592,
+      "max_deviation_mm": 0.0630771710075133,
+      "max_force_delta_n": 0.8286877266073835,
+      "trace": [
+        {
+          "tcp": [
+            0.654902,
+            -0.088244,
+            0.294118
+          ],
+          "speed": 0.0,
+          "deviation_mm": 0.0081,
+          "force_delta_n": 0.0
+        },
+        {
+          "tcp": [
+            0.654902,
+            -0.088245,
+            0.294123
+          ],
+          "speed": 0.0,
+          "deviation_mm": 0.013,
+          "force_delta_n": 0.0
+        },
+        {
+          "tcp": [
+            0.654888,
+            -0.088256,
+            0.294108
+          ],
+          "speed": 0.0,
+          "deviation_mm": 0.0185,
+          "force_delta_n": 0.0
+        },
+        {
+          "tcp": [
+            0.654901,
+            -0.088229,
+            0.294117
+          ],
+          "speed": 0.0,
+          "deviation_mm": 0.0145,
+          "force_delta_n": 0.0
+        },
+        {
+          "tcp": [
+            0.65491,
+            -0.088233,
+            0.294139
+          ],
+          "speed": 0.0,
+          "deviation_mm": 0.0316,
+          "force_delta_n": 0.0
+        },
+        {
+          "tcp": [
+            0.6549,
+            -0.088256,
+            0.294109
+          ],
+          "speed": 0.0,
+          "deviation_mm": 0.0136,
+          "force_delta_n": 0.0072
+        },
+        {
+          "tcp": [
+            0.654893,
+            -0.088234,
+            0.294106
+          ],
+          "speed": 0.0,
+          "deviation_mm": 0.011,
+          "force_delta_n": 0.0028
+        },
+        {
+          "tcp": [
+            0.654903,
+            -0.08823,
+            0.294109
+          ],
+          "speed": 0.0,
+          "deviation_mm": 0.0123,
+          "force_delta_n": 0.0368
+        },
+        {
+          "tcp": [
+            0.654902,
+            -0.088227,
+            0.294097
+          ],
+          "speed": 0.0,
+          "deviation_mm": 0.0153,
+          "force_delta_n": 0.1485
+        },
+        {
+          "tcp": [
+            0.654898,
+            -0.08824,
+            0.294098
+          ],
+          "speed": 0.0,
+          "deviation_mm": 0.0031,
+          "force_delta_n": 0.2434
+        },
+        {
+          "tcp": [
+            0.654923,
+            -0.088244,
+            0.294071
+          ],
+          "speed": 0.0,
+          "deviation_mm": 0.0222,
+          "force_delta_n": 0.3281
+        },
+        {
+          "tcp": [
+            0.65494,
+            -0.088235,
+            0.294024
+          ],
+          "speed": 0.00192,
+          "deviation_mm": 0.04,
+          "force_delta_n": 0.2721
+        },
+        {
+          "tcp": [
+            0.654936,
+            -0.088258,
+            0.29389
+          ],
+          "speed": 0.0043,
+          "deviation_mm": 0.0389,
+          "force_delta_n": 0.2134
+        },
+        {
+          "tcp": [
+            0.654923,
+            -0.08822,
+            0.293722
+          ],
+          "speed": 0.00328,
+          "deviation_mm": 0.0311,
+          "force_delta_n": 0.2833
+        },
+        {
+          "tcp": [
+            0.654921,
+            -0.088235,
+            0.293592
+          ],
+          "speed": 0.00775,
+          "deviation_mm": 0.0212,
+          "force_delta_n": 0.5493
+        },
+        {
+          "tcp": [
+            0.654899,
+            -0.088237,
+            0.293393
+          ],
+          "speed": 0.00731,
+          "deviation_mm": 0.0056,
+          "force_delta_n": 0.4705
+        },
+        {
+          "tcp": [
+            0.654889,
+            -0.088262,
+            0.293193
+          ],
+          "speed": 0.00648,
+          "deviation_mm": 0.0231,
+          "force_delta_n": 0.213
+        },
+        {
+          "tcp": [
+            0.65489,
+            -0.088254,
+            0.292966
+          ],
+          "speed": 0.00485,
+          "deviation_mm": 0.0165,
+          "force_delta_n": 0.671
+        },
+        {
+          "tcp": [
+            0.654882,
+            -0.088252,
+            0.292692
+          ],
+          "speed": 0.00343,
+          "deviation_mm": 0.0209,
+          "force_delta_n": 0.6131
+        },
+        {
+          "tcp": [
+            0.654883,
+            -0.088253,
+            0.292496
+          ],
+          "speed": 0.00354,
+          "deviation_mm": 0.0209,
+          "force_delta_n": 0.6862
+        },
+        {
+          "tcp": [
+            0.65489,
+            -0.088247,
+            0.292266
+          ],
+          "speed": 0.00813,
+          "deviation_mm": 0.0124,
+          "force_delta_n": 0.4659
+        },
+        {
+          "tcp": [
+            0.654883,
+            -0.088239,
+            0.292016
+          ],
+          "speed": 0.00679,
+          "deviation_mm": 0.0178,
+          "force_delta_n": 0.2951
+        },
+        {
+          "tcp": [
+            0.654895,
+            -0.08824,
+            0.291772
+          ],
+          "speed": 0.00486,
+          "deviation_mm": 0.0062,
+          "force_delta_n": 0.0925
+        },
+        {
+          "tcp": [
+            0.654883,
+            -0.088238,
+            0.291501
+          ],
+          "speed": 0.00523,
+          "deviation_mm": 0.0183,
+          "force_delta_n": 0.2477
+        },
+        {
+          "tcp": [
+            0.654897,
+            -0.088245,
+            0.291259
+          ],
+          "speed": 0.00581,
+          "deviation_mm": 0.0049,
+          "force_delta_n": 0.0468
+        },
+        {
+          "tcp": [
+            0.654906,
+            -0.088244,
+            0.291034
+          ],
+          "speed": 0.00423,
+          "deviation_mm": 0.0053,
+          "force_delta_n": 0.1995
+        },
+        {
+          "tcp": [
+            0.654909,
+            -0.088244,
+            0.290764
+          ],
+          "speed": 0.00543,
+          "deviation_mm": 0.009,
+          "force_delta_n": 0.0115
+        },
+        {
+          "tcp": [
+            0.654927,
+            -0.088234,
+            0.290482
+          ],
+          "speed": 0.00653,
+          "deviation_mm": 0.0273,
+          "force_delta_n": 0.2113
+        },
+        {
+          "tcp": [
+            0.654923,
+            -0.088233,
+            0.290232
+          ],
+          "speed": 0.00655,
+          "deviation_mm": 0.0242,
+          "force_delta_n": 0.3436
+        },
+        {
+          "tcp": [
+            0.654912,
+            -0.088259,
+            0.290034
+          ],
+          "speed": 0.00577,
+          "deviation_mm": 0.0206,
+          "force_delta_n": 0.3498
+        },
+        {
+          "tcp": [
+            0.654929,
+            -0.088235,
+            0.289824
+          ],
+          "speed": 0.00431,
+          "deviation_mm": 0.0285,
+          "force_delta_n": 0.2477
+        },
+        {
+          "tcp": [
+            0.654891,
+            -0.088231,
+            0.289571
+          ],
+          "speed": 0.00669,
+          "deviation_mm": 0.0147,
+          "force_delta_n": 0.2125
+        },
+        {
+          "tcp": [
+            0.654914,
+            -0.088213,
+            0.289361
+          ],
+          "speed": 0.00593,
+          "deviation_mm": 0.0322,
+          "force_delta_n": 0.296
+        },
+        {
+          "tcp": [
+            0.654903,
+            -0.088238,
+            0.289095
+          ],
+          "speed": 0.00411,
+          "deviation_mm": 0.0046,
+          "force_delta_n": 0.3365
+        },
+        {
+          "tcp": [
+            0.65491,
+            -0.08825,
+            0.288864
+          ],
+          "speed": 0.00397,
+          "deviation_mm": 0.0123,
+          "force_delta_n": 0.4395
+        },
+        {
+          "tcp": [
+            0.654917,
+            -0.088222,
+            0.288584
+          ],
+          "speed": 0.00678,
+          "deviation_mm": 0.0257,
+          "force_delta_n": 0.1537
+        },
+        {
+          "tcp": [
+            0.6549,
+            -0.088242,
+            0.288356
+          ],
+          "speed": 0.00662,
+          "deviation_mm": 0.0011,
+          "force_delta_n": 0.1895
+        },
+        {
+          "tcp": [
+            0.654897,
+            -0.088253,
+            0.288103
+          ],
+          "speed": 0.00512,
+          "deviation_mm": 0.0116,
+          "force_delta_n": 0.0481
+        },
+        {
+          "tcp": [
+            0.654892,
+            -0.088233,
+            0.287886
+          ],
+          "speed": 0.0063,
+          "deviation_mm": 0.0124,
+          "force_delta_n": 0.042
+        },
+        {
+          "tcp": [
+            0.654901,
+            -0.088259,
+            0.287673
+          ],
+          "speed": 0.00633,
+          "deviation_mm": 0.0168,
+          "force_delta_n": 0.2152
+        },
+        {
+          "tcp": [
+            0.654896,
+            -0.08824,
+            0.287435
+          ],
+          "speed": 0.00575,
+          "deviation_mm": 0.0049,
+          "force_delta_n": 0.0658
+        },
+        {
+          "tcp": [
+            0.65491,
+            -0.088242,
+            0.287209
+          ],
+          "speed": 0.00442,
+          "deviation_mm": 0.009,
+          "force_delta_n": 0.2719
+        },
+        {
+          "tcp": [
+            0.654933,
+            -0.088234,
+            0.28697
+          ],
+          "speed": 0.00539,
+          "deviation_mm": 0.0337,
+          "force_delta_n": 0.312
+        },
+        {
+          "tcp": [
+            0.654904,
+            -0.088227,
+            0.286747
+          ],
+          "speed": 0.00488,
+          "deviation_mm": 0.0152,
+          "force_delta_n": 0.4814
+        },
+        {
+          "tcp": [
+            0.654896,
+            -0.088234,
+            0.28652
+          ],
+          "speed": 0.00373,
+          "deviation_mm": 0.0087,
+          "force_delta_n": 0.5737
+        },
+        {
+          "tcp": [
+            0.654891,
+            -0.088237,
+            0.286307
+          ],
+          "speed": 0.00384,
+          "deviation_mm": 0.0109,
+          "force_delta_n": 0.7154
+        },
+        {
+          "tcp": [
+            0.654916,
+            -0.088252,
+            0.286073
+          ],
+          "speed": 0.0064,
+          "deviation_mm": 0.0183,
+          "force_delta_n": 0.6243
+        },
+        {
+          "tcp": [
+            0.6549,
+            -0.088253,
+            0.285779
+          ],
+          "speed": 0.00638,
+          "deviation_mm": 0.0106,
+          "force_delta_n": 0.5638
+        },
+        {
+          "tcp": [
+            0.654919,
+            -0.088245,
+            0.285555
+          ],
+          "speed": 0.00743,
+          "deviation_mm": 0.018,
+          "force_delta_n": 0.4025
+        },
+        {
+          "tcp": [
+            0.654889,
+            -0.088243,
+            0.285369
+          ],
+          "speed": 0.00563,
+          "deviation_mm": 0.0114,
+          "force_delta_n": 0.7148
+        },
+        {
+          "tcp": [
+            0.654884,
+            -0.088254,
+            0.285207
+          ],
+          "speed": 0.00536,
+          "deviation_mm": 0.0206,
+          "force_delta_n": 0.6908
+        },
+        {
+          "tcp": [
+            0.654887,
+            -0.088246,
+            0.28501
+          ],
+          "speed": 0.00457,
+          "deviation_mm": 0.014,
+          "force_delta_n": 0.7885
+        },
+        {
+          "tcp": [
+            0.654882,
+            -0.088241,
+            0.284908
+          ],
+          "speed": 0.00239,
+          "deviation_mm": 0.0186,
+          "force_delta_n": 0.618
+        },
+        {
+          "tcp": [
+            0.654901,
+            -0.08826,
+            0.284732
+          ],
+          "speed": 0.00279,
+          "deviation_mm": 0.0178,
+          "force_delta_n": 0.3907
+        },
+        {
+          "tcp": [
+            0.654895,
+            -0.088245,
+            0.284674
+          ],
+          "speed": 0.00177,
+          "deviation_mm": 0.0064,
+          "force_delta_n": 0.4471
+        },
+        {
+          "tcp": [
+            0.654883,
+            -0.088246,
+            0.284589
+          ],
+          "speed": 0.00227,
+          "deviation_mm": 0.018,
+          "force_delta_n": 0.2712
+        },
+        {
+          "tcp": [
+            0.654907,
+            -0.088236,
+            0.284571
+          ],
+          "speed": 0.00087,
+          "deviation_mm": 0.0086,
+          "force_delta_n": 0.6499
+        },
+        {
+          "tcp": [
+            0.654898,
+            -0.08825,
+            0.284522
+          ],
+          "speed": 0.00322,
+          "deviation_mm": 0.0086,
+          "force_delta_n": 0.0108
+        },
+        {
+          "tcp": [
+            0.654923,
+            -0.088232,
+            0.284434
+          ],
+          "speed": 0.00434,
+          "deviation_mm": 0.0242,
+          "force_delta_n": 0.6854
+        },
+        {
+          "tcp": [
+            0.654895,
+            -0.088218,
+            0.284337
+          ],
+          "speed": 0.00188,
+          "deviation_mm": 0.0243,
+          "force_delta_n": 0.4317
+        },
+        {
+          "tcp": [
+            0.654897,
+            -0.088236,
+            0.284279
+          ],
+          "speed": 0.00184,
+          "deviation_mm": 0.0072,
+          "force_delta_n": 0.1614
+        },
+        {
+          "tcp": [
+            0.654892,
+            -0.088221,
+            0.28413
+          ],
+          "speed": 0.00341,
+          "deviation_mm": 0.0228,
+          "force_delta_n": 0.1636
+        },
+        {
+          "tcp": [
+            0.654898,
+            -0.088235,
+            0.283988
+          ],
+          "speed": 0.00457,
+          "deviation_mm": 0.007,
+          "force_delta_n": 0.0424
+        },
+        {
+          "tcp": [
+            0.6549,
+            -0.088225,
+            0.283813
+          ],
+          "speed": 0.00489,
+          "deviation_mm": 0.0167,
+          "force_delta_n": 0.0591
+        },
+        {
+          "tcp": [
+            0.654906,
+            -0.088233,
+            0.283578
+          ],
+          "speed": 0.0052,
+          "deviation_mm": 0.0102,
+          "force_delta_n": 0.1169
+        },
+        {
+          "tcp": [
+            0.654893,
+            -0.08825,
+            0.283345
+          ],
+          "speed": 0.00611,
+          "deviation_mm": 0.0114,
+          "force_delta_n": 0.2915
+        },
+        {
+          "tcp": [
+            0.654898,
+            -0.088254,
+            0.283107
+          ],
+          "speed": 0.00617,
+          "deviation_mm": 0.0123,
+          "force_delta_n": 0.5081
+        },
+        {
+          "tcp": [
+            0.654913,
+            -0.088227,
+            0.282876
+          ],
+          "speed": 0.00475,
+          "deviation_mm": 0.0193,
+          "force_delta_n": 0.5604
+        },
+        {
+          "tcp": [
+            0.654904,
+            -0.088255,
+            0.282692
+          ],
+          "speed": 0.00445,
+          "deviation_mm": 0.0138,
+          "force_delta_n": 0.5784
+        },
+        {
+          "tcp": [
+            0.654899,
+            -0.088249,
+            0.282483
+          ],
+          "speed": 0.00391,
+          "deviation_mm": 0.0074,
+          "force_delta_n": 0.6594
+        },
+        {
+          "tcp": [
+            0.654891,
+            -0.088236,
+            0.282202
+          ],
+          "speed": 0.00469,
+          "deviation_mm": 0.0113,
+          "force_delta_n": 0.6671
+        },
+        {
+          "tcp": [
+            0.654891,
+            -0.088226,
+            0.28195
+          ],
+          "speed": 0.00501,
+          "deviation_mm": 0.019,
+          "force_delta_n": 0.4147
+        },
+        {
+          "tcp": [
+            0.65489,
+            -0.088265,
+            0.281696
+          ],
+          "speed": 0.00642,
+          "deviation_mm": 0.0257,
+          "force_delta_n": 0.2537
+        },
+        {
+          "tcp": [
+            0.654898,
+            -0.088225,
+            0.281462
+          ],
+          "speed": 0.00481,
+          "deviation_mm": 0.0175,
+          "force_delta_n": 0.439
+        },
+        {
+          "tcp": [
+            0.654895,
+            -0.08824,
+            0.281182
+          ],
+          "speed": 0.00503,
+          "deviation_mm": 0.0061,
+          "force_delta_n": 0.2155
+        },
+        {
+          "tcp": [
+            0.654901,
+            -0.088234,
+            0.280943
+          ],
+          "speed": 0.00527,
+          "deviation_mm": 0.0078,
+          "force_delta_n": 0.0419
+        },
+        {
+          "tcp": [
+            0.654921,
+            -0.088254,
+            0.280722
+          ],
+          "speed": 0.00497,
+          "deviation_mm": 0.0235,
+          "force_delta_n": 0.2025
+        },
+        {
+          "tcp": [
+            0.654897,
+            -0.08824,
+            0.280487
+          ],
+          "speed": 0.00404,
+          "deviation_mm": 0.0042,
+          "force_delta_n": 0.2753
+        },
+        {
+          "tcp": [
+            0.654897,
+            -0.088223,
+            0.280257
+          ],
+          "speed": 0.0033,
+          "deviation_mm": 0.019,
+          "force_delta_n": 0.5323
+        },
+        {
+          "tcp": [
+            0.654892,
+            -0.088234,
+            0.28002
+          ],
+          "speed": 0.00412,
+          "deviation_mm": 0.0121,
+          "force_delta_n": 0.4659
+        },
+        {
+          "tcp": [
+            0.654889,
+            -0.088246,
+            0.279758
+          ],
+          "speed": 0.0062,
+          "deviation_mm": 0.0126,
+          "force_delta_n": 0.424
+        },
+        {
+          "tcp": [
+            0.654903,
+            -0.088231,
+            0.279533
+          ],
+          "speed": 0.00682,
+          "deviation_mm": 0.0111,
+          "force_delta_n": 0.3363
+        },
+        {
+          "tcp": [
+            0.654892,
+            -0.088234,
+            0.279284
+          ],
+          "speed": 0.00687,
+          "deviation_mm": 0.0125,
+          "force_delta_n": 0.2556
+        },
+        {
+          "tcp": [
+            0.654904,
+            -0.088241,
+            0.278981
+          ],
+          "speed": 0.00645,
+          "deviation_mm": 0.0032,
+          "force_delta_n": 0.3919
+        },
+        {
+          "tcp": [
+            0.65493,
+            -0.088225,
+            0.278796
+          ],
+          "speed": 0.0044,
+          "deviation_mm": 0.0343,
+          "force_delta_n": 0.5755
+        },
+        {
+          "tcp": [
+            0.654918,
+            -0.08823,
+            0.278529
+          ],
+          "speed": 0.00518,
+          "deviation_mm": 0.0204,
+          "force_delta_n": 0.4596
+        },
+        {
+          "tcp": [
+            0.654909,
+            -0.088247,
+            0.278293
+          ],
+          "speed": 0.00536,
+          "deviation_mm": 0.0099,
+          "force_delta_n": 0.3821
+        },
+        {
+          "tcp": [
+            0.654917,
+            -0.088229,
+            0.278064
+          ],
+          "speed": 0.006,
+          "deviation_mm": 0.0207,
+          "force_delta_n": 0.17
+        },
+        {
+          "tcp": [
+            0.654903,
+            -0.088227,
+            0.277837
+          ],
+          "speed": 0.00776,
+          "deviation_mm": 0.0149,
+          "force_delta_n": 0.1342
+        },
+        {
+          "tcp": [
+            0.654898,
+            -0.088231,
+            0.277585
+          ],
+          "speed": 0.00497,
+          "deviation_mm": 0.0113,
+          "force_delta_n": 0.0295
+        },
+        {
+          "tcp": [
+            0.654912,
+            -0.088248,
+            0.277346
+          ],
+          "speed": 0.0064,
+          "deviation_mm": 0.0129,
+          "force_delta_n": 0.1829
+        },
+        {
+          "tcp": [
+            0.65491,
+            -0.088224,
+            0.277044
+          ],
+          "speed": 0.00672,
+          "deviation_mm": 0.0204,
+          "force_delta_n": 0.0346
+        },
+        {
+          "tcp": [
+            0.654896,
+            -0.088232,
+            0.276827
+          ],
+          "speed": 0.00726,
+          "deviation_mm": 0.011,
+          "force_delta_n": 0.0627
+        },
+        {
+          "tcp": [
+            0.654917,
+            -0.088207,
+            0.276591
+          ],
+          "speed": 0.00404,
+          "deviation_mm": 0.039,
+          "force_delta_n": 0.1123
+        },
+        {
+          "tcp": [
+            0.654909,
+            -0.08825,
+            0.276332
+          ],
+          "speed": 0.0034,
+          "deviation_mm": 0.0117,
+          "force_delta_n": 0.1568
+        },
+        {
+          "tcp": [
+            0.654909,
+            -0.088249,
+            0.27609
+          ],
+          "speed": 0.00418,
+          "deviation_mm": 0.0107,
+          "force_delta_n": 0.2503
+        },
+        {
+          "tcp": [
+            0.654926,
+            -0.088243,
+            0.275854
+          ],
+          "speed": 0.00394,
+          "deviation_mm": 0.0248,
+          "force_delta_n": 0.1261
+        },
+        {
+          "tcp": [
+            0.65491,
+            -0.088241,
+            0.27568
+          ],
+          "speed": 0.00521,
+          "deviation_mm": 0.009,
+          "force_delta_n": 0.075
+        },
+        {
+          "tcp": [
+            0.654906,
+            -0.088243,
+            0.275499
+          ],
+          "speed": 0.00599,
+          "deviation_mm": 0.0054,
+          "force_delta_n": 0.027
+        }
+      ],
+      "actual_j6_start_deg": -215.54632116778436,
+      "actual_j6_end_deg": -215.54701784707967,
+      "actual_j6_travel_deg_total": 0.6919391440545439,
+      "actual_j6_span_deg": 0.00684384954834627
+    }
+  ],
+  "finished_at": "2026-09-22T10:56:54.695931+08:00",
+  "actual_wrist": {
+    "note": "measured from the controller's own q_actual on 30003, not from IK - this is the authoritative cable-strain evidence",
+    "j6_start_deg": -215.54632116778436,
+    "j6_end_deg": -215.54563814886734,
+    "j6_net_deg": 0.0006830189170159429,
+    "j6_travel_deg": 0.6933188422668763,
+    "j6_span_deg": 0.00684384954834627
+  },
+  "watchdog_trip": null,
+  "watchdog_error": null,
+  "passed": true
+}

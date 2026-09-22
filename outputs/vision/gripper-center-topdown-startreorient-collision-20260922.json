@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "margin_mm": 40.0,
+  "attachments": "config/robot_attachments.preliminary-cad-20260921.yaml",
+  "kinematic_source": "gated warm-started endpoint q when available",
+  "per_slot": {
+    "1": [
+      0.0472003027640258,
+      "force_sensor vs wrist_1_link_0"
+    ]
+  },
+  "worst": {
+    "clearance_m": 0.0472003027640258,
+    "where": [
+      1,
+      "lift",
+      "force_sensor vs wrist_1_link_0"
+    ],
+    "below_margin": false
+  }
+}

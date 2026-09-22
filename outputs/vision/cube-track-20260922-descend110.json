@@ -1,0 +1,341 @@
+{
+  "schema_version": 1,
+  "measured_at": "2026-09-22T10:41:50+08:00",
+  "mode": "boardless_local_cube_tracking",
+  "runtime_board_usage": "none: cloud only; no image capture or checkerboard detection",
+  "motion_authorization": "none: observation and validation only; no robot command was sent",
+  "anchor_center_base_m": [
+    0.6500294495059106,
+    -0.0888743611484482,
+    0.01180941197762162
+  ],
+  "calibration": "config/handeye_eye_in_hand_20260921.yaml",
+  "observations": [
+    {
+      "status": "rejected",
+      "geometry": {
+        "settings": {
+          "search_half_xy_m": 0.25,
+          "min_coverage": 0.85,
+          "max_aspect": 1.1,
+          "expect_edge_m": 0.05,
+          "edge_tolerance_m": 0.0025,
+          "max_normal_tilt_deg": 12.0
+        },
+        "input_points": 475682,
+        "gates": {
+          "cluster_points": true,
+          "reference_plane": true,
+          "top_face_points": true,
+          "top_face_parallel": true,
+          "height_positive": true,
+          "coverage": false,
+          "square": false
+        },
+        "reasons": [
+          "gate failed: coverage",
+          "gate failed: square"
+        ],
+        "status": "rejected",
+        "center_target_m": null,
+        "center_base_m": null,
+        "up_axis_target": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "camera_origin_target_m": [
+          -0.15291373615082648,
+          -0.20403546104721648,
+          0.09706631719943581
+        ],
+        "cluster_points": 114642,
+        "cluster_height_m": [
+          0.0020000807398364434,
+          0.03738499868545035
+        ],
+        "ring_points": 291908,
+        "reference_plane": {
+          "normal": [
+            0.003061061608134743,
+            0.0011306573538717689,
+            0.9999946757437159
+          ],
+          "offset": -0.013150484672011306,
+          "height_m": -0.01296722898872734,
+          "tilt_deg": 0.1869680071482203,
+          "inliers": 246846
+        },
+        "top_face": {
+          "points": 13618,
+          "height_m": 0.029384264864480238,
+          "tilt_deg": 9.357942999445998,
+          "outliers_dropped": 0,
+          "footprint": {
+            "center_2d": [
+              -0.011411002837121487,
+              -0.013039138168096542
+            ],
+            "edges_m": [
+              0.06975903362035751,
+              0.03467126935720444
+            ],
+            "angle_deg": 139.11692428588867,
+            "area_m2": 0.0024186342447496956,
+            "pitch_m": 0.0003007983419496319,
+            "coverage": 0.5094411337750977,
+            "points": 13618
+          }
+        },
+        "measured_height_m": 0.04235149385320758,
+        "size_prior": {
+          "expected_edge_m": 0.05,
+          "measured_edges_m": [
+            0.06975903362035751,
+            0.03467126935720444
+          ],
+          "deviation_m": [
+            0.01975903362035751,
+            0.015328730642795566
+          ],
+          "matches_nominal_size": false
+        },
+        "height_vs_edge_mm": -9.863657635573396
+      },
+      "tcp_base_tool0": [
+        0.6548849087833624,
+        -0.08824123451287713,
+        0.2940778532391212,
+        2.8668373811149683,
+        -1.2718398767566117,
+        -0.026457641858710874
+      ],
+      "robot_motion_during_capture_mm": 0.019151789174764202,
+      "finite_cloud_points": 475682,
+      "camera_origin_base_m": [
+        0.4971157133550841,
+        -0.2929098221956647,
+        0.09706631719943581
+      ]
+    },
+    {
+      "status": "rejected",
+      "geometry": {
+        "settings": {
+          "search_half_xy_m": 0.25,
+          "min_coverage": 0.85,
+          "max_aspect": 1.1,
+          "expect_edge_m": 0.05,
+          "edge_tolerance_m": 0.0025,
+          "max_normal_tilt_deg": 12.0
+        },
+        "input_points": 476780,
+        "gates": {
+          "cluster_points": true,
+          "reference_plane": true,
+          "top_face_points": true,
+          "top_face_parallel": true,
+          "height_positive": true,
+          "coverage": false,
+          "square": false
+        },
+        "reasons": [
+          "gate failed: coverage",
+          "gate failed: square"
+        ],
+        "status": "rejected",
+        "center_target_m": null,
+        "center_base_m": null,
+        "up_axis_target": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "camera_origin_target_m": [
+          -0.15291156778484893,
+          -0.20404357396527756,
+          0.09707344994598588
+        ],
+        "cluster_points": 114708,
+        "cluster_height_m": [
+          0.002000098109610521,
+          0.03747951405233188
+        ],
+        "ring_points": 293061,
+        "reference_plane": {
+          "normal": [
+            0.0031499703252902108,
+            0.0005669181007369774,
+            0.9999948781322918
+          ],
+          "offset": -0.013147274024033791,
+          "height_m": -0.01295862780897064,
+          "tilt_deg": 0.18338001084970265,
+          "inliers": 248198
+        },
+        "top_face": {
+          "points": 13562,
+          "height_m": 0.028169741485334313,
+          "tilt_deg": 8.664708180044611,
+          "outliers_dropped": 0,
+          "footprint": {
+            "center_2d": [
+              -0.011055847629904747,
+              -0.013189248740673065
+            ],
+            "edges_m": [
+              0.07040843367576599,
+              0.034964609891176224
+            ],
+            "angle_deg": 139.72132110595703,
+            "area_m2": 0.0024618034165219127,
+            "pitch_m": 0.0003037678652585054,
+            "coverage": 0.508339700034976,
+            "points": 13562
+          }
+        },
+        "measured_height_m": 0.04112836929430495,
+        "size_prior": {
+          "expected_edge_m": 0.05,
+          "measured_edges_m": [
+            0.07040843367576599,
+            0.034964609891176224
+          ],
+          "deviation_m": [
+            0.02040843367576599,
+            0.015035390108823779
+          ],
+          "matches_nominal_size": false
+        },
+        "height_vs_edge_mm": -11.558152489166154
+      },
+      "tcp_base_tool0": [
+        0.6548924037159431,
+        -0.08824700762406888,
+        0.294078289461871,
+        2.8667960764765716,
+        -1.2718620854885954,
+        -0.02644202138357049
+      ],
+      "robot_motion_during_capture_mm": 0.05280586957529226,
+      "finite_cloud_points": 476780,
+      "camera_origin_base_m": [
+        0.49711788172106164,
+        -0.29291793511372577,
+        0.09707344994598588
+      ]
+    },
+    {
+      "status": "rejected",
+      "geometry": {
+        "settings": {
+          "search_half_xy_m": 0.25,
+          "min_coverage": 0.85,
+          "max_aspect": 1.1,
+          "expect_edge_m": 0.05,
+          "edge_tolerance_m": 0.0025,
+          "max_normal_tilt_deg": 12.0
+        },
+        "input_points": 474941,
+        "gates": {
+          "cluster_points": true,
+          "reference_plane": true,
+          "top_face_points": true,
+          "top_face_parallel": true,
+          "height_positive": true,
+          "coverage": false,
+          "square": false
+        },
+        "reasons": [
+          "gate failed: coverage",
+          "gate failed: square"
+        ],
+        "status": "rejected",
+        "center_target_m": null,
+        "center_base_m": null,
+        "up_axis_target": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "camera_origin_target_m": [
+          -0.1529108855304544,
+          -0.20403276089955008,
+          0.09706702350663643
+        ],
+        "cluster_points": 114626,
+        "cluster_height_m": [
+          0.0020008713519128613,
+          0.037426397601547444
+        ],
+        "ring_points": 291283,
+        "reference_plane": {
+          "normal": [
+            0.0030291131777221278,
+            0.0010878085551027858,
+            0.9999948205595387
+          ],
+          "offset": -0.013137176830471347,
+          "height_m": -0.01295668089790513,
+          "tilt_deg": 0.1844077802786111,
+          "inliers": 246356
+        },
+        "top_face": {
+          "points": 12989,
+          "height_m": 0.01781680857212918,
+          "tilt_deg": 9.974506215094683,
+          "outliers_dropped": 0,
+          "footprint": {
+            "center_2d": [
+              -0.011142266914248466,
+              -0.0132848359644413
+            ],
+            "edges_m": [
+              0.07032859325408936,
+              0.03524639084935188
+            ],
+            "angle_deg": 139.64076232910156,
+            "area_m2": 0.0024788290857187256,
+            "pitch_m": 0.0003113613989501685,
+            "coverage": 0.5079941057482191,
+            "points": 12989
+          }
+        },
+        "measured_height_m": 0.03077348947003431,
+        "size_prior": {
+          "expected_edge_m": 0.05,
+          "measured_edges_m": [
+            0.07032859325408936,
+            0.03524639084935188
+          ],
+          "deviation_m": [
+            0.020328593254089353,
+            0.01475360915064812
+          ],
+          "matches_nominal_size": false
+        },
+        "height_vs_edge_mm": -22.01400258168631
+      },
+      "tcp_base_tool0": [
+        0.6548881773414041,
+        -0.08823148811255371,
+        0.2940709044693028,
+        2.866817858727856,
+        -1.27181030552685,
+        -0.026462479741155114
+      ],
+      "robot_motion_during_capture_mm": 0.018475582027148996,
+      "finite_cloud_points": 474941,
+      "camera_origin_base_m": [
+        0.4971185639754562,
+        -0.2929071220479983,
+        0.09706702350663643
+      ]
+    }
+  ],
+  "required_captures": 3,
+  "measured_captures": 0,
+  "max_center_spread_mm": 3.0,
+  "status": "rejected",
+  "reason": "one or more cloud observations failed geometric gates"
+}

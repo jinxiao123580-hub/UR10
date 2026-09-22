@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "kind": "live_direct_base_descent_gate",
+  "motion_sent": false,
+  "passed": true,
+  "created_at": "2026-09-22T10:39:47.631988+08:00",
+  "current": {
+    "q_rad": [
+      0.11301563878854116,
+      -1.969862429295675,
+      -1.600650707875387,
+      -4.300189185137252,
+      4.711813354492188,
+      -3.761658263201215
+    ],
+    "tcp_m_rad": [
+      0.6548796696022527,
+      -0.0882751863504962,
+      0.36410287956669857,
+      2.866727313402464,
+      -1.2719073138777799,
+      -0.02644269143514909
+    ],
+    "source": "live UR 30013",
+    "stationary": {
+      "frames": 30,
+      "max_position_motion_mm": 0.027519954486306446
+    }
+  },
+  "visit_order": [
+    1
+  ],
+  "segments": [
+    {
+      "slot": 1,
+      "segment": "base_down_40mm",
+      "order": "direct_base_z_descent",
+      "start_tcp_m_rad": [
+        0.6548796696022527,
+        -0.0882751863504962,
+        0.36410287956669857,
+        2.866727313402464,
+        -1.2719073138777799,
+        -0.02644269143514909
+      ],
+      "end_tcp_m_rad": [
+        0.6548796696022527,
+        -0.0882751863504962,
+        0.3241028795666986,
+        2.866727313402464,
+        -1.2719073138777799,
+        -0.02644269143514909
+      ],
+      "end_q_rad": [
+        0.11614055677652989,
+        -1.997035331303843,
+        -1.636348780812959,
+        -4.237791508556076,
+        4.708340355487838,
+        -3.7611129524272062
+      ],
+      "worst": {
+        "ik_position_m": 7.960787701805259e-11,
+        "ik_rotation_rad": 2.5377601724874256e-10,
+        "joint_margin_rad": 1.505243872776834,
+        "min_singular": 0.3222046318145942,
+        "max_joint_step_rad": 0.0010746050305030508,
+        "min_flange_z_m": 0.32410287959210177,
+        "min_camera_clearance_m": 0.047200381817277766,
+        "worst_camera_pair": "force_sensor vs wrist_1_link_0"
+      },
+      "passed": true,
+      "reasons": []
+    }
+  ],
+  "joint6_range_deg": [
+    -270.0,
+    -180.0
+  ],
+  "margin_mm": 40.0,
+  "model": {
+    "fk_position_agreement_m": 0.0026096255105951486,
+    "fk_rotation_agreement_rad": 0.00430972554805677,
+    "attachments": "config/robot_attachments.preliminary-cad-20260921.yaml",
+    "status": "preliminary CAD envelope; not real-motion proof"
+  }
+}

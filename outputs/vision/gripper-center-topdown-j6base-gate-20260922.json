@@ -1,0 +1,236 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-09-22T09:55:20.287809+08:00",
+  "kind": "scripted_move_offline_gate",
+  "motion_sent": false,
+  "plan": "outputs/vision/gripper-center-topdown-j6base-plan-20260922.json",
+  "slots_checked": [
+    1
+  ],
+  "clearance_z_m": 0.55,
+  "model": {
+    "urdf": "/home/jx/ur_learn/generated/ur10.urdf",
+    "note": "nominal URDF kinematics; the controller uses factory calibration, so a small FK disagreement is expected and is gated below",
+    "fk_position_agreement_m": 0.0022532372665681416,
+    "fk_rotation_agreement_rad": 0.004701682320383319,
+    "fk_position_gate_m": 0.01,
+    "fk_rotation_gate_rad": 0.02,
+    "fk_gate_passed": true
+  },
+  "current": {
+    "q_rad": [
+      0.094275726972,
+      -2.126006453622,
+      -1.445110864423,
+      -4.929560471383,
+      4.755444454948932,
+      -3.549017995484
+    ],
+    "tcp_m_rad": [
+      0.707353056173,
+      -0.099790367039,
+      0.406299190343,
+      2.289604476027,
+      -1.3278869508239546,
+      -0.686898466285
+    ],
+    "source": "assumed via --assume-q (robot unreachable)"
+  },
+  "segments": [
+    {
+      "segment": "reorient_start",
+      "order": "reorient_at_start",
+      "start_tcp_m_rad": [
+        0.707353056173,
+        -0.099790367039,
+        0.406299190343,
+        2.2896044760270025,
+        -1.3278869508239564,
+        -0.686898466285001
+      ],
+      "end_tcp_m_rad": [
+        0.707353056173,
+        -0.099790367039,
+        0.406299190343,
+        2.658579383949673,
+        -1.6594765777297193,
+        -0.02473242807285526
+      ],
+      "end_q_rad": [
+        0.09093516955183979,
+        -2.026731671297061,
+        -1.4353245483854806,
+        -4.409034455356045,
+        4.708828388716349,
+        -3.5054413114450855
+      ],
+      "worst": {
+        "ik_position_m": 1.9657779818464818e-10,
+        "ik_rotation_rad": 7.155336625944662e-10,
+        "joint_margin_rad": 1.3523293167917947,
+        "min_singular": 0.3015284497230585,
+        "max_joint_step_rad": 0.009278163685721097,
+        "min_flange_z_m": 0.40629919031826767,
+        "min_camera_clearance_m": Infinity,
+        "worst_camera_pair": null
+      },
+      "singularity_gate_passed": true,
+      "passed": true,
+      "reasons": [],
+      "slot": 1,
+      "singularity_floor": 0.02,
+      "singularity_fraction_of_baseline": 0.9788958214148119,
+      "clearance_z_m": 0.55
+    },
+    {
+      "segment": "lift",
+      "order": "reorient_at_start",
+      "start_tcp_m_rad": [
+        0.707353056173,
+        -0.099790367039,
+        0.406299190343,
+        2.658579383949673,
+        -1.6594765777297193,
+        -0.02473242807285526
+      ],
+      "end_tcp_m_rad": [
+        0.707353056173,
+        -0.099790367039,
+        0.55,
+        2.658579383949673,
+        -1.6594765777297193,
+        -0.02473242807285526
+      ],
+      "end_q_rad": [
+        0.09093516969624423,
+        -1.9780968465645092,
+        -1.2492691766373407,
+        -4.643724650831844,
+        4.708828388725891,
+        -3.5054413112162943
+      ],
+      "worst": {
+        "ik_position_m": 1.7156709550088636e-10,
+        "ik_rotation_rad": 2.941319955016827e-10,
+        "joint_margin_rad": 1.5743569184536952,
+        "min_singular": 0.2720323047969087,
+        "max_joint_step_rad": 0.0040473010555093225,
+        "min_flange_z_m": 0.4062991903430001,
+        "min_camera_clearance_m": Infinity,
+        "worst_camera_pair": null
+      },
+      "singularity_gate_passed": true,
+      "passed": true,
+      "reasons": [],
+      "slot": 1,
+      "singularity_floor": 0.02,
+      "singularity_fraction_of_baseline": 0.8831381804937878,
+      "clearance_z_m": 0.55
+    },
+    {
+      "segment": "translate",
+      "order": "reorient_at_start",
+      "start_tcp_m_rad": [
+        0.707353056173,
+        -0.099790367039,
+        0.55,
+        2.658579383949673,
+        -1.6594765777297193,
+        -0.02473242807285526
+      ],
+      "end_tcp_m_rad": [
+        0.6538667935694942,
+        -0.089171247535897,
+        0.55,
+        2.658579383949673,
+        -1.6594765777297193,
+        -0.02473242807285526
+      ],
+      "end_q_rad": [
+        0.11494312966282062,
+        -1.8838805877746934,
+        -1.3791576727471078,
+        -4.607962022066566,
+        4.708418720801096,
+        -3.4814366764437334
+      ],
+      "worst": {
+        "ik_position_m": 1.0313026676274905e-10,
+        "ik_rotation_rad": 8.674307544397513e-11,
+        "joint_margin_rad": 1.5743569184728354,
+        "min_singular": 0.27203230471243023,
+        "max_joint_step_rad": 0.0022772994715023476,
+        "min_flange_z_m": 0.5499999999999999,
+        "min_camera_clearance_m": Infinity,
+        "worst_camera_pair": null
+      },
+      "singularity_gate_passed": true,
+      "passed": true,
+      "reasons": [],
+      "slot": 1,
+      "singularity_floor": 0.02,
+      "singularity_fraction_of_baseline": 0.8831381802195329,
+      "clearance_z_m": 0.55
+    },
+    {
+      "segment": "descend",
+      "order": "reorient_at_start",
+      "start_tcp_m_rad": [
+        0.6538667935694942,
+        -0.089171247535897,
+        0.55,
+        2.658579383949673,
+        -1.6594765777297193,
+        -0.02473242807285526
+      ],
+      "end_tcp_m_rad": [
+        0.6538667935694942,
+        -0.089171247535897,
+        0.3541533860273074,
+        2.658579383949673,
+        -1.6594765777297193,
+        -0.02473242807285526
+      ],
+      "end_q_rad": [
+        0.11494312962576973,
+        -1.9734789501708112,
+        -1.6123909304794561,
+        -4.285130402232445,
+        4.708418720813084,
+        -3.4814366764465956
+      ],
+      "worst": {
+        "ik_position_m": 2.1138766629663706e-10,
+        "ik_rotation_rad": 3.8484633437161284e-10,
+        "joint_margin_rad": 1.529201723110337,
+        "min_singular": 0.29273681222071957,
+        "max_joint_step_rad": 0.0055242462571802875,
+        "min_flange_z_m": 0.3541533861548134,
+        "min_camera_clearance_m": Infinity,
+        "worst_camera_pair": null
+      },
+      "singularity_gate_passed": true,
+      "passed": true,
+      "reasons": [],
+      "slot": 1,
+      "singularity_floor": 0.02,
+      "singularity_fraction_of_baseline": 0.9503542452473304,
+      "clearance_z_m": 0.55
+    },
+    {
+      "slot": 1,
+      "segment": "slot_summary",
+      "feasible": true,
+      "order": "reorient_at_start",
+      "clearance_z_m": 0.55,
+      "roll_rescue_offset_deg": null
+    }
+  ],
+  "visit_order": [
+    1
+  ],
+  "visit_order_policy": "greedy nearest neighbour in joint space",
+  "baseline_min_singular": 0.3080291519553686,
+  "passed": true,
+  "interpretation": "Numerical feasibility only: reachability, joint limits, singularity proximity and flange clearance along densely sampled straight-line movel segments. Collision-freedom is NOT proven - there is no obstacle model. The lift/reorient/translate/descend structure plus a clearance height above every table object is the substitute, and it still needs human eyes on the workspace before execution."
+}

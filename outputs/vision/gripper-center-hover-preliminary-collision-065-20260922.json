@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "margin_mm": 40.0,
+  "attachments": "config/robot_attachments.preliminary-cad-20260921.yaml",
+  "kinematic_source": "gated warm-started endpoint q when available",
+  "per_slot": {
+    "1": [
+      -0.008770737979674684,
+      "camera_housing vs upper_arm_link_0"
+    ]
+  },
+  "worst": {
+    "clearance_m": -0.008770737979674684,
+    "where": [
+      1,
+      "translate",
+      "camera_housing vs upper_arm_link_0"
+    ],
+    "below_margin": true
+  }
+}
