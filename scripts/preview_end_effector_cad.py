@@ -61,7 +61,7 @@ def draw_axes(axis):
 def main():
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--models", default="ros2_ws/src/ur10_digital_twin/models/end_effector")
+    parser.add_argument("--models", default="model/solidworks/end_effector")
     parser.add_argument("--output", default="outputs/vision/end-effector-cad-clockings.png")
     args = parser.parse_args()
     models = args.models if os.path.isabs(args.models) else os.path.join(root, args.models)

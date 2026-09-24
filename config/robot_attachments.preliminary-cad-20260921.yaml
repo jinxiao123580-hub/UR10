@@ -2,7 +2,7 @@
 # It is intentionally separate from robot_attachments.yaml and is NOT a truth model
 # for real-robot clearance decisions.
 model_status: preliminary_cad_envelope_not_real_robot_validated
-cad_models_dir: ros2_ws/src/ur10_digital_twin/models/end_effector
+cad_models_dir: model/solidworks/end_effector
 tool_yaw_deg: 270.0  # current +90° baseline, then operator-requested +180°
 handeye_calibration: config/handeye_eye_in_hand_20260921.yaml
 force_sensor:

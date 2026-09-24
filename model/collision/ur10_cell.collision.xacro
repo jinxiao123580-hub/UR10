@@ -75,12 +75,12 @@
   <!-- 实测包络 130 × 58 × 160 mm。用薄圆柱做碰撞体（旋转对称部分）。 -->
   <link name="$(arg tf_prefix)ft_mount_plate">
     <visual>
-      <origin xyz="0 0 $(PLATE_D/2)" rpy="0 0 0"/>
+      <origin xyz="0 0 ${PLATE_D/2}" rpy="0 0 0"/>
       <geometry><cylinder radius="0.045" length="${PLATE_D}"/></geometry>
       <material name="finger_metal"/>
     </visual>
     <collision>
-      <origin xyz="0 0 $(PLATE_D/2)" rpy="0 0 0"/>
+      <origin xyz="0 0 ${PLATE_D/2}" rpy="0 0 0"/>
       <geometry><cylinder radius="0.045" length="${PLATE_D}"/></geometry>
     </collision>
   </link>
@@ -97,37 +97,37 @@
        官方 Table 5.87：⌀126 × 52.2。两者一致，取实测 50。 -->
   <link name="$(arg tf_prefix)ati_sensor">
     <visual>
-      <origin xyz="0 0 $(PLATE_D + FT_D/2)" rpy="0 0 0"/>
+      <origin xyz="0 0 ${PLATE_D + FT_D/2}" rpy="0 0 0"/>
       <geometry><cylinder radius="${FT_R}" length="${FT_D}"/></geometry>
       <material name="ati_blue"/>
     </visual>
     <collision>
-      <origin xyz="0 0 $(PLATE_D + FT_D/2)" rpy="0 0 0"/>
+      <origin xyz="0 0 ${PLATE_D + FT_D/2}" rpy="0 0 0"/>
       <geometry><cylinder radius="${FT_R}" length="${FT_D}"/></geometry>
     </collision>
   </link>
   <joint name="$(arg tf_prefix)ft_mount_to_ati" type="fixed">
     <parent link="$(arg tf_prefix)ft_mount_plate"/>
     <child link="$(arg tf_prefix)ati_sensor"/>
-    <origin xyz="0 0 $(PLATE_D)" rpy="0 0 0"/>
+    <origin xyz="0 0 ${PLATE_D}" rpy="0 0 0"/>
   </joint>
 
   <!-- ============ 3. 传感器 → 夹爪 耦合板 ============ -->
   <link name="$(arg tf_prefix)gripper_coupling">
     <visual>
-      <origin xyz="0 0 $(PLATE_D + FT_D + PLATE_D/2)" rpy="0 0 0"/>
+      <origin xyz="0 0 ${PLATE_D + FT_D + PLATE_D/2}" rpy="0 0 0"/>
       <geometry><cylinder radius="0.0364" length="${PLATE_D}"/></geometry>
       <material name="finger_metal"/>
     </visual>
     <collision>
-      <origin xyz="0 0 $(PLATE_D + FT_D + PLATE_D/2)" rpy="0 0 0"/>
+      <origin xyz="0 0 ${PLATE_D + FT_D + PLATE_D/2}" rpy="0 0 0"/>
       <geometry><cylinder radius="0.0364" length="${PLATE_D}"/></geometry>
     </collision>
   </link>
   <joint name="$(arg tf_prefix)ati_to_coupling" type="fixed">
     <parent link="$(arg tf_prefix)ati_sensor"/>
     <child link="$(arg tf_prefix)gripper_coupling"/>
-    <origin xyz="0 0 $(PLATE_D + FT_D)" rpy="0 0 0"/>
+    <origin xyz="0 0 ${PLATE_D + FT_D}" rpy="0 0 0"/>
   </joint>
 
   <!-- ============ 4. Robotiq 2F-85 夹爪主体 ============ -->
@@ -135,19 +135,19 @@
        法兰安装面 → 指尖 = 200.6 mm（= 官方 2F-85 最大高度，已交叉验证）。 -->
   <link name="$(arg tf_prefix)gripper_base">
     <visual>
-      <origin xyz="0 0 $(2*PLATE_D + FT_D + GRIP_D/2)" rpy="0 0 0"/>
-      <geometry><box size="0.1435 $(GRIP_W) $(GRIP_D)"/></geometry>
+      <origin xyz="0 0 ${2*PLATE_D + FT_D + GRIP_D/2}" rpy="0 0 0"/>
+      <geometry><box size="0.1435 ${GRIP_W} ${GRIP_D}"/></geometry>
       <material name="gripper_gray"/>
     </visual>
     <collision>
-      <origin xyz="0 0 $(2*PLATE_D + FT_D + GRIP_D/2)" rpy="0 0 0"/>
-      <geometry><box size="0.1435 $(GRIP_W) $(GRIP_D)"/></geometry>
+      <origin xyz="0 0 ${2*PLATE_D + FT_D + GRIP_D/2}" rpy="0 0 0"/>
+      <geometry><box size="0.1435 ${GRIP_W} ${GRIP_D}"/></geometry>
     </collision>
   </link>
   <joint name="$(arg tf_prefix)coupling_to_gripper" type="fixed">
     <parent link="$(arg tf_prefix)gripper_coupling"/>
     <child link="$(arg tf_prefix)gripper_base"/>
-    <origin xyz="0 0 $(2*PLATE_D + FT_D)" rpy="0 0 0"/>
+    <origin xyz="0 0 ${2*PLATE_D + FT_D}" rpy="0 0 0"/>
   </joint>
 
   <!-- ============ 5. 左右手指（prismatic） ============ -->
@@ -156,38 +156,38 @@
        这里给到 89 mm 全长（含嵌进机身的根部）。 -->
   <link name="$(arg tf_prefix)left_finger">
     <visual>
-      <origin xyz="0 0 $(2*PLATE_D + FT_D + GRIP_D + FING_L/2)" rpy="0 0 0"/>
-      <geometry><box size="0.018 0.022 $(FING_L)"/></geometry>
+      <origin xyz="0 0 ${2*PLATE_D + FT_D + GRIP_D + FING_L/2}" rpy="0 0 0"/>
+      <geometry><box size="0.018 0.022 ${FING_L}"/></geometry>
       <material name="finger_metal"/>
     </visual>
     <collision>
-      <origin xyz="0 0 $(2*PLATE_D + FT_D + GRIP_D + FING_L/2)" rpy="0 0 0"/>
-      <geometry><box size="0.018 0.022 $(FING_L)"/></geometry>
+      <origin xyz="0 0 ${2*PLATE_D + FT_D + GRIP_D + FING_L/2}" rpy="0 0 0"/>
+      <geometry><box size="0.018 0.022 ${FING_L}"/></geometry>
     </collision>
   </link>
   <joint name="$(arg tf_prefix)left_finger_joint" type="prismatic">
     <parent link="$(arg tf_prefix)gripper_base"/>
     <child link="$(arg tf_prefix)left_finger"/>
-    <origin xyz="0.0313 0 $(2*PLATE_D + FT_D + GRIP_D)" rpy="0 0 0"/>
+    <origin xyz="0.0313 0 ${2*PLATE_D + FT_D + GRIP_D}" rpy="0 0 0"/>
     <axis xyz="1 0 0"/>
     <limit lower="0" upper="0.0425" effort="100" velocity="0.15"/>
   </joint>
 
   <link name="$(arg tf_prefix)right_finger">
     <visual>
-      <origin xyz="0 0 $(2*PLATE_D + FT_D + GRIP_D + FING_L/2)" rpy="0 0 0"/>
-      <geometry><box size="0.018 0.022 $(FING_L)"/></geometry>
+      <origin xyz="0 0 ${2*PLATE_D + FT_D + GRIP_D + FING_L/2}" rpy="0 0 0"/>
+      <geometry><box size="0.018 0.022 ${FING_L}"/></geometry>
       <material name="finger_metal"/>
     </visual>
     <collision>
-      <origin xyz="0 0 $(2*PLATE_D + FT_D + GRIP_D + FING_L/2)" rpy="0 0 0"/>
-      <geometry><box size="0.018 0.022 $(FING_L)"/></geometry>
+      <origin xyz="0 0 ${2*PLATE_D + FT_D + GRIP_D + FING_L/2}" rpy="0 0 0"/>
+      <geometry><box size="0.018 0.022 ${FING_L}"/></geometry>
     </collision>
   </link>
   <joint name="$(arg tf_prefix)right_finger_joint" type="prismatic">
     <parent link="$(arg tf_prefix)gripper_base"/>
     <child link="$(arg tf_prefix)right_finger"/>
-    <origin xyz="-0.0313 0 $(2*PLATE_D + FT_D + GRIP_D)" rpy="0 0 0"/>
+    <origin xyz="-0.0313 0 ${2*PLATE_D + FT_D + GRIP_D}" rpy="0 0 0"/>
     <axis xyz="-1 0 0"/>
     <limit lower="0" upper="0.0425" effort="100" velocity="0.15"/>
   </joint>
@@ -199,12 +199,12 @@
        这就是 docs/01-硬件与网络.md §7.1 说的"偏心安装"，也是标定问题的物理来源。 -->
   <link name="$(arg tf_prefix)camera_link">
     <visual>
-      <origin xyz="$(CAM_X) $(CAM_Y) $(CAM_Z)" rpy="0 0 0"/>
+      <origin xyz="${CAM_X} ${CAM_Y} ${CAM_Z}" rpy="0 0 0"/>
       <geometry><box size="0.160 0.1365 0.195"/></geometry>
       <material name="camera_dark"/>
     </visual>
     <collision>
-      <origin xyz="$(CAM_X) $(CAM_Y) $(CAM_Z)" rpy="0 0 0"/>
+      <origin xyz="${CAM_X} ${CAM_Y} ${CAM_Z}" rpy="0 0 0"/>
       <geometry><box size="0.160 0.1365 0.195"/></geometry>
     </collision>
   </link>
