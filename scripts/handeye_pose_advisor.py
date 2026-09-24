@@ -170,7 +170,10 @@ def ik_feasibility(base_from_tool0, seed_q, ik=None, self_collision=None,
                    min_clearance_m=None):
     """Can the controller reach this TCP pose from ``seed_q``?
 
-    Returns ``(feasible, joint_margin_rad, reasons)``.  This uses the nominal
+    Returns ``(feasible, joint_margin_rad, reasons, solved_q, clearance_m)``;
+    ``joint_margin_rad``/``solved_q``/``clearance_m`` are ``None`` when the
+    corresponding checker was not supplied, and callers must unpack all five.
+    This uses the nominal
     URDF IK (``ur_pose_ik.UR10IK``), the same model and base/URDF yaw mapping that
     ``solve_checked``'s ``joint_discontinuity`` reason is deliberately dropped: it
     measures the joint change from the seed, which matters for a joint-space jump
@@ -180,7 +183,9 @@ def ik_feasibility(base_from_tool0, seed_q, ik=None, self_collision=None,
     every roll for a pose that the path gate proves is reachable.
     """
     if ik is None or seed_q is None:
-        return True, None, []
+        # Keep the five-value contract: the caller unpacks five, and returning a
+        # short tuple here crashed every advisor run that had no IK checker.
+        return True, None, [], None, None
     import pinocchio as pin
     from check_move_plan import BASE_FROM_URDF_ROOT
     from ur_pose_ik import LIMIT_MARGIN, LOWER, UPPER

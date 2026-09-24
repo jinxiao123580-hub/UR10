@@ -1,0 +1,139 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-09-18T10:53:13+08:00",
+  "purpose": "P0-B difference-vector diagnosis of the 2026-09-17 cube centre error",
+  "inputs": {
+    "candidate": "outputs/vision/cube-candidate-20260917.json",
+    "calibration": "config/handeye_eye_in_hand_20260917.yaml",
+    "confirmed_grasp_tcp_base_m": [
+      0.66161,
+      -0.11659,
+      0.30468
+    ],
+    "assumed_cube_edge_m": 0.05
+  },
+  "base_frame": {
+    "estimated_center_xy_m": [
+      0.6302510302269251,
+      -0.09923328898190908
+    ],
+    "confirmed_center_xy_m": [
+      0.66161,
+      -0.11659
+    ],
+    "difference_vector_xy_m": [
+      0.03135896977307495,
+      -0.017356711018090915
+    ],
+    "difference_norm_mm": 35.84188056721001,
+    "confirmed_minus_estimated_direction": "X+ / Y-"
+  },
+  "target_frame": {
+    "base_from_target_rotation": [
+      [
+        -0.9952044125322949,
+        0.09714038631397295,
+        0.011485757399872122
+      ],
+      [
+        0.09714517596029636,
+        0.9952702119367656,
+        -0.00014148848562392245
+      ],
+      [
+        -0.01144517644779976,
+        0.0009749759584287024,
+        -0.9999340265027362
+      ]
+    ],
+    "board_plane_tilt_deg": 179.3418501732954,
+    "inferred_center_m": [
+      0.07775768815460887,
+      -0.11171025655509549,
+      -0.025
+    ],
+    "visible_side_center_m": [
+      0.05275768815460888,
+      -0.11171025655509549,
+      -0.03242970238147492
+    ],
+    "confirmed_center_xy_m": [
+      0.04153467251990217,
+      -0.12565512409051854
+    ],
+    "difference_vector_xy_m": [
+      -0.0362230156347067,
+      -0.013944867535423053
+    ],
+    "difference_norm_xy_mm": 38.81451007358849,
+    "visible_side_lateral_axis": "x",
+    "visible_side_extent_p5_p95_m": [
+      0.0002945878397690102,
+      0.04427863169840057,
+      0.025035568895048713
+    ]
+  },
+  "inference_steps_checked": {
+    "side_plane_normal_offset_m": 0.025,
+    "side_plane_measured_axis_value_m": 0.05275768815460888,
+    "forced_vertical_center_m": -0.025,
+    "vertical_center_sign_note": "locator forces z = sign*0.025; sign=-1.0 from the component search, so the cube centre was placed below the board plane",
+    "board_center_constant_used_for_outward_sign_m": [
+      0.024,
+      0.015
+    ],
+    "expected_error_if_two_axes_each_off_by_half_edge_mm": 35.35533905932738,
+    "expected_error_if_one_axis_off_by_half_edge_mm": 25.0
+  },
+  "camera_side_check": {
+    "lateral_axis": "x",
+    "camera_origin_target_m": [
+      0.36411627034366867,
+      -0.04108149285628109,
+      -0.09725653466266833
+    ],
+    "camera_axis_value_m": 0.36411627034366867,
+    "visible_face_axis_value_m": 0.05275768815460888,
+    "camera_is_on": "+x",
+    "archived_locator_offset_sign": "+",
+    "sign_is_consistent": false,
+    "consequence_mm": 50.0
+  },
+  "sign_corrected_estimate": {
+    "note": "same archived cloud, only the offset sign corrected by the camera side",
+    "center_target_m": [
+      0.027757688154608877,
+      -0.11171025655509549,
+      -0.025
+    ],
+    "center_xy_base_m": [
+      0.6800112508535399,
+      -0.1040905477799239
+    ],
+    "residual_vs_confirmed_grasp_xy_mm": 22.245052006611846,
+    "residual_vector_xy_mm": [
+      -18.40125085353983,
+      -12.499452220076105
+    ]
+  },
+  "ground_truth_caveats": {
+    "confirmed_point_uncertainty": "the 35.84 mm reference is ONE by-eye pendant correction; the gripper can close with the cube several millimetres off centre, so its own uncertainty is not quantified and it cannot serve as an acceptance reference",
+    "visible_face_size_measured": {
+      "y_span_p5_p95_mm": 44.278631698400574,
+      "z_span_p5_p95_mm": 25.035568895048712,
+      "nominal_edge_mm": 50.0,
+      "note": "only 44.3 mm of the 50 mm nominal face was seen in y, and the height mask clipped the face to >=20 mm, so neither the 50 mm size prior nor the half-edge value was verified against the measurement"
+    },
+    "conclusion": "the sign error alone explains 50 mm along one axis; the residual ~22.2 mm against the manual point is inconsistent with any single-face reconstruction of a 50 mm cube, so the centre must be MEASURED (top face + footprint), not inferred, and accepted against an independent ground truth at several cube placements"
+  },
+  "verdict": {
+    "measured_norm_mm": 35.84188056721001,
+    "matched_two_half_edge_hypothesis": true,
+    "matched_one_half_edge_hypothesis": false,
+    "target_frame_axis_errors_mm": [
+      36.2230156347067,
+      13.944867535423052
+    ],
+    "note": "a two-axis half-edge error would show BOTH target-frame axes near 25 mm"
+  }
+}

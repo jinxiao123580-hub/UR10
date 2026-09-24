@@ -1,0 +1,28 @@
+[INFO] [1789709068.592099494] [ur10_joint_state_relay]: publishing /joint_states from 192.168.1.3:30003 at 50 Hz
+UR 30003 暂无状态，正在自动重连：timed out
+[INFO] [1789709080.688927988] [ur10_joint_state_relay]: published 500 joint states
+UR 30003 暂无状态，正在自动重连：timed out
+UR 30003 暂无状态，正在自动重连：timed out
+[INFO] [1789709093.829180051] [ur10_joint_state_relay]: published 1000 joint states
+UR 30003 暂无状态，正在自动重连：timed out
+Traceback (most recent call last):
+  File "/home/jx/UR10/scripts/publish_joint_states.py", line 68, in main
+    publisher.publish(message)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/publisher.py", line 70, in publish
+    self.__publisher.publish(msg)
+rclpy._rclpy_pybind11.RCLError: Failed to publish: publisher's context is invalid, at ./src/rcl/publisher.c:389
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/jx/UR10/scripts/publish_joint_states.py", line 85, in <module>
+    sys.exit(main())
+  File "/home/jx/UR10/scripts/publish_joint_states.py", line 80, in main
+    rclpy.shutdown()
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/__init__.py", line 130, in shutdown
+    _shutdown(context=context)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/utilities.py", line 58, in shutdown
+    return context.shutdown()
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/context.py", line 102, in shutdown
+    self.__context.shutdown()
+rclpy._rclpy_pybind11.RCLError: failed to shutdown: rcl_shutdown already called on the given context, at ./src/rcl/init.c:241

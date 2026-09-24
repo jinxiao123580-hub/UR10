@@ -38,6 +38,7 @@ import functools
 import http.server
 import json
 import os
+import signal
 import socket
 import struct
 import threading
@@ -448,6 +449,29 @@ def rclpy_spin(node):
     rclpy.spin(node)
 
 
+def install_signal_handlers(bridge):
+    """Make SIGTERM / SIGINT really terminate this process.
+
+    ``rclpy.init()`` installs its own SIGINT+SIGTERM handlers that only request a
+    context shutdown; with ``rclpy.spin()`` living in a daemon thread nothing ever
+    consumes that request, so the process used to survive ``kill``, ``timeout``,
+    Ctrl-C and ``start_dashboard.sh --stop`` while still holding ports 8080/9090
+    (see experiments/2026-09-18-入口可用性审计.md §3.1).  Install these *after*
+    ``rclpy.init()`` so they win.
+    """
+    def handler(signum, _frame):
+        print("\n[桥] 收到信号 %d，退出" % signum, flush=True)
+        bridge._ur_stop.set()
+        try:
+            bridge.destroy_node()
+            rclpy.try_shutdown()
+        except Exception:                     # noqa: BLE001 - shutdown must never hang
+            pass
+        os._exit(0)
+    for sig in (signal.SIGINT, signal.SIGTERM):
+        signal.signal(sig, handler)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--ws-port", type=int, default=WS_PORT)
@@ -457,6 +481,7 @@ def main():
 
     rclpy.init()
     bridge = RosWebBridge(args.ws_port, args.http_port)
+    install_signal_handlers(bridge)
 
     th = threading.Thread(target=rclpy_spin, args=(bridge,), daemon=True)
     th.start()

@@ -1,0 +1,52 @@
+/usr/lib/python3/dist-packages/scipy/__init__.py:146: UserWarning: A NumPy version >=1.17.3 and <1.25.0 is required for this version of SciPy (detected version 1.26.4
+  warnings.warn(f"A NumPy version >={np_minversion} and <{np_maxversion}"
+当前 TCP: [0.467, -0.0537, 0.3753] | 姿态(rx,ry,rz rad): [1.9351, -2.3647, -0.0003]
+FK 一致度: 0.002510 m / 0.003585 rad (门禁 0.010 m / 0.020 rad) -> PASS
+访问顺序（关节空间最近邻）: [5, 1, 4, 3, 2, 8, 7, 6]
+当前位姿最小奇异值 0.2894（作为奇异度基线）
+
+slot 段          段序              IKpos_mm  rot_mrad      关节余量      最小奇异      法兰z 结论
+5    lift       reorient_first    0.0000    0.0000    1.1643    0.2874   0.3753 PASS
+5    reorient   reorient_first    0.0000    0.0000    1.2473    0.2874   0.5500 PASS
+5    translate  reorient_first    0.0000    0.0000    1.1090    0.2909   0.5500 PASS
+5    descend    reorient_first    0.0000    0.0000    1.1090    0.2909   0.3218 PASS
+5    SUMMARY    reorient_first         -         -         -         -        - PASS
+1    lift       reorient_first    0.0000    0.0000    1.1090    0.2909   0.3218 PASS
+1    reorient   reorient_first    0.0000    0.0000    1.1090    0.2587   0.5500 PASS
+1    translate  reorient_first    0.0000    0.0000    1.1700    0.1644   0.5500 PASS
+1    descend    reorient_first    0.0000    0.0000    0.8339    0.1638   0.3185 PASS
+1    SUMMARY    reorient_first         -         -         -         -        - PASS
+4    lift       reorient_first    0.0000    0.0000    0.8339    0.1638   0.3185 PASS
+4    reorient   reorient_first    0.0000    0.0000    0.8335    0.1453   0.5500 PASS
+4    translate  reorient_first    0.0000    0.0000    1.1150    0.2505   0.5500 PASS
+4    descend    reorient_first    0.0000    0.0000    1.1331    0.3137   0.3212 PASS
+4    SUMMARY    reorient_first         -         -         -         -        - PASS
+3    lift       reorient_first    0.0000    0.0000    1.1331    0.3137   0.3212 PASS
+3    reorient   reorient_first    0.0000    0.0000    1.0032    0.3137   0.5500 PASS
+3    translate  reorient_first    0.0000    0.0000    1.0032    0.3108   0.5500 PASS
+3    descend    reorient_first    0.0000    0.0000    1.0871    0.3108   0.3201 PASS
+3    SUMMARY    reorient_first         -         -         -         -        - PASS
+2    lift       reorient_first    0.0000    0.0000    1.0871    0.3108   0.3201 PASS
+2    reorient   reorient_first    0.0000    0.0000    0.8342    0.2416   0.5500 PASS
+2    translate  reorient_first    0.0000    0.0000    0.8342    0.1797   0.5500 PASS
+2    descend    reorient_first    0.0000    0.0000    0.8407    0.1797   0.3189 PASS
+2    SUMMARY    reorient_first         -         -         -         -        - PASS
+8    lift       reorient_first    0.0000    0.0000    0.8407    0.1797   0.3189 PASS
+8    reorient   reorient_first    0.0000    0.0000    0.8318    0.1724   0.5500 PASS
+8    translate  reorient_first    0.0000    0.0000    1.2565    0.2105   0.5500 PASS
+8    descend    reorient_first    0.0000    0.0000    1.0228    0.2332   0.3191 PASS
+8    SUMMARY    reorient_first         -         -         -         -        - PASS
+7    lift       reorient_first    0.0000    0.0000    1.0228    0.2332   0.3191 PASS
+7    reorient   reorient_first    0.0000    0.0000    1.3391    0.2177   0.5500 PASS
+7    translate  reorient_first    0.0000    0.0000    1.3528    0.2190   0.5500 PASS
+7    descend    reorient_first    0.0000    0.0000    1.3316    0.2568   0.3203 PASS
+7    SUMMARY    reorient_first         -         -         -         -        - PASS
+6    lift       reorient_first    0.0000    0.0000    1.3316    0.2568   0.3203 PASS
+6    reorient   reorient_first    0.0000    0.0000    1.3083    0.2590   0.5500 PASS
+6    translate  reorient_first    0.0000    0.0000    1.2980    0.2909   0.5500 PASS
+6    descend    reorient_first    0.0000    0.0000    1.2980    0.2909   0.3214 PASS
+6    SUMMARY    reorient_first         -         -         -         -        - PASS
+
+离线数值门禁: PASS
+注意：本门禁不证明无碰撞（仓库无场景模型）；避障依靠抬升-平移-下降结构与高于台面所有物体的巡航高度，仍需人眼确认。
+OUTPUT: outputs/vision/variant-d38t25-gate.json

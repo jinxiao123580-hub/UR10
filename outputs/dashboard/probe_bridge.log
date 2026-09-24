@@ -1,0 +1,15 @@
+[桥] rclpy 节点 ros_web_bridge 就绪；Mech-Eye 服务类型: 不可用(mecheye_ros_interface 未编译)
+Traceback (most recent call last):
+  File "/home/jx/UR10/scripts/ros_web_bridge.py", line 487, in <module>
+    main()
+  File "/home/jx/UR10/scripts/ros_web_bridge.py", line 465, in main
+    bridge.start_http()
+  File "/home/jx/UR10/scripts/ros_web_bridge.py", line 286, in start_http
+    srv = http.server.ThreadingHTTPServer(("0.0.0.0", self.http_port), handler)
+  File "/usr/lib/python3.10/socketserver.py", line 452, in __init__
+    self.server_bind()
+  File "/usr/lib/python3.10/http/server.py", line 137, in server_bind
+    socketserver.TCPServer.server_bind(self)
+  File "/usr/lib/python3.10/socketserver.py", line 466, in server_bind
+    self.socket.bind(self.server_address)
+OSError: [Errno 98] Address already in use

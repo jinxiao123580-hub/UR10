@@ -1,0 +1,386 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-09-18T10:40:39+08:00",
+  "purpose": "P0-A: 2x end-effector mass contradiction (fit 3.2 kg vs single pose 6.56 kg)",
+  "read_only": "No robot command was sent; ATI RDT was not opened; only the sensor web XML and archived files were read.",
+  "sensor_configuration": {
+    "source_file": "netftapi2-sensor-20260918.xml",
+    "cfgcpf_counts_per_force": 1000000.0,
+    "cfgcpt_counts_per_torque": 1000000.0,
+    "hardware_bias_counts_setbias": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "calibration_serial": "FT11885",
+    "calibration_name": "End of line test",
+    "max_ratings_n_and_nm": [
+      165.0,
+      165.0,
+      495.0,
+      15.0,
+      15.0,
+      15.0
+    ],
+    "force_units": "N",
+    "torque_units": "N-m",
+    "live_counts_runft": [
+      3446488.0,
+      6741563.0,
+      59929574.0,
+      2313024.0,
+      2442302.0,
+      160692.0
+    ]
+  },
+  "counts_per_force_check": {
+    "driver_hardcoded_counts_per_force": 1000000.0,
+    "driver_hardcoded_counts_per_torque": 1000000.0,
+    "sensor_cfgcpf": 1000000.0,
+    "sensor_cfgcpt": 1000000.0,
+    "match": true,
+    "hardware_bias_all_zero": true,
+    "live_reading_n_at_check_time": [
+      3.4465,
+      6.7416,
+      59.9296
+    ]
+  },
+  "datasets": [
+    {
+      "file": "ft_gravity_calibration.downward-20260915.yaml",
+      "poses": 8,
+      "sphere_fit_scale_and_bias": {
+        "bias_sensor_frame_n": [
+          5.008454668992961,
+          8.396289957885932,
+          22.761939704002813
+        ],
+        "bias_norm_n": 24.77273102257628,
+        "gravity_load_n": 34.419541371287444,
+        "mass_kg": 3.509816437956636,
+        "residual_rms_n": 0.4876720313207673,
+        "residual_max_abs_n": 0.6825856567455659
+      },
+      "pure_scale_no_offset_model": {
+        "model": "F_i = A * u_i (pure gravity, no offset)",
+        "fitted_a_n": 54.711525135955554,
+        "implied_mass_kg": 5.579022921788333,
+        "residual_rms_n": 2.8928662092673028,
+        "residual_max_abs_n": 5.036403426914298,
+        "per_pose_force_norm_n": [
+          58.2397,
+          56.9536,
+          56.284,
+          49.6751,
+          57.825,
+          52.1162,
+          54.0798,
+          52.5188
+        ]
+      }
+    },
+    {
+      "file": "ft_gravity_calibration.fullrange-20260915.yaml",
+      "poses": 12,
+      "sphere_fit_scale_and_bias": {
+        "bias_sensor_frame_n": [
+          6.366671406461137,
+          8.039884368008437,
+          27.074615434756538
+        ],
+        "bias_norm_n": 28.951840120944873,
+        "gravity_load_n": 31.842175716535003,
+        "mass_kg": 3.2469982834642823,
+        "residual_rms_n": 0.925406136289535,
+        "residual_max_abs_n": 2.5016851101190056
+      },
+      "pure_scale_no_offset_model": {
+        "model": "F_i = A * u_i (pure gravity, no offset)",
+        "fitted_a_n": 43.5435271682293,
+        "implied_mass_kg": 4.440204062368832,
+        "residual_rms_n": 16.6273782578997,
+        "residual_max_abs_n": 31.207653431618112,
+        "per_pose_force_norm_n": [
+          53.8882,
+          53.5745,
+          56.6966,
+          46.6449,
+          60.0613,
+          57.3762,
+          51.9172,
+          58.3819,
+          22.0492,
+          20.6624,
+          12.3359,
+          28.934
+        ]
+      }
+    },
+    {
+      "file": "ft_gravity_calibration.manual.round2.yaml",
+      "poses": 12,
+      "sphere_fit_scale_and_bias": {
+        "bias_sensor_frame_n": [
+          2.4390123643699595,
+          8.705574912112104,
+          24.694558580120926
+        ],
+        "bias_norm_n": 26.297472109139488,
+        "gravity_load_n": 30.78983383212505,
+        "mass_kg": 3.139689275351425,
+        "residual_rms_n": 1.0061140969907503,
+        "residual_max_abs_n": 1.7041004323790006
+      },
+      "pure_scale_no_offset_model": {
+        "model": "F_i = A * u_i (pure gravity, no offset)",
+        "fitted_a_n": 46.46819772117237,
+        "implied_mass_kg": 4.738437460414349,
+        "residual_rms_n": 8.05312143889711,
+        "residual_max_abs_n": 15.013287544425513,
+        "per_pose_force_norm_n": [
+          42.0725,
+          33.082,
+          44.5346,
+          38.5835,
+          53.5229,
+          50.9057,
+          56.3307,
+          53.9328,
+          51.5514,
+          49.7782,
+          51.8691,
+          31.4549
+        ]
+      }
+    },
+    {
+      "file": "ft_gravity_calibration.manual.yaml",
+      "poses": 8,
+      "sphere_fit_scale_and_bias": {
+        "bias_sensor_frame_n": [
+          2.4462738069479752,
+          8.780587208920691,
+          24.769909487796095
+        ],
+        "bias_norm_n": 26.393775465166637,
+        "gravity_load_n": 31.235817308384785,
+        "mass_kg": 3.185166933497656,
+        "residual_rms_n": 0.8018021029352457,
+        "residual_max_abs_n": 1.291847362461354
+      },
+      "pure_scale_no_offset_model": {
+        "model": "F_i = A * u_i (pure gravity, no offset)",
+        "fitted_a_n": 46.62059238363946,
+        "implied_mass_kg": 4.753977391223248,
+        "residual_rms_n": 7.7997078439441445,
+        "residual_max_abs_n": 13.538598441912349,
+        "per_pose_force_norm_n": [
+          42.0725,
+          33.082,
+          44.5346,
+          38.5835,
+          53.5229,
+          50.9057,
+          56.3307,
+          53.9328
+        ]
+      }
+    },
+    {
+      "file": "ft_gravity_calibration.mixed-18.yaml",
+      "poses": 18,
+      "sphere_fit_scale_and_bias": {
+        "bias_sensor_frame_n": [
+          6.405941298325751,
+          6.566591629925427,
+          34.57585683218047
+        ],
+        "bias_norm_n": 35.77214118879723,
+        "gravity_load_n": 31.481398687674655,
+        "mass_kg": 3.210209264904392,
+        "residual_rms_n": 2.3664119884723283,
+        "residual_max_abs_n": 6.383201084784304
+      },
+      "pure_scale_no_offset_model": {
+        "model": "F_i = A * u_i (pure gravity, no offset)",
+        "fitted_a_n": 54.85277500755863,
+        "implied_mass_kg": 5.593426400203803,
+        "residual_rms_n": 9.555184151769707,
+        "residual_max_abs_n": 15.400693698950711,
+        "per_pose_force_norm_n": [
+          65.6782,
+          69.5827,
+          67.7148,
+          64.1491,
+          54.7554,
+          59.6672,
+          63.5551,
+          49.7054,
+          47.2555,
+          45.2567,
+          40.2395,
+          52.8735,
+          64.1366,
+          61.4589,
+          44.5312,
+          39.4521,
+          45.9573,
+          51.3806
+        ]
+      }
+    },
+    {
+      "file": "ft_gravity_calibration.yaml",
+      "poses": 10,
+      "sphere_fit_scale_and_bias": {
+        "bias_sensor_frame_n": [
+          5.487144024198937,
+          8.15535561735698,
+          31.63874990761057
+        ],
+        "bias_norm_n": 33.13048551567251,
+        "gravity_load_n": 31.991822034267326,
+        "mass_kg": 3.262257961104692,
+        "residual_rms_n": 0.6956608249275986,
+        "residual_max_abs_n": 1.4272801757056648
+      },
+      "pure_scale_no_offset_model": {
+        "model": "F_i = A * u_i (pure gravity, no offset)",
+        "fitted_a_n": 49.25419644287732,
+        "implied_mass_kg": 5.022530267000181,
+        "residual_rms_n": 7.864842510127823,
+        "residual_max_abs_n": 14.882415298838147,
+        "per_pose_force_norm_n": [
+          47.2555,
+          45.2567,
+          40.2395,
+          52.8735,
+          64.1366,
+          61.4589,
+          44.5312,
+          39.4521,
+          45.9573,
+          51.3806
+        ]
+      }
+    }
+  ],
+  "pooled": {
+    "files": 6,
+    "poses": 68,
+    "sphere_fit_scale_and_bias": {
+      "bias_sensor_frame_n": [
+        4.420751746424928,
+        8.271602019827657,
+        28.061394798200773
+      ],
+      "bias_norm_n": 29.587232449122805,
+      "gravity_load_n": 31.893485898123977,
+      "mass_kg": 3.252230465869994,
+      "residual_rms_n": 3.16050395829409,
+      "residual_max_abs_n": 12.830012041556316
+    },
+    "pure_scale_no_offset_model": {
+      "model": "F_i = A * u_i (pure gravity, no offset)",
+      "fitted_a_n": 49.568964020506016,
+      "implied_mass_kg": 5.054627627222958,
+      "residual_rms_n": 11.012808622112242,
+      "residual_max_abs_n": 37.233090283894825,
+      "per_pose_force_norm_n": [
+        58.2397,
+        56.9536,
+        56.284,
+        49.6751,
+        57.825,
+        52.1162,
+        54.0798,
+        52.5188,
+        53.8882,
+        53.5745,
+        56.6966,
+        46.6449,
+        60.0613,
+        57.3762,
+        51.9172,
+        58.3819,
+        22.0492,
+        20.6624,
+        12.3359,
+        28.934,
+        42.0725,
+        33.082,
+        44.5346,
+        38.5835,
+        53.5229,
+        50.9057,
+        56.3307,
+        53.9328,
+        51.5514,
+        49.7782,
+        51.8691,
+        31.4549,
+        42.0725,
+        33.082,
+        44.5346,
+        38.5835,
+        53.5229,
+        50.9057,
+        56.3307,
+        53.9328,
+        65.6782,
+        69.5827,
+        67.7148,
+        64.1491,
+        54.7554,
+        59.6672,
+        63.5551,
+        49.7054,
+        47.2555,
+        45.2567,
+        40.2395,
+        52.8735,
+        64.1366,
+        61.4589,
+        44.5312,
+        39.4521,
+        45.9573,
+        51.3806,
+        47.2555,
+        45.2567,
+        40.2395,
+        52.8735,
+        64.1366,
+        61.4589,
+        44.5312,
+        39.4521,
+        45.9573,
+        51.3806
+      ]
+    }
+  },
+  "single_pose_estimator": {
+    "estimator": "m = |F_raw| / g at ONE static pose (the 2026-09-10 method)",
+    "min_mass_kg": 1.2579090450471047,
+    "max_mass_kg": 7.095463402224696,
+    "range_ratio": 5.6406808029264095,
+    "mean_mass_kg": 5.054627627222958,
+    "pose_dependence_note": "A gravity-only sensor would read the SAME |F| in every pose. The archived poses spread over a 12.34-69.58 N range, which a pure scale error can never produce: it requires a constant force offset."
+  },
+  "verdict": {
+    "counts_per_force_is_the_sensor_value": true,
+    "hardware_bias_is_zero": true,
+    "sphere_radius_n": 31.893485898123977,
+    "sphere_mass_kg": 3.252230465869994,
+    "sphere_bias_norm_n": 29.587232449122805,
+    "sphere_residual_rms_n": 3.16050395829409,
+    "mass_from_gravity_fits_kg": 3.2,
+    "mass_from_single_pose_0910_kg": 6.56,
+    "resolution": "The multi-pose fits are right about the SCALE: the archived force vectors lie on a sphere of radius 31.9 N == 3.25 kg whose centre is 29.6 N away from the origin. The 2026-09-10 single-pose |F|/g value ignored that offset, so it is not a second measurement of mass at all - the 2.03x ratio is a bias artefact, not a 2x sensor or counts-per-force error.",
+    "scale_verification_is_not_absolute": "Counts-per-force 1e6 only proves the driver matches the sensor's own specification. The absolute newton scale still rests on a mass reference; the UR payload readback 3.5 kg is corroboration, not an independent measurement.",
+    "deferred": "Root cause of the ~28 N constant offset (sensor zero vs cable strain vs mounting preload) and the corrective action are NOT resolved in this round: the user decided to archive the problem and continue later."
+  }
+}

@@ -1,0 +1,63 @@
+# 末端附件几何（现场实测填写）
+#
+# 这个文件是 URDF 与自碰撞门禁的**唯一几何来源**：
+#   scripts/robot_attachments.py 读它
+#   scripts/build_urdf_with_camera.py 用它生成 URDF（RViz / MuJoCo）
+#   scripts/self_collision.py 用同一套盒子判相机与机械臂的间隙
+# 改这里一处，两边同时更新 —— 不要分别改。
+#
+# 怎么改：把下面每一项换成你用卡尺/钢板尺量到的值（单位 **毫米**），
+# 然后跑：
+#     python3 scripts/build_urdf_with_camera.py
+#     python3 scripts/build_urdf_with_camera.py --stl-only
+#     ros2 launch ~/UR10/launch/view_ur10_camera.launch.py     # 看是否对得上
+#     python3 scripts/self_collision.py --gate <门禁文件>       # 重算间隙
+#
+# 链条约定：每个附件都挂在 tool0 坐标系下（tool0 的 +z 指向法兰外侧）。
+#   tool0 ──► 力传感器 ──► 转接件 ──► 夹爪
+#                └──► 相机支架 ──► 相机外壳
+#
+# schema_version: 1
+
+# ── 1. 力传感器（ATI Net F/T）──────────────────────────────────────────
+# 量：圆柱直径、高度。装在 tool0 正下方/正前方，沿 tool0 +z 伸出。
+force_sensor:
+  enabled: true
+  diameter_mm: 80.0        # ← 改这里：传感器外径
+  height_mm: 30.0          # ← 改这里：沿 tool0 +z 的厚度
+  offset_mm: 0.0           # ← 从 tool0 起算的起点（一般 0）
+
+# ── 2. 转接件 / 法兰盘（若夹具之间还有一块板）──────────────────────────
+adapter:
+  enabled: false           # 没有就保持 false
+  size_mm: [60.0, 60.0, 10.0]
+
+# ── 3. 夹爪（Robotiq 2F-85）─────────────────────────────────────────────
+# 量：本体宽度、本体长度（沿 tool0 +z）、全开时两指总宽。
+# 只建本体，不含手指张开轮廓；若要保守，把 width 填成全开总宽。
+gripper:
+  enabled: true
+  size_mm: [80.0, 150.0, 70.0]   # ← [宽度, 沿 tool0 +z 的长度, 厚度]
+  offset_mm: 30.0                # ← 从 tool0 起算的起点（力传感器之后）
+
+# ── 4. 相机支架 ────────────────────────────────────────────────────────
+# 连接 tool0 与相机的杆件。截面按实测，长度会按相机偏移自动算，可覆盖。
+camera_bracket:
+  width_mm: 50.0           # ← 支架截面边长（方杆）
+  length_mm: null          # null = 自动 = tool0 到相机中心的距离
+
+# ── 5. 相机外壳（Mech-Eye PRO XS + 防护罩）─────────────────────────────
+# 量：外壳三边。这是判定自碰撞的关键尺寸 —— 填小了会低估碰撞风险。
+camera_housing:
+  size_mm: [200.0, 200.0, 150.0]   # ← [x, y, z]，相机自身坐标系的三个边长
+
+# ── 6. 相机中心相对 tool0 的位置 ────────────────────────────────────────
+# 默认（null）用 2026-09-17 手眼标定 config/handeye_eye_in_hand_20260917.yaml
+# 的 tool0_from_camera 平移 [0.046, 0.252, 0.202] m（含该标定 ~2.6 mm/1° 误差）。
+# 现场实测能填就填，会覆盖默认值 —— 两者之差本身就是有用的证据。
+camera_offset_tool0_m: null      # 例如 [0.046, 0.252, 0.202]
+camera_rotation_source: handeye  # handeye | identity（identity = 相机与 tool0 同向）
+
+# ── 7. 其它 ────────────────────────────────────────────────────────────
+# 自碰撞判据的最小余量（m）。填完真实尺寸后建议先用 30 mm 跑一遍。
+self_collision_margin_mm: 40.0

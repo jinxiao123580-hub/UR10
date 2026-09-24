@@ -1,0 +1,13 @@
+usage: handeye_pose_advisor.py [-h] [--reference REFERENCE]
+                               [--calibration CALIBRATION]
+                               [--coverage COVERAGE] [--live] [--host HOST]
+                               [--min-tcp-z MIN_TCP_Z] [--design-roll]
+                               [--azimuth-span-deg AZIMUTH_SPAN_DEG]
+                               [--shell-override NAME:DIST:TILT[:AZOFF]]
+                               [--roll-step-deg ROLL_STEP_DEG]
+                               [--skip-infeasible]
+                               [--self-collision-margin-mm SELF_COLLISION_MARGIN_MM]
+                               [--roll-objective {clearance,wrist}]
+                               [--ik-check] [--ik-seed-q IK_SEED_Q]
+                               [--output OUTPUT] [--self-test]
+handeye_pose_advisor.py: error: argument --ik-seed-q: expected one argument

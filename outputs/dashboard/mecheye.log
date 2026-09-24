@@ -1,0 +1,136 @@
+[INFO] [launch]: All log files can be found below /home/jx/.ros/log/2026-09-22-09-25-00-774655-jx-System-Product-Name-7524
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [start-1]: process started with pid [7555]
+[start-1] Logger: Error: No write permission for directory /var/log/ .
+[start-1] Logger: [loadConfig] Key not found. Setting default value: [ApiLog_2.5.0] check_rotate_log_count = 1000
+[start-1] Logger: [loadConfig] Key not found. Setting default value: [ApiLog_2.5.0] max_total_log_size_mb = 20
+[start-1] Logger: [loadConfig] Key not found. Setting default value: [ApiLog_2.5.0] max_single_log_size_mb = 1
+[start-1] Logger: [loadConfig] Key not found. Setting default value: [ApiLog_2.5.0] max_rotate_file_count = 4
+[start-1] Logger: [loadConfig] Key not found. Setting default value: [ApiLog_2.5.0] max_total_file_count = 20
+[start-1] Logger: [loadConfig] Key not found. Setting default value: [ApiLog_2.5.0] log_level = 1
+[start-1] Logger: [loadConfig] Key not found. Setting default value: [ApiLog_2.5.0] detach_logger_thread = 0
+[start-1] Logger: [loadConfig] Key not found. Setting default value: [ApiLog_2.5.0] max_overall_api_log_size_mb = 200
+[start-1] Failed to obtain the IP address of the computer Ethernet port connected to the device. Please try disabling the Ethernet interface cards not connected to the device.
+[start-1] ping: option requires an argument -- 'I'
+[start-1] 
+[start-1] Usage
+[start-1]   ping [options] <destination>
+[start-1] 
+[start-1] Options:
+[start-1]   <destination>      dns name or ip address
+[start-1]   -a                 use audible ping
+[start-1]   -A                 use adaptive ping
+[start-1]   -B                 sticky source address
+[start-1]   -c <count>         stop after <count> replies
+[start-1]   -D                 print timestamps
+[start-1]   -d                 use SO_DEBUG socket option
+[start-1]   -f                 flood ping
+[start-1]   -h                 print help and exit
+[start-1]   -I <interface>     either interface name or address
+[start-1]   -i <interval>      seconds between sending each packet
+[start-1]   -L                 suppress loopback of multicast packets
+[start-1]   -l <preload>       send <preload> number of packages while waiting replies
+[start-1]   -m <mark>          tag the packets going out
+[start-1]   -M <pmtud opt>     define mtu discovery, can be one of <do|dont|want>
+[start-1]   -n                 no dns name resolution
+[start-1]   -O                 report outstanding replies
+[start-1]   -p <pattern>       contents of padding byte
+[start-1]   -q                 quiet output
+[start-1]   -Q <tclass>        use quality of service <tclass> bits
+[start-1]   -s <size>          use <size> as number of data bytes to be sent
+[start-1]   -S <size>          use <size> as SO_SNDBUF socket option value
+[start-1]   -t <ttl>           define time to live
+[start-1]   -U                 print user-to-user latency
+[start-1]   -v                 verbose output
+[start-1]   -V                 print version and exit
+[start-1]   -w <deadline>      reply wait <deadline> in seconds
+[start-1]   -W <timeout>       time to wait for response
+[start-1] 
+[start-1] IPv4 options:
+[start-1]   -4                 use IPv4
+[start-1]   -b                 allow pinging broadcast
+[start-1]   -R                 record route
+[start-1]   -T <timestamp>     define timestamp, can be one of <tsonly|tsandaddr|tsprespec>
+[start-1] 
+[start-1] IPv6 options:
+[start-1]   -6                 use IPv6
+[start-1]   -F <flowlabel>     define flow label, default is random
+[start-1]   -N <nodeinfo opt>  use icmp6 node info query, try <help> as argument
+[start-1] 
+[start-1] For more details see ping(8).
+[start-1] Failed to obtain the IP address of the computer Ethernet port connected to the device. Please try disabling the Ethernet interface cards not connected to the device.
+[start-1] 按 IP 直连相机成功: 192.168.1.33 (固件 2.5.0)
+[start-1] .............................
+[start-1] Model:                        Mech-Eye PRO XS
+[start-1] Device name:                  
+[start-1] Serial number:                RAM35238A3020004
+[start-1] IP address:                   192.168.1.33
+[start-1] Subnet mask:                  255.255.255.0
+[start-1] IP address assignment method: Static
+[start-1] Hardware version:             V4.0.0
+[start-1] Firmware version:             V2.5.0
+[start-1] .............................
+[start-1] 
+[start-1] Network request timed out, and the device is unreachable. Please check the network connection between the PC and the camera.
+[start-1] Error Code : -2, Error Description: Network request timed out, and the device is unreachable. Please check the network connection between the PC and the camera.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Error Code : -9, Error Description: Command execution timed out.
+[start-1] Network request timed out, and the device is unreachable. Please check the network connection between the PC and the camera.
+[start-1] Error Code : -2, Error Description: Network request timed out, and the device is unreachable. Please check the network connection between the PC and the camera.

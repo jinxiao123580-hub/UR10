@@ -1,0 +1,23 @@
+/usr/lib/python3/dist-packages/scipy/__init__.py:146: UserWarning: A NumPy version >=1.17.3 and <1.25.0 is required for this version of SciPy (detected version 1.26.4
+  warnings.warn(f"A NumPy version >={np_minversion} and <{np_maxversion}"
+当前 TCP: [0.4643, -0.0529, 0.4243]
+门禁校验：通过（漂移 0.00004 rad，首段起点差 0.02 mm，共 104 段 / 26 槽）
+重放门禁访问顺序: [21, 17, 14, 6, 5, 13, 9, 26, 4, 8, 12, 16, 3, 7, 2, 11, 20, 19, 10, 1, 25, 18, 22, 23, 24, 15]
+robotmode Robotmode: RUNNING / safetystatus Safetystatus: NORMAL
+静止受力基线 |F| = 5.778 N（用于变化量判据）
+  slot 21  lift       arrived  误差  0.109 mm    3.7s  最大偏离  0.087 mm  |F|变化   0.88 N
+  slot 21  reorient   arrived  误差  0.098 mm    0.2s  最大偏离  0.132 mm  |F|变化   0.18 N
+  slot 21  translate  arrived  误差  0.123 mm    3.0s  最大偏离  0.160 mm  |F|变化   2.41 N
+  slot 21  descend    arrived  误差  0.121 mm    1.9s  最大偏离  0.116 mm  |F|变化   2.38 N
+    采集：接受（1 次尝试）
+      样本 20260918-124651-924295：接受
+      棋盘格：54/54；重投影 RMS：0.1335 px
+      采集期间运动：0.0489 mm / 0.0077 deg；UR 帧数：716
+      数据集：/home/jx/UR10/outputs/handeye/eye-in-hand-20260918.json（有效 1，拒绝 0）
+  slot 17  lift       arrived  误差  0.134 mm    2.4s  最大偏离  0.072 mm  |F|变化   1.86 N
+  slot 17  reorient   arrived  误差  0.134 mm    0.0s  最大偏离  0.134 mm  |F|变化   0.78 N
+  slot 17  translate  timeout  误差 130.594 mm   26.4s  最大偏离  0.319 mm  |F|变化   3.23 N
+  -> 该段未正常到位（timeout），停止后续运动
+
+结果：FAIL
+OUTPUT: /home/jx/UR10/outputs/vision/motion/run-20260918-124642.json

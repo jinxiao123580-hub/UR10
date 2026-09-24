@@ -1,0 +1,151 @@
+/usr/lib/python3/dist-packages/scipy/__init__.py:146: UserWarning: A NumPy version >=1.17.3 and <1.25.0 is required for this version of SciPy (detected version 1.26.4
+  warnings.warn(f"A NumPy version >={np_minversion} and <{np_maxversion}"
+当前 TCP: [0.6475, -0.2685, 0.326] | 姿态(rx,ry,rz rad): [1.9352, -2.3646, -0.0002]
+FK 一致度: 0.002599 m / 0.004389 rad (门禁 0.010 m / 0.020 rad) -> PASS
+访问顺序（关节空间最近邻）: [5, 4, 3, 2, 22, 13, 21, 20, 1, 25, 19, 18, 10, 14, 8, 7, 6, 12, 11, 26, 16, 24, 23, 15, 9, 17]
+当前位姿最小奇异值 0.3177（作为奇异度基线）
+
+slot 段          段序              IKpos_mm  rot_mrad      关节余量      最小奇异      法兰z 结论
+5    lift       reorient_first    0.0000    0.0000    1.5072    0.2789   0.3260 PASS
+5    reorient   reorient_first    0.0000    0.0000    0.9045    0.2789   0.5500 PASS
+5    translate  reorient_first    0.0000    0.0000    0.9045    0.3062   0.5500 PASS
+5    descend    reorient_first    0.0000    0.0000    0.9830    0.3180   0.2516 PASS
+5    SUMMARY    reorient_first         -         -         -         -        - PASS
+4    lift       reorient_first    0.0000    0.0000    0.9830    0.3180   0.2516 PASS
+4    reorient   reorient_first    0.0000    0.0000    0.9830    0.3180   0.5500 PASS
+4    translate  reorient_first    0.0000    0.0000    0.9886    0.3193   0.5500 PASS
+4    descend    reorient_first    0.0000    0.0000    1.0728    0.3341   0.2507 PASS
+4    SUMMARY    reorient_first         -         -         -         -        - PASS
+3    lift       reorient_first    0.0000    0.0000    1.0728    0.3341   0.2507 PASS
+3    reorient   reorient_first    0.0000    0.0000    0.7787    0.2783   0.5500 PASS
+3    translate  reorient_first    0.0000    0.0000    0.7787    0.2468   0.5500 PASS
+3    descend    reorient_first    0.0000    0.0000    0.8561    0.2468   0.2521 PASS
+3    SUMMARY    reorient_first         -         -         -         -        - PASS
+2    lift       reorient_first    0.0000    0.0000    0.8561    0.2468   0.2521 PASS
+2    reorient   reorient_first    0.0000    0.0000    0.6725    0.1866   0.5500 PASS
+2    translate  reorient_first    0.0000    0.0000    0.6725    0.1523   0.5500 PASS
+2    descend    reorient_first    0.0000    0.0000    0.7029    0.1523   0.2513 PASS
+2    SUMMARY    reorient_first         -         -         -         -        - PASS
+22   lift       reorient_first    0.0000    0.0000    0.7029    0.1523   0.2513 PASS
+22   reorient   reorient_first    0.0000    0.0000    0.7029    0.1469   0.5500 PASS
+22   translate  reorient_first    0.0000    0.0000    0.7876    0.0717   0.5500 PASS
+22   descend    reorient_first    0.0000    0.0000    0.7746    0.0899   0.3731 PASS
+22   SUMMARY    reorient_first         -         -         -         -        - PASS
+13   lift       reorient_first    0.0000    0.0000    0.7746    0.0899   0.3731 PASS
+13   reorient   reorient_first    0.0000    0.0000    0.6462    0.0904   0.5500 PASS
+13   translate  reorient_first    0.0000    0.0000    0.6462    0.0881   0.5500 PASS
+13   descend    reorient_first    0.0000    0.0000    0.6417    0.0874   0.2957 PASS
+13   SUMMARY    reorient_first         -         -         -         -        - PASS
+21   lift       reorient_first    0.0000    0.0000    0.6417    0.0874   0.2957 PASS
+21   reorient   reorient_first    0.0000    0.0000    0.8749    0.0892   0.5500 PASS
+21   translate  reorient_first    0.0000    0.0000    0.7664    0.1059   0.5500 PASS
+21   descend    reorient_first    0.0000    0.0000    0.7664    0.2112   0.3903 PASS
+21   SUMMARY    reorient_first         -         -         -         -        - PASS
+20   lift       reorient_first    0.0000    0.0000    0.7664    0.2112   0.3903 PASS
+20   reorient   reorient_first    0.0000    0.0000    0.4236    0.2127   0.5500 PASS
+20   translate  reorient_first    0.0000    0.0000    0.4236    0.2175   0.5500 PASS
+20   descend    reorient_first    0.0000    0.0000    0.4236    0.2758   0.4069 PASS
+20   SUMMARY    reorient_first         -         -         -         -        - PASS
+1    lift       translate_first   0.0000    0.0000    0.4236    0.2758   0.4069 PASS
+1    translate  translate_first   0.0000    0.0000    0.4236    0.1429   0.5500 PASS
+1    reorient   translate_first   0.0000    0.0000    0.2274    0.1215   0.5500 PASS
+1    descend    translate_first   0.0000    0.0000    0.2274    0.1194   0.2538 PASS
+1    RESCUE     roll +15 deg           -         -         -         -        - PASS 绕光轴转 +15° 后整链通过
+1    SUMMARY    translate_first        -         -         -         -        - PASS
+25   lift       reorient_first    0.0000    0.0000    0.2274    0.1194   0.2538 PASS
+25   reorient   reorient_first    0.0000    0.0000    0.2274    0.1215   0.5500 PASS
+25   translate  reorient_first    0.0000    0.0000    0.2274    0.1215   0.5500 PASS
+25   descend    reorient_first    0.0000    0.0000    0.2274    0.1194   0.2538 PASS
+25   RESCUE     roll +15 deg           -         -         -         -        - PASS 绕光轴转 +15° 后整链通过
+25   SUMMARY    reorient_first         -         -         -         -        - PASS
+19   lift       reorient_first    0.0000    0.0000    0.2274    0.1194   0.2538 PASS
+19   reorient   reorient_first    0.0000    0.0000    0.2274    0.1215   0.5500 PASS
+19   translate  reorient_first    0.0000    0.0000    0.1145    0.1544   0.5500 PASS
+19   descend    reorient_first    0.0000    0.0000    0.1145    0.2826   0.4037 PASS
+19   RESCUE     roll +45 deg           -         -         -         -        - PASS 绕光轴转 +45° 后整链通过
+19   SUMMARY    reorient_first         -         -         -         -        - PASS
+18   lift       reorient_first    0.0000    0.0000    0.1145    0.2826   0.4037 PASS
+18   reorient   reorient_first    0.0000    0.0000    0.1068    0.2826   0.5500 PASS
+18   translate  reorient_first    0.0000    0.0000    0.1219    0.2945   0.5500 PASS
+18   descend    reorient_first    0.0000    0.0000    0.4880    0.2945   0.4656 PASS
+18   RESCUE     roll +90 deg           -         -         -         -        - PASS 绕光轴转 +90° 后整链通过
+18   SUMMARY    reorient_first         -         -         -         -        - PASS
+10   lift       reorient_first    0.0000    0.0000    0.4880    0.2945   0.4656 PASS
+10   reorient   reorient_first    0.0000    0.0000    0.1979    0.2945   0.5500 PASS
+10   translate  reorient_first    0.0000    0.0000    0.1605    0.2404   0.5500 PASS
+10   descend    reorient_first    0.0000    0.0000    0.1605    0.2394   0.3639 PASS
+10   RESCUE     roll +60 deg           -         -         -         -        - PASS 绕光轴转 +60° 后整链通过
+10   SUMMARY    reorient_first         -         -         -         -        - PASS
+14   lift       reorient_first    0.0000    0.0000    0.1605    0.2394   0.3639 PASS
+14   reorient   reorient_first    0.0000    0.0000    0.1605    0.2313   0.5500 PASS
+14   translate  reorient_first    0.0000    0.0000    0.8008    0.2716   0.5500 PASS
+14   descend    reorient_first    0.0000    0.0000    0.8008    0.2716   0.3169 PASS
+14   RESCUE     roll -30 deg           -         -         -         -        - PASS 绕光轴转 -30° 后整链通过
+14   SUMMARY    reorient_first         -         -         -         -        - PASS
+8    lift       reorient_first    0.0000    0.0000    0.8008    0.2716   0.3169 PASS
+8    reorient   reorient_first    0.0000    0.0000    0.8008    0.2671   0.5500 PASS
+8    translate  reorient_first    0.0000    0.0000    0.8613    0.2671   0.5500 PASS
+8    descend    reorient_first    0.0000    0.0000    0.8785    0.2676   0.2528 PASS
+8    SUMMARY    reorient_first         -         -         -         -        - PASS
+7    lift       reorient_first    0.0000    0.0000    0.8785    0.2676   0.2528 PASS
+7    reorient   reorient_first    0.0000    0.0000    0.8551    0.2676   0.5500 PASS
+7    translate  reorient_first    0.0000    0.0000    0.8556    0.2701   0.5500 PASS
+7    descend    reorient_first    0.0000    0.0000    0.8676    0.2749   0.2527 PASS
+7    SUMMARY    reorient_first         -         -         -         -        - PASS
+6    lift       reorient_first    0.0000    0.0000    0.8676    0.2749   0.2527 PASS
+6    reorient   reorient_first    0.0000    0.0000    0.8665    0.2749   0.5500 PASS
+6    translate  reorient_first    0.0000    0.0000    0.8856    0.2781   0.5500 PASS
+6    descend    reorient_first    0.0000    0.0000    0.9063    0.2935   0.2523 PASS
+6    SUMMARY    reorient_first         -         -         -         -        - PASS
+12   lift       reorient_first    0.0000    0.0000    0.9063    0.2935   0.2523 PASS
+12   reorient   reorient_first    0.0000    0.0000    0.6500    0.2935   0.5500 PASS
+12   translate  reorient_first    0.0000    0.0000    0.4969    0.2408   0.5500 PASS
+12   descend    reorient_first    0.0000    0.0000    0.4969    0.2408   0.2527 PASS
+12   SUMMARY    reorient_first         -         -         -         -        - PASS
+11   lift       reorient_first    0.0000    0.0000    0.4969    0.2408   0.2527 PASS
+11   reorient   reorient_first    0.0000    0.0000    0.4969    0.2408   0.5500 PASS
+11   translate  reorient_first    0.0000    0.0000    0.5217    0.2465   0.5500 PASS
+11   descend    reorient_first    0.0000    0.0000    0.5309    0.2555   0.2524 PASS
+11   SUMMARY    reorient_first         -         -         -         -        - PASS
+26   lift       reorient_first    0.0000    0.0000    0.5309    0.2555   0.2524 PASS
+26   reorient   reorient_first    0.0000    0.0000    0.5309    0.2430   0.5500 PASS
+26   translate  reorient_first    0.0000    0.0000    0.5715    0.2438   0.5500 PASS
+26   descend    reorient_first    0.0000    0.0000    0.9447    0.2908   0.2599 PASS
+26   SUMMARY    reorient_first         -         -         -         -        - PASS
+16   lift       reorient_first    0.0000    0.0000    0.9447    0.2908   0.2599 PASS
+16   reorient   reorient_first    0.0000    0.0000    0.7742    0.2359   0.5500 PASS
+16   translate  reorient_first    0.0000    0.0000    0.7742    0.1804   0.5500 PASS
+16   descend    reorient_first    0.0000    0.0000    0.6580    0.1804   0.2590 PASS
+16   SUMMARY    reorient_first         -         -         -         -        - PASS
+24   lift       reorient_first    0.0000    0.0000    0.6580    0.1804   0.2590 PASS
+24   reorient   reorient_first    0.0000    0.0000    0.8969    0.1804   0.5500 PASS
+24   translate  reorient_first    0.0000    0.0000    0.7950    0.0961   0.5500 PASS
+24   descend    reorient_first    0.0000    0.0000    0.5208    0.0949   0.3556 PASS
+24   SUMMARY    reorient_first         -         -         -         -        - PASS
+23   lift       reorient_first    0.0000    0.0000    0.5208    0.0949   0.3556 PASS
+23   reorient   reorient_first    0.0000    0.0000    0.7950    0.0901   0.5500 PASS
+23   translate  reorient_first    0.0000    0.0000    0.8851    0.0831   0.5500 PASS
+23   descend    reorient_first    0.0000    0.0000    0.7967    0.1010   0.4280 PASS
+23   RESCUE     roll +15 deg           -         -         -         -        - PASS 绕光轴转 +15° 后整链通过
+23   SUMMARY    reorient_first         -         -         -         -        - PASS
+15   lift       translate_first   0.0000    0.0000    0.7967    0.1010   0.4280 PASS
+15   translate  translate_first   0.0000    0.0000    0.9286    0.0962   0.5500 PASS
+15   reorient   translate_first   0.0000    0.0000    0.7236    0.0641   0.5500 PASS
+15   descend    translate_first   0.0000    0.0000    0.3486    0.0633   0.2584 PASS
+15   SUMMARY    translate_first        -         -         -         -        - PASS
+9    lift       translate_first   0.0000    0.0000    0.3486    0.0633   0.2584 PASS
+9    translate  translate_first   0.0000    0.0000    0.4720    0.0639   0.5500 PASS
+9    reorient   translate_first   0.0000    0.0000    0.2135    0.1757   0.5500 PASS
+9    descend    translate_first   0.0000    0.0000    0.2135    0.2368   0.3756 PASS
+9    RESCUE     roll +90 deg           -         -         -         -        - PASS 绕光轴转 +90° 后整链通过
+9    SUMMARY    translate_first        -         -         -         -        - PASS
+17   lift       reorient_first    0.0000    0.0000    0.2135    0.2368   0.3756 PASS
+17   reorient   reorient_first    0.0000    0.0000    0.2135    0.2371   0.5500 PASS
+17   translate  reorient_first    0.0000    0.0000    0.1694    0.2557   0.5500 PASS
+17   descend    reorient_first    0.0000    0.0000    0.1694    0.2880   0.4659 PASS
+17   RESCUE     roll +90 deg           -         -         -         -        - PASS 绕光轴转 +90° 后整链通过
+17   SUMMARY    reorient_first         -         -         -         -        - PASS
+
+离线数值门禁: PASS
+注意：本门禁不证明无碰撞（仓库无场景模型）；避障依靠抬升-平移-下降结构与高于台面所有物体的巡航高度，仍需人眼确认。
+OUTPUT: outputs/vision/gate-half-resume2.json

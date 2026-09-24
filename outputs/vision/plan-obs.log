@@ -1,0 +1,8 @@
+roll mode    rank null_space_gap           cond  axis_iso  flange_min    rolls azimuth sectors
+design          8  exact (floor)  exact (floor)     0.107       0.079        4 [4, 3, 3, 3, 4, 3, 3, 3]
+clearance       8  exact (floor)  exact (floor)     0.032       0.255        3 [4, 3, 3, 3, 4, 3, 3, 3]
+
+法兰高度：clearance 模式最低 0.255 m，design 模式最低 0.079 m，09-17 实测地板 0.202 m
+  design     低于实测地板，需现场确认避障
+  clearance  不低于实测地板
+OUTPUT: outputs/handeye/plan-observability-gate.json

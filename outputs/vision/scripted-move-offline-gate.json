@@ -1,0 +1,274 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-09-18T11:37:53.789243+08:00",
+  "kind": "scripted_move_offline_gate",
+  "motion_sent": false,
+  "plan": "outputs/handeye/pose-plan-20260918.json",
+  "slots_checked": [
+    1,
+    11,
+    16,
+    19
+  ],
+  "clearance_z_m": 0.55,
+  "model": {
+    "urdf": "/home/jx/ur_learn/generated/ur10.urdf",
+    "note": "nominal URDF kinematics; the controller uses factory calibration, so a small FK disagreement is expected and is gated below",
+    "fk_position_agreement_m": 0.0025101664110304084,
+    "fk_rotation_agreement_rad": 0.0035847823469029763,
+    "fk_position_gate_m": 0.01,
+    "fk_rotation_gate_rad": 0.02,
+    "fk_gate_passed": true
+  },
+  "current": {
+    "q_rad": [
+      0.2451646625995636,
+      -1.6744092146502894,
+      -1.9769585768329065,
+      -4.280215088521139,
+      4.751189708709717,
+      -2.69312292734255
+    ],
+    "tcp_m_rad": [
+      0.4670055874540022,
+      -0.053721409746500845,
+      0.37526741750792125,
+      1.9351057169650001,
+      -2.364607131980367,
+      -0.00022348274728758912
+    ]
+  },
+  "segments": [
+    {
+      "slot": 1,
+      "segment": "slot_summary",
+      "feasible": true,
+      "order": "reorient_first"
+    },
+    {
+      "slot": 11,
+      "segment": "slot_summary",
+      "feasible": true,
+      "order": "reorient_first"
+    },
+    {
+      "slot": 16,
+      "segment": "lift",
+      "order": "reorient_first",
+      "start_tcp_m_rad": [
+        0.5369341081342707,
+        -0.014131237150110332,
+        0.39390460062356436,
+        2.490913557513601,
+        -0.27599350358408875,
+        -0.2283517870991364
+      ],
+      "end_tcp_m_rad": [
+        0.5369341081342707,
+        -0.014131237150110332,
+        0.55,
+        2.490913557513601,
+        -0.27599350358408875,
+        -0.2283517870991364
+      ],
+      "worst": {
+        "ik_position_m": 1.383440938055954e-10,
+        "ik_rotation_rad": 2.7046097339683383e-10,
+        "joint_margin_rad": 1.1115543970960093,
+        "min_singular": 0.3095355291066744,
+        "max_joint_step_rad": 0.004620665793432899,
+        "min_flange_z_m": 0.39390460062356436
+      },
+      "singularity_gate_passed": true,
+      "singularity_floor": 0.02,
+      "singularity_fraction_of_baseline": 1.0695791292692125,
+      "passed": true,
+      "reasons": []
+    },
+    {
+      "slot": 16,
+      "segment": "reorient",
+      "order": "reorient_first",
+      "start_tcp_m_rad": [
+        0.5369341081342707,
+        -0.014131237150110332,
+        0.55,
+        2.490913557513601,
+        -0.27599350358408875,
+        -0.2283517870991364
+      ],
+      "end_tcp_m_rad": [
+        0.5369341081342707,
+        -0.014131237150110332,
+        0.55,
+        1.244929387467547,
+        2.3440685875317846,
+        0.7194245908431055
+      ],
+      "worst": {
+        "ik_position_m": 0.04586152245472332,
+        "ik_rotation_rad": 0.21038578460660193,
+        "joint_margin_rad": 8.881784197001252e-16,
+        "min_singular": 0.2568500533652182,
+        "max_joint_step_rad": 0.050281973946590064,
+        "min_flange_z_m": 0.5499999999999998
+      },
+      "singularity_gate_passed": true,
+      "singularity_floor": 0.02,
+      "singularity_fraction_of_baseline": 0.8875280237586048,
+      "passed": false,
+      "reasons": [
+        "sample 51 rejected: joint_limit_margin",
+        "sample 52 rejected: position_residual,rotation_residual,joint_limit_margin",
+        "sample 53 rejected: position_residual,rotation_residual,joint_limit_margin",
+        "sample 54 rejected: position_residual,rotation_residual,joint_limit_margin",
+        "sample 55 rejected: position_residual,rotation_residual,joint_limit_margin",
+        "sample 56 rejected: position_residual,rotation_residual,joint_limit_margin",
+        "sample 57 rejected: position_residual,rotation_residual,joint_limit_margin",
+        "sample 58 rejected: position_residual,rotation_residual,joint_limit_margin",
+        "sample 59 rejected: position_residual,rotation_residual,joint_limit_margin",
+        "sample 60 rejected: position_residual,rotation_residual,joint_limit_margin"
+      ]
+    },
+    {
+      "slot": 16,
+      "segment": "lift",
+      "order": "translate_first",
+      "start_tcp_m_rad": [
+        0.5369341081342707,
+        -0.014131237150110332,
+        0.39390460062356436,
+        2.490913557513601,
+        -0.27599350358408875,
+        -0.2283517870991364
+      ],
+      "end_tcp_m_rad": [
+        0.5369341081342707,
+        -0.014131237150110332,
+        0.55,
+        2.490913557513601,
+        -0.27599350358408875,
+        -0.2283517870991364
+      ],
+      "worst": {
+        "ik_position_m": 1.383440938055954e-10,
+        "ik_rotation_rad": 2.7046097339683383e-10,
+        "joint_margin_rad": 1.1115543970960093,
+        "min_singular": 0.3095355291066744,
+        "max_joint_step_rad": 0.004620665793432899,
+        "min_flange_z_m": 0.39390460062356436
+      },
+      "singularity_gate_passed": true,
+      "singularity_floor": 0.02,
+      "singularity_fraction_of_baseline": 1.0695791292692125,
+      "passed": true,
+      "reasons": []
+    },
+    {
+      "slot": 16,
+      "segment": "translate",
+      "order": "translate_first",
+      "start_tcp_m_rad": [
+        0.5369341081342707,
+        -0.014131237150110332,
+        0.55,
+        2.490913557513601,
+        -0.27599350358408875,
+        -0.2283517870991364
+      ],
+      "end_tcp_m_rad": [
+        0.44185852363871436,
+        -0.17914711883030118,
+        0.55,
+        2.490913557513601,
+        -0.27599350358408875,
+        -0.2283517870991364
+      ],
+      "worst": {
+        "ik_position_m": 3.26226381873216e-10,
+        "ik_rotation_rad": 7.704104432814802e-10,
+        "joint_margin_rad": 0.9988559918123956,
+        "min_singular": 0.2533988303419819,
+        "max_joint_step_rad": 0.0064991978244481885,
+        "min_flange_z_m": 0.5499999999999998
+      },
+      "singularity_gate_passed": true,
+      "singularity_floor": 0.02,
+      "singularity_fraction_of_baseline": 0.8756025555360707,
+      "passed": true,
+      "reasons": []
+    },
+    {
+      "slot": 16,
+      "segment": "reorient",
+      "order": "translate_first",
+      "start_tcp_m_rad": [
+        0.44185852363871436,
+        -0.17914711883030118,
+        0.55,
+        2.490913557513601,
+        -0.27599350358408875,
+        -0.2283517870991364
+      ],
+      "end_tcp_m_rad": [
+        0.44185852363871436,
+        -0.17914711883030118,
+        0.55,
+        1.244929387467547,
+        2.3440685875317846,
+        0.7194245908431055
+      ],
+      "worst": {
+        "ik_position_m": 0.09929528158457433,
+        "ik_rotation_rad": 0.3682458315177588,
+        "joint_margin_rad": 8.881784197001252e-16,
+        "min_singular": 0.2239163206116907,
+        "max_joint_step_rad": 0.05035669924194952,
+        "min_flange_z_m": 0.5499999930891314
+      },
+      "singularity_gate_passed": true,
+      "singularity_floor": 0.02,
+      "singularity_fraction_of_baseline": 0.7737277330334541,
+      "passed": false,
+      "reasons": [
+        "sample 43 rejected: joint_limit_margin",
+        "sample 44 rejected: position_residual,rotation_residual,joint_limit_margin",
+        "sample 45 rejected: position_residual,rotation_residual,joint_limit_margin",
+        "sample 46 rejected: position_residual,rotation_residual,joint_limit_margin",
+        "sample 47 rejected: position_residual,rotation_residual,joint_limit_margin",
+        "sample 48 rejected: position_residual,rotation_residual,joint_limit_margin",
+        "sample 49 rejected: position_residual,rotation_residual,joint_limit_margin",
+        "sample 50 rejected: position_residual,rotation_residual,joint_limit_margin",
+        "sample 51 rejected: position_residual,rotation_residual,joint_limit_margin",
+        "sample 52 rejected: position_residual,rotation_residual,joint_limit_margin",
+        "sample 53 rejected: position_residual,rotation_residual,joint_limit_margin",
+        "sample 54 rejected: position_residual,rotation_residual,joint_limit_margin",
+        "sample 55 rejected: position_residual,rotation_residual,joint_limit_margin",
+        "sample 56 rejected: position_residual,rotation_residual,joint_limit_margin",
+        "sample 57 rejected: position_residual,rotation_residual,joint_limit_margin",
+        "sample 58 rejected: position_residual,rotation_residual,joint_limit_margin",
+        "sample 59 rejected: position_residual,rotation_residual,joint_limit_margin",
+        "sample 60 rejected: position_residual,rotation_residual,joint_limit_margin"
+      ]
+    },
+    {
+      "slot": 16,
+      "segment": "slot_summary",
+      "feasible": false,
+      "orders_tried": [
+        "reorient_first",
+        "translate_first"
+      ],
+      "note": "no waypoint order satisfied the gates from the current chain position; the seed is reset so the failure does not cascade into later slots"
+    },
+    {
+      "slot": 19,
+      "segment": "slot_summary",
+      "feasible": true,
+      "order": "reorient_first"
+    }
+  ],
+  "baseline_min_singular": 0.28939937274034494,
+  "passed": false,
+  "interpretation": "Numerical feasibility only: reachability, joint limits, singularity proximity and flange clearance along densely sampled straight-line movel segments. Collision-freedom is NOT proven - there is no obstacle model. The lift/reorient/translate/descend structure plus a clearance height above every table object is the substitute, and it still needs human eyes on the workspace before execution."
+}

@@ -1,0 +1,54 @@
+/usr/lib/python3/dist-packages/scipy/__init__.py:146: UserWarning: A NumPy version >=1.17.3 and <1.25.0 is required for this version of SciPy (detected version 1.26.4
+  warnings.warn(f"A NumPy version >={np_minversion} and <{np_maxversion}"
+当前 TCP: [0.467, -0.0537, 0.3753] | 姿态(rx,ry,rz rad): [1.9351, -2.3647, -0.0003]
+FK 一致度: 0.002510 m / 0.003585 rad (门禁 0.010 m / 0.020 rad) -> PASS
+访问顺序（关节空间最近邻）: [4, 8, 3, 2, 5, 6, 7, 1]
+当前位姿最小奇异值 0.2894（作为奇异度基线）
+
+slot 段          段序              IKpos_mm  rot_mrad      关节余量      最小奇异      法兰z 结论
+4    lift       reorient_first    0.0000    0.0000    1.1643    0.2874   0.3753 PASS
+4    reorient   reorient_first    0.0000    0.0000    1.0812    0.2874   0.5500 PASS
+4    translate  reorient_first    0.0000    0.0000    0.9692    0.3027   0.5500 PASS
+4    descend    reorient_first    0.0000    0.0000    0.9692    0.3027   0.2589 PASS
+4    SUMMARY    reorient_first         -         -         -         -        - PASS
+8    lift       reorient_first    0.0000    0.0000    0.9692    0.3027   0.2589 PASS
+8    reorient   reorient_first    0.0000    0.0000    0.9582    0.2385   0.5500 PASS
+8    translate  reorient_first    0.0000    0.0000    1.3079    0.2129   0.5500 PASS
+8    descend    reorient_first    0.0000    0.0000    0.9276    0.2076   0.2560 PASS
+8    SUMMARY    reorient_first         -         -         -         -        - PASS
+3    lift       reorient_first    0.0000    0.0000    0.9276    0.2076   0.2560 PASS
+3    reorient   reorient_first    0.0000    0.0000    0.6673    0.1548   0.5500 PASS
+3    translate  reorient_first    0.0000    0.0000    0.6946    0.1684   0.5500 PASS
+3    descend    reorient_first    0.0000    0.0000    1.0440    0.3228   0.2573 PASS
+3    SUMMARY    reorient_first         -         -         -         -        - PASS
+2    lift       reorient_first    0.0000    0.0000    1.0440    0.3228   0.2573 PASS
+2    reorient   reorient_first    0.0000    0.0000    0.6747    0.2142   0.5500 PASS
+2    translate  reorient_first    0.0000    0.0000    0.6747    0.1497   0.5500 PASS
+2    descend    reorient_first    0.0000    0.0000    0.7237    0.1497   0.2558 PASS
+2    SUMMARY    reorient_first         -         -         -         -        - PASS
+5    lift       reorient_first    0.0000    0.0000    0.7237    0.1497   0.2558 PASS
+5    reorient   reorient_first    0.0000    0.0000    0.7237    0.1497   0.5500 PASS
+5    translate  reorient_first    0.0000    0.0000    0.9172    0.2527   0.5500 PASS
+5    descend    reorient_first    0.0000    0.0000    0.9172    0.2701   0.2597 PASS
+5    SUMMARY    reorient_first         -         -         -         -        - PASS
+6    lift       reorient_first    0.0000    0.0000    0.9172    0.2701   0.2597 PASS
+6    reorient   reorient_first    0.0000    0.0000    0.9172    0.2606   0.5500 PASS
+6    translate  reorient_first    0.0000    0.0000    1.0928    0.2606   0.5500 PASS
+6    descend    reorient_first    0.0000    0.0000    1.0928    0.2798   0.2591 PASS
+6    SUMMARY    reorient_first         -         -         -         -        - PASS
+7    lift       reorient_first    0.0000    0.0000    1.0928    0.2798   0.2591 PASS
+7    reorient   reorient_first    0.0000    0.0000    1.0928    0.2384   0.5500 PASS
+7    translate  reorient_first    0.0000    0.0000    1.6103    0.2384   0.5500 PASS
+7    descend    reorient_first    0.0000    0.0000    1.3533    0.2360   0.2576 PASS
+7    SUMMARY    reorient_first         -         -         -         -        - PASS
+1    DEFER      retry later            -         -         -         -        - 本轮不可达，排到队尾重试（前驱不同可能就通了）
+
+--- 队尾重试第 1 轮，剩余 1 个位姿：[1] ---
+1    lift       translate_first   0.0000    0.0000    1.3533    0.2360   0.2576 PASS
+1    translate  translate_first   0.0000    0.0000    1.1996    0.1346   0.6500 PASS
+1    reorient   translate_first  61.6578  180.6890    0.0000    0.1235   0.6500 FAIL sample 42 rejected: joint_limit_margin;sample 43 rejected: position_residual,rotation_residual,joint_limit_margin
+1    SUMMARY    -                      -         -         -         -        - FAIL 重试后仍不可达
+
+离线数值门禁: FAIL
+注意：本门禁不证明无碰撞（仓库无场景模型）；避障依靠抬升-平移-下降结构与高于台面所有物体的巡航高度，仍需人眼确认。
+OUTPUT: outputs/vision/variant-base-gate.json

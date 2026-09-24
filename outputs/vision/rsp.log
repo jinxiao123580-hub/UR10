@@ -1,0 +1,16 @@
+[INFO] [1789709068.643204543] [robot_state_publisher]: got segment base
+[INFO] [1789709068.643325895] [robot_state_publisher]: got segment base_link
+[INFO] [1789709068.643340591] [robot_state_publisher]: got segment base_link_inertia
+[INFO] [1789709068.643350458] [robot_state_publisher]: got segment camera_bracket
+[INFO] [1789709068.643359911] [robot_state_publisher]: got segment camera_housing
+[INFO] [1789709068.643368952] [robot_state_publisher]: got segment flange
+[INFO] [1789709068.643378105] [robot_state_publisher]: got segment forearm_link
+[INFO] [1789709068.643387159] [robot_state_publisher]: got segment ft_frame
+[INFO] [1789709068.643396231] [robot_state_publisher]: got segment shoulder_link
+[INFO] [1789709068.643405378] [robot_state_publisher]: got segment tool0
+[INFO] [1789709068.643414352] [robot_state_publisher]: got segment upper_arm_link
+[INFO] [1789709068.643423399] [robot_state_publisher]: got segment world
+[INFO] [1789709068.643432437] [robot_state_publisher]: got segment wrist_1_link
+[INFO] [1789709068.643441554] [robot_state_publisher]: got segment wrist_2_link
+[INFO] [1789709068.643450658] [robot_state_publisher]: got segment wrist_3_link
+[INFO] [1789709085.695078133] [rclcpp]: signal_handler(SIGINT/SIGTERM)

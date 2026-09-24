@@ -1,0 +1,1214 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-09-19T09:55:10.992011+08:00",
+  "kind": "pose_advisor_plan",
+  "infeasible_slots": [],
+  "self_collision_margin_mm": 40.0,
+  "flange_floor_m": 0.15,
+  "guidance_only": true,
+  "warning": "base_from_target is estimated from one reference sample plus the guidance YAML; it inherits that calibration's error and must not be quoted as a measurement",
+  "reference_sample": "20260919-095449-702392",
+  "reference_source": "outputs/handeye/samples/20260919-095449-702392/sample.json",
+  "guidance_calibration": "config/handeye_eye_in_hand_20260917.yaml",
+  "base_from_target_estimate": [
+    [
+      -0.9961193168291022,
+      0.0876440110298843,
+      0.008051954455194636,
+      0.5224225383299288
+    ],
+    [
+      0.08765178157698036,
+      0.9961509850351408,
+      0.0006166035201296144,
+      -0.11330929176045434
+    ],
+    [
+      -0.007966920756301043,
+      0.0013199788303989105,
+      -0.9999673923831521,
+      -0.011601710323384223
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "ik_filtered": false,
+  "ik_seed_source": null,
+  "ik_seed_q_rad": null,
+  "plan": [
+    {
+      "slot": 1,
+      "shell": "A1",
+      "role": "primary",
+      "distance_m": 0.35,
+      "tilt_deg": 15.0,
+      "azimuth_deg": 0.0,
+      "roll_deg": 190.0,
+      "design_roll_deg": 25.0,
+      "target_tcp_pose_m_rad": [
+        0.2929706829312528,
+        -0.09419405135275884,
+        0.25469176738924393,
+        1.8056863327206398,
+        1.4497230254887412,
+        0.6515567822671096
+      ],
+      "target_tcp_pose_m_deg": [
+        0.2929706829312528,
+        -0.09419405135275884,
+        0.25469176738924393,
+        103.45820598934799,
+        83.06301082344154,
+        37.3314537370297
+      ],
+      "camera_origin_base_m": [
+        0.6099355092002565,
+        -0.1214578320463413,
+        0.3271830018769468
+      ],
+      "camera_height_above_board_m": 0.338784712200331,
+      "flange_height_above_board_m": 0.2662934777126281,
+      "viewing_side_check": 0.9659258262890834,
+      "roll_selection": {
+        "scored": 47,
+        "rejected": 25,
+        "rejection_reasons": [
+          "flange_below_floor"
+        ],
+        "joint_margin_rad": null,
+        "camera_clearance_m": null,
+        "q_rad": null
+      },
+      "below_clearance_floor": false
+    },
+    {
+      "slot": 2,
+      "shell": "A1",
+      "role": "primary",
+      "distance_m": 0.35,
+      "tilt_deg": 15.0,
+      "azimuth_deg": 45.0,
+      "roll_deg": 190.0,
+      "design_roll_deg": 25.0,
+      "target_tcp_pose_m_rad": [
+        0.37317543042710843,
+        0.060884308170858215,
+        0.25543321840250083,
+        2.157388258599597,
+        0.6266626052852716,
+        0.24331795605347553
+      ],
+      "target_tcp_pose_m_deg": [
+        0.37317543042710843,
+        0.060884308170858215,
+        0.25543321840250083,
+        123.60924198883514,
+        35.90512246151866,
+        13.941091961613788
+      ],
+      "camera_origin_base_m": [
+        0.5778922636746335,
+        -0.18294013482567156,
+        0.32688707126946626
+      ],
+      "camera_height_above_board_m": 0.33848878159285045,
+      "flange_height_above_board_m": 0.2670349287258851,
+      "viewing_side_check": 0.9659258262890826,
+      "roll_selection": {
+        "scored": 46,
+        "rejected": 26,
+        "rejection_reasons": [
+          "flange_below_floor"
+        ],
+        "joint_margin_rad": null,
+        "camera_clearance_m": null,
+        "q_rad": null
+      },
+      "below_clearance_floor": false
+    },
+    {
+      "slot": 3,
+      "shell": "A1",
+      "role": "primary",
+      "distance_m": 0.35,
+      "tilt_deg": 15.0,
+      "azimuth_deg": 90.0,
+      "roll_deg": 190.0,
+      "design_roll_deg": 25.0,
+      "target_tcp_pose_m_rad": [
+        0.5395424585230957,
+        0.11382557473459692,
+        0.2568054866532996,
+        2.2342178349771373,
+        -0.24687534223506266,
+        -0.18170597209939254
+      ],
+      "target_tcp_pose_m_deg": [
+        0.5395424585230957,
+        0.11382557473459692,
+        0.2568054866532996,
+        128.0112524570462,
+        -14.144915175916891,
+        -10.410985313617083
+      ],
+      "camera_origin_base_m": [
+        0.511761002828499,
+        -0.20375574575674593,
+        0.32634173260789945
+      ],
+      "camera_height_above_board_m": 0.33794344293128364,
+      "flange_height_above_board_m": 0.2684071969766838,
+      "viewing_side_check": 0.9659258262890789,
+      "roll_selection": {
+        "scored": 46,
+        "rejected": 26,
+        "rejection_reasons": [
+          "flange_below_floor"
+        ],
+        "joint_margin_rad": null,
+        "camera_clearance_m": null,
+        "q_rad": null
+      },
+      "below_clearance_floor": false
+    },
+    {
+      "slot": 4,
+      "shell": "A1",
+      "role": "primary",
+      "distance_m": 0.35,
+      "tilt_deg": 15.0,
+      "azimuth_deg": 135.0,
+      "roll_deg": 190.0,
+      "design_roll_deg": 25.0,
+      "target_tcp_pose_m_rad": [
+        0.6946162184922907,
+        0.03361747239462848,
+        0.25800471601153624,
+        2.031922040976037,
+        -1.114599469979131,
+        -0.5961456145288223
+      ],
+      "target_tcp_pose_m_deg": [
+        0.6946162184922907,
+        0.03361747239462848,
+        0.25800471601153624,
+        116.42055724753524,
+        -63.86184547732271,
+        -34.15662768773437
+      ],
+      "camera_origin_base_m": [
+        0.4502805223686856,
+        -0.17171116226522268,
+        0.32586643788410585
+      ],
+      "camera_height_above_board_m": 0.33746814820749005,
+      "flange_height_above_board_m": 0.2696064263349205,
+      "viewing_side_check": 0.9659258262890749,
+      "roll_selection": {
+        "scored": 46,
+        "rejected": 26,
+        "rejection_reasons": [
+          "flange_below_floor"
+        ],
+        "joint_margin_rad": null,
+        "camera_clearance_m": null,
+        "q_rad": null
+      },
+      "below_clearance_floor": false
+    },
+    {
+      "slot": 5,
+      "shell": "A1",
+      "role": "primary",
+      "distance_m": 0.35,
+      "tilt_deg": 15.0,
+      "azimuth_deg": 180.0,
+      "roll_deg": 190.0,
+      "design_roll_deg": 25.0,
+      "target_tcp_pose_m_rad": [
+        0.7475566049129292,
+        -0.13275518031050293,
+        0.258328414183552,
+        1.5418485168746188,
+        -1.9150072459229373,
+        -0.96998635503369
+      ],
+      "target_tcp_pose_m_deg": [
+        0.7475566049129292,
+        -0.13275518031050293,
+        0.258328414183552,
+        88.34141266542115,
+        -109.72183292835562,
+        -55.576124328708694
+      ],
+      "camera_origin_base_m": [
+        0.42946525392733803,
+        -0.10557766675983916,
+        0.32573960830115956
+      ],
+      "camera_height_above_board_m": 0.33734131862454375,
+      "flange_height_above_board_m": 0.2699301245069362,
+      "viewing_side_check": 0.9659258262890733,
+      "roll_selection": {
+        "scored": 45,
+        "rejected": 27,
+        "rejection_reasons": [
+          "flange_below_floor"
+        ],
+        "joint_margin_rad": null,
+        "camera_clearance_m": null,
+        "q_rad": null
+      },
+      "below_clearance_floor": false
+    },
+    {
+      "slot": 6,
+      "shell": "A1",
+      "role": "primary",
+      "distance_m": 0.35,
+      "tilt_deg": 15.0,
+      "azimuth_deg": 225.0,
+      "roll_deg": 190.0,
+      "design_roll_deg": 25.0,
+      "target_tcp_pose_m_rad": [
+        0.6673518574170735,
+        -0.28783353983412,
+        0.25758696317029517,
+        0.7559713620333286,
+        -2.5683163088195307,
+        -1.2643816337976173
+      ],
+      "target_tcp_pose_m_deg": [
+        0.6673518574170735,
+        -0.28783353983412,
+        0.25758696317029517,
+        43.31396847726613,
+        -147.15368494997728,
+        -72.44373131045907
+      ],
+      "camera_origin_base_m": [
+        0.46150849945296096,
+        -0.04409536398050891,
+        0.32603553890864023
+      ],
+      "camera_height_above_board_m": 0.33763724923202443,
+      "flange_height_above_board_m": 0.26918867349367936,
+      "viewing_side_check": 0.9659258262890745,
+      "roll_selection": {
+        "scored": 46,
+        "rejected": 26,
+        "rejection_reasons": [
+          "flange_below_floor"
+        ],
+        "joint_margin_rad": null,
+        "camera_clearance_m": null,
+        "q_rad": null
+      },
+      "below_clearance_floor": false
+    },
+    {
+      "slot": 7,
+      "shell": "A1",
+      "role": "primary",
+      "distance_m": 0.35,
+      "tilt_deg": 15.0,
+      "azimuth_deg": 270.0,
+      "roll_deg": 190.0,
+      "design_roll_deg": 25.0,
+      "target_tcp_pose_m_rad": [
+        0.5009848293210863,
+        -0.34077480639785873,
+        0.25621469491949633,
+        0.28560104074351184,
+        2.674400149373592,
+        1.2867441208913835
+      ],
+      "target_tcp_pose_m_deg": [
+        0.5009848293210863,
+        -0.34077480639785873,
+        0.25621469491949633,
+        16.363734259147094,
+        153.23184128826375,
+        73.72500744034765
+      ],
+      "camera_origin_base_m": [
+        0.5276397602990955,
+        -0.023279753049434526,
+        0.32658087757020693
+      ],
+      "camera_height_above_board_m": 0.3381825878935911,
+      "flange_height_above_board_m": 0.26781640524288053,
+      "viewing_side_check": 0.9659258262890779,
+      "roll_selection": {
+        "scored": 46,
+        "rejected": 26,
+        "rejection_reasons": [
+          "flange_below_floor"
+        ],
+        "joint_margin_rad": null,
+        "camera_clearance_m": null,
+        "q_rad": null
+      },
+      "below_clearance_floor": false
+    },
+    {
+      "slot": 8,
+      "shell": "A1",
+      "role": "primary",
+      "distance_m": 0.35,
+      "tilt_deg": 15.0,
+      "azimuth_deg": 315.0,
+      "roll_deg": 190.0,
+      "design_roll_deg": 25.0,
+      "target_tcp_pose_m_rad": [
+        0.3459110693518912,
+        -0.2605667040578903,
+        0.25501546556125965,
+        1.1800485345786034,
+        2.159493004678875,
+        1.0125763067618396
+      ],
+      "target_tcp_pose_m_deg": [
+        0.3459110693518912,
+        -0.2605667040578903,
+        0.25501546556125965,
+        67.61180065195155,
+        123.72983505612447,
+        58.016348812397574
+      ],
+      "camera_origin_base_m": [
+        0.5891202407589089,
+        -0.05532433654095775,
+        0.3270561722940005
+      ],
+      "camera_height_above_board_m": 0.3386578826173847,
+      "flange_height_above_board_m": 0.26661717588464384,
+      "viewing_side_check": 0.9659258262890819,
+      "roll_selection": {
+        "scored": 46,
+        "rejected": 26,
+        "rejection_reasons": [
+          "flange_below_floor"
+        ],
+        "joint_margin_rad": null,
+        "camera_clearance_m": null,
+        "q_rad": null
+      },
+      "below_clearance_floor": false
+    },
+    {
+      "slot": 9,
+      "shell": "A2",
+      "role": "primary",
+      "distance_m": 0.45,
+      "tilt_deg": 30.0,
+      "azimuth_deg": 0.0,
+      "roll_deg": 190.0,
+      "design_roll_deg": -25.0,
+      "target_tcp_pose_m_rad": [
+        0.4185455824924454,
+        -0.10542468410555603,
+        0.3922076069378166,
+        1.9651395532341764,
+        1.6164384388273434,
+        0.4460635126435491
+      ],
+      "target_tcp_pose_m_deg": [
+        0.4185455824924454,
+        -0.10542468410555603,
+        0.3922076069378166,
+        112.59420255454248,
+        92.61510038752247,
+        25.5575566692558
+      ],
+      "camera_origin_base_m": [
+        0.7434114459177356,
+        -0.13327124005589774,
+        0.37988957098873477
+      ],
+      "camera_height_above_board_m": 0.39149128131211897,
+      "flange_height_above_board_m": 0.40380931726120084,
+      "viewing_side_check": 0.8660254037844578,
+      "roll_selection": {
+        "scored": 53,
+        "rejected": 19,
+        "rejection_reasons": [
+          "flange_below_floor"
+        ],
+        "joint_margin_rad": null,
+        "camera_clearance_m": null,
+        "q_rad": null
+      },
+      "below_clearance_floor": false
+    },
+    {
+      "slot": 10,
+      "shell": "A2",
+      "role": "primary",
+      "distance_m": 0.45,
+      "tilt_deg": 30.0,
+      "azimuth_deg": 45.0,
+      "roll_deg": 190.0,
+      "design_roll_deg": -25.0,
+      "target_tcp_pose_m_rad": [
+        0.45376731994278074,
+        -0.036656528126483706,
+        0.39253362408129155,
+        2.38808603964266,
+        0.7254840630416804,
+        0.13064272673465627
+      ],
+      "target_tcp_pose_m_deg": [
+        0.45376731994278074,
+        -0.036656528126483706,
+        0.39253362408129155,
+        136.82725118563582,
+        41.567174916291236,
+        7.485276865976731
+      ],
+      "camera_origin_base_m": [
+        0.6638221357171962,
+        -0.2859815534926158,
+        0.3791545358033077
+      ],
+      "camera_height_above_board_m": 0.3907562461266919,
+      "flange_height_above_board_m": 0.40413533440467575,
+      "viewing_side_check": 0.8660254037844554,
+      "roll_selection": {
+        "scored": 53,
+        "rejected": 19,
+        "rejection_reasons": [
+          "flange_below_floor"
+        ],
+        "joint_margin_rad": null,
+        "camera_clearance_m": null,
+        "q_rad": null
+      },
+      "below_clearance_floor": false
+    },
+    {
+      "slot": 11,
+      "shell": "A2",
+      "role": "primary",
+      "distance_m": 0.45,
+      "tilt_deg": 30.0,
+      "azimuth_deg": 90.0,
+      "roll_deg": 190.0,
+      "design_roll_deg": -25.0,
+      "target_tcp_pose_m_rad": [
+        0.5272978353145541,
+        -0.01293667219880007,
+        0.3931403339721591,
+        2.496252793892203,
+        -0.24475209230631242,
+        -0.19656983503029463
+      ],
+      "target_tcp_pose_m_deg": [
+        0.5272978353145541,
+        -0.01293667219880007,
+        0.3931403339721591,
+        143.02474968776338,
+        -14.02326191614805,
+        -11.262621926818726
+      ],
+      "camera_origin_base_m": [
+        0.4995646971494636,
+        -0.3376835608339838,
+        0.3778000185817273
+      ],
+      "camera_height_above_board_m": 0.3894017289051115,
+      "flange_height_above_board_m": 0.4047420442955433,
+      "viewing_side_check": 0.8660254037844486,
+      "roll_selection": {
+        "scored": 53,
+        "rejected": 19,
+        "rejection_reasons": [
+          "flange_below_floor"
+        ],
+        "joint_margin_rad": null,
+        "camera_clearance_m": null,
+        "q_rad": null
+      },
+      "below_clearance_floor": false
+    },
+    {
+      "slot": 12,
+      "shell": "A2",
+      "role": "primary",
+      "distance_m": 0.45,
+      "tilt_deg": 30.0,
+      "azimuth_deg": 135.0,
+      "roll_deg": 190.0,
+      "design_roll_deg": -25.0,
+      "target_tcp_pose_m_rad": [
+        0.5960639499512641,
+        -0.04815988622740633,
+        0.3936723341847748,
+        2.2772093128062547,
+        -1.2137028070962905,
+        -0.5082435783867083
+      ],
+      "target_tcp_pose_m_deg": [
+        0.5960639499512641,
+        -0.04815988622740633,
+        0.3936723341847748,
+        130.4744826916849,
+        -69.54004842979815,
+        -29.12021200618481
+      ],
+      "camera_origin_base_m": [
+        0.3468589100068501,
+        -0.25809092738134165,
+        0.37661947714192734
+      ],
+      "camera_height_above_board_m": 0.38822118746531153,
+      "flange_height_above_board_m": 0.40527404450815907,
+      "viewing_side_check": 0.8660254037844412,
+      "roll_selection": {
+        "scored": 53,
+        "rejected": 19,
+        "rejection_reasons": [
+          "flange_below_floor"
+        ],
+        "joint_margin_rad": null,
+        "camera_clearance_m": null,
+        "q_rad": null
+      },
+      "below_clearance_floor": false
+    },
+    {
+      "slot": 13,
+      "shell": "A2",
+      "role": "primary",
+      "distance_m": 0.45,
+      "tilt_deg": 30.0,
+      "azimuth_deg": 180.0,
+      "roll_deg": 190.0,
+      "design_roll_deg": -25.0,
+      "target_tcp_pose_m_rad": [
+        0.6197834065304288,
+        -0.12169288914471517,
+        0.3938179862097738,
+        1.7253361407894792,
+        -2.0928002709762237,
+        -0.774705462638677
+      ],
+      "target_tcp_pose_m_deg": [
+        0.6197834065304288,
+        -0.12169288914471517,
+        0.3938179862097738,
+        98.85447910862636,
+        -119.90862289077265,
+        -44.38735337492607
+      ],
+      "camera_origin_base_m": [
+        0.29515775334463956,
+        -0.0938279383462566,
+        0.3763044566483993
+      ],
+      "camera_height_above_board_m": 0.3879061669717835,
+      "flange_height_above_board_m": 0.405419696533158,
+      "viewing_side_check": 0.8660254037844378,
+      "roll_selection": {
+        "scored": 53,
+        "rejected": 19,
+        "rejection_reasons": [
+          "flange_below_floor"
+        ],
+        "joint_margin_rad": null,
+        "camera_clearance_m": null,
+        "q_rad": null
+      },
+      "below_clearance_floor": false
+    },
+    {
+      "slot": 14,
+      "shell": "A2",
+      "role": "primary",
+      "distance_m": 0.45,
+      "tilt_deg": 30.0,
+      "azimuth_deg": 225.0,
+      "roll_deg": 190.0,
+      "design_roll_deg": -25.0,
+      "target_tcp_pose_m_rad": [
+        0.5845616690800937,
+        -0.19046104512378745,
+        0.39349196906629885,
+        0.8506869347243782,
+        -2.7749341168797677,
+        -0.9608482835833441
+      ],
+      "target_tcp_pose_m_deg": [
+        0.5845616690800937,
+        -0.19046104512378745,
+        0.39349196906629885,
+        48.74077104662783,
+        -158.99201332407299,
+        -55.05255140171488
+      ],
+      "camera_origin_base_m": [
+        0.37474706354517895,
+        0.058882375090461486,
+        0.37703949183382635
+      ],
+      "camera_height_above_board_m": 0.38864120215721054,
+      "flange_height_above_board_m": 0.4050936793896831,
+      "viewing_side_check": 0.86602540378444,
+      "roll_selection": {
+        "scored": 53,
+        "rejected": 19,
+        "rejection_reasons": [
+          "flange_below_floor"
+        ],
+        "joint_margin_rad": null,
+        "camera_clearance_m": null,
+        "q_rad": null
+      },
+      "below_clearance_floor": false
+    },
+    {
+      "slot": 15,
+      "shell": "A2",
+      "role": "primary",
+      "distance_m": 0.45,
+      "tilt_deg": 30.0,
+      "azimuth_deg": 270.0,
+      "roll_deg": 190.0,
+      "design_roll_deg": -25.0,
+      "target_tcp_pose_m_rad": [
+        0.5110311537083203,
+        -0.21418090105147114,
+        0.39288525917543127,
+        0.26926361823987877,
+        2.8180077524953164,
+        0.9234291595545494
+      ],
+      "target_tcp_pose_m_deg": [
+        0.5110311537083203,
+        -0.21418090105147114,
+        0.39288525917543127,
+        15.427668901566866,
+        161.4599508531283,
+        52.90859352178838
+      ],
+      "camera_origin_base_m": [
+        0.5390045021129115,
+        0.1105843824318295,
+        0.37839400905540677
+      ],
+      "camera_height_above_board_m": 0.38999571937879096,
+      "flange_height_above_board_m": 0.40448696949881546,
+      "viewing_side_check": 0.866025403784447,
+      "roll_selection": {
+        "scored": 53,
+        "rejected": 19,
+        "rejection_reasons": [
+          "flange_below_floor"
+        ],
+        "joint_margin_rad": null,
+        "camera_clearance_m": null,
+        "q_rad": null
+      },
+      "below_clearance_floor": false
+    },
+    {
+      "slot": 16,
+      "shell": "A2",
+      "role": "primary",
+      "distance_m": 0.45,
+      "tilt_deg": 30.0,
+      "azimuth_deg": 315.0,
+      "roll_deg": 190.0,
+      "design_roll_deg": -25.0,
+      "target_tcp_pose_m_rad": [
+        0.44226503907161024,
+        -0.17895768702286488,
+        0.3923532589628156,
+        1.2470216371029745,
+        2.345178646712491,
+        0.721244951849258
+      ],
+      "target_tcp_pose_m_deg": [
+        0.44226503907161024,
+        -0.17895768702286488,
+        0.3923532589628156,
+        71.44907676749499,
+        134.36883866082766,
+        41.32429173607876
+      ],
+      "camera_origin_base_m": [
+        0.691710289255525,
+        0.030991748979187356,
+        0.3795745504952067
+      ],
+      "camera_height_above_board_m": 0.3911762608185909,
+      "flange_height_above_board_m": 0.4039549692861998,
+      "viewing_side_check": 0.8660254037844544,
+      "roll_selection": {
+        "scored": 53,
+        "rejected": 19,
+        "rejection_reasons": [
+          "flange_below_floor"
+        ],
+        "joint_margin_rad": null,
+        "camera_clearance_m": null,
+        "q_rad": null
+      },
+      "below_clearance_floor": false
+    },
+    {
+      "slot": 17,
+      "shell": "A3",
+      "role": "primary",
+      "distance_m": 0.58,
+      "tilt_deg": 50.0,
+      "azimuth_deg": 0.0,
+      "roll_deg": 190.0,
+      "design_roll_deg": 45.0,
+      "target_tcp_pose_m_rad": [
+        0.6609085863427392,
+        -0.12687513985716548,
+        0.48783553734085744,
+        2.155731226942756,
+        1.825742516987399,
+        0.13224977323848122
+      ],
+      "target_tcp_pose_m_deg": [
+        0.6609085863427392,
+        -0.12687513985716548,
+        0.48783553734085744,
+        123.51430106837857,
+        104.60734070096997,
+        7.577353848127156
+      ],
+      "camera_origin_base_m": [
+        0.96200220138398,
+        -0.15248336483987887,
+        0.3647426955439932
+      ],
+      "camera_height_above_board_m": 0.3763444058673774,
+      "flange_height_above_board_m": 0.4994372476642417,
+      "viewing_side_check": 0.6427876096865613,
+      "roll_selection": {
+        "scored": 49,
+        "rejected": 23,
+        "rejection_reasons": [
+          "flange_below_floor"
+        ],
+        "joint_margin_rad": null,
+        "camera_clearance_m": null,
+        "q_rad": null
+      },
+      "below_clearance_floor": false
+    },
+    {
+      "slot": 18,
+      "shell": "A3",
+      "role": "primary",
+      "distance_m": 0.58,
+      "tilt_deg": 50.0,
+      "azimuth_deg": 45.0,
+      "roll_deg": 190.0,
+      "design_roll_deg": -45.0,
+      "target_tcp_pose_m_rad": [
+        0.6097973226852873,
+        -0.22375661227521676,
+        0.4873642389488938,
+        2.68674421308333,
+        0.8599411900224091,
+        -0.0436712043066758
+      ],
+      "target_tcp_pose_m_deg": [
+        0.6097973226852873,
+        -0.22375661227521676,
+        0.4873642389488938,
+        153.93910404087237,
+        49.27100081774158,
+        -2.502175693026068
+      ],
+      "camera_origin_base_m": [
+        0.8048378000050398,
+        -0.4540392513678348,
+        0.3632912271920371
+      ],
+      "camera_height_above_board_m": 0.3748929375154213,
+      "flange_height_above_board_m": 0.498965949272278,
+      "viewing_side_check": 0.6427876096865577,
+      "roll_selection": {
+        "scored": 49,
+        "rejected": 23,
+        "rejection_reasons": [
+          "flange_below_floor"
+        ],
+        "joint_margin_rad": null,
+        "camera_clearance_m": null,
+        "q_rad": null
+      },
+      "below_clearance_floor": false
+    },
+    {
+      "slot": 19,
+      "shell": "A3",
+      "role": "primary",
+      "distance_m": 0.58,
+      "tilt_deg": 50.0,
+      "azimuth_deg": 90.0,
+      "roll_deg": 190.0,
+      "design_roll_deg": 45.0,
+      "target_tcp_pose_m_rad": [
+        0.5051526837543127,
+        -0.2561195323614267,
+        0.48650166186520943,
+        2.8458446235851307,
+        -0.2361656756597768,
+        -0.2152067186516675
+      ],
+      "target_tcp_pose_m_deg": [
+        0.5051526837543127,
+        -0.2561195323614267,
+        0.48650166186520943,
+        163.0548860814244,
+        -13.531296481160684,
+        -12.330436701599881
+      ],
+      "camera_origin_base_m": [
+        0.4804798939057256,
+        -0.5561348093444209,
+        0.3606164724071198
+      ],
+      "camera_height_above_board_m": 0.372218182730504,
+      "flange_height_above_board_m": 0.4981033721885937,
+      "viewing_side_check": 0.6427876096865471,
+      "roll_selection": {
+        "scored": 49,
+        "rejected": 23,
+        "rejection_reasons": [
+          "flange_below_floor"
+        ],
+        "joint_margin_rad": null,
+        "camera_clearance_m": null,
+        "q_rad": null
+      },
+      "below_clearance_floor": false
+    },
+    {
+      "slot": 20,
+      "shell": "A3",
+      "role": "primary",
+      "distance_m": 0.58,
+      "tilt_deg": 50.0,
+      "azimuth_deg": 135.0,
+      "roll_deg": 190.0,
+      "design_roll_deg": -45.0,
+      "target_tcp_pose_m_rad": [
+        0.408274079805945,
+        -0.20500614044729037,
+        0.4857530920468345,
+        2.6020535716419575,
+        -1.3383562222139829,
+        -0.36209575902390845
+      ],
+      "target_tcp_pose_m_deg": [
+        0.408274079805945,
+        -0.20500614044729037,
+        0.4857530920468345,
+        149.08668772202594,
+        -76.68216301793417,
+        -20.746558771656048
+      ],
+      "camera_origin_base_m": [
+        0.17893294541607685,
+        -0.3989638455650019,
+        0.3582852662662237
+      ],
+      "camera_height_above_board_m": 0.3698869765896079,
+      "flange_height_above_board_m": 0.4973548023702187,
+      "viewing_side_check": 0.642787609686536,
+      "roll_selection": {
+        "scored": 48,
+        "rejected": 24,
+        "rejection_reasons": [
+          "flange_below_floor"
+        ],
+        "joint_margin_rad": null,
+        "camera_clearance_m": null,
+        "q_rad": null
+      },
+      "below_clearance_floor": false
+    },
+    {
+      "slot": 21,
+      "shell": "A3",
+      "role": "primary",
+      "distance_m": 0.58,
+      "tilt_deg": 50.0,
+      "azimuth_deg": 180.0,
+      "roll_deg": 190.0,
+      "design_roll_deg": 45.0,
+      "target_tcp_pose_m_rad": [
+        0.37591168312936624,
+        -0.10035796829721742,
+        0.4855570315409897,
+        1.9580084965130498,
+        -2.308096397924106,
+        -0.46410044049109045
+      ],
+      "target_tcp_pose_m_deg": [
+        0.37591168312936624,
+        -0.10035796829721742,
+        0.4855570315409897,
+        112.18562310095352,
+        -132.2441823103991,
+        -26.590996510301903
+      ],
+      "camera_origin_base_m": [
+        0.07683906726910866,
+        -0.07459497900031084,
+        0.3576631977099981
+      ],
+      "camera_height_above_board_m": 0.3692649080333823,
+      "flange_height_above_board_m": 0.4971587418643739,
+      "viewing_side_check": 0.6427876096865306,
+      "roll_selection": {
+        "scored": 49,
+        "rejected": 23,
+        "rejection_reasons": [
+          "flange_below_floor"
+        ],
+        "joint_margin_rad": null,
+        "camera_clearance_m": null,
+        "q_rad": null
+      },
+      "below_clearance_floor": false
+    },
+    {
+      "slot": 22,
+      "shell": "A3",
+      "role": "primary",
+      "distance_m": 0.58,
+      "tilt_deg": 50.0,
+      "azimuth_deg": 225.0,
+      "roll_deg": 190.0,
+      "design_roll_deg": -45.0,
+      "target_tcp_pose_m_rad": [
+        0.4270229467868183,
+        -0.003476495879166097,
+        0.4860283299329534,
+        -0.9356008506462847,
+        2.9101166341540443,
+        0.4879550834163125
+      ],
+      "target_tcp_pose_m_deg": [
+        0.4270229467868183,
+        -0.003476495879166097,
+        0.4860283299329534,
+        -53.6059800508818,
+        166.7374010278434,
+        27.957766871708735
+      ],
+      "camera_origin_base_m": [
+        0.23400346864804883,
+        0.22696090752764514,
+        0.3591146660619543
+      ],
+      "camera_height_above_board_m": 0.3707163763853385,
+      "flange_height_above_board_m": 0.4976300402563376,
+      "viewing_side_check": 0.6427876096865345,
+      "roll_selection": {
+        "scored": 49,
+        "rejected": 23,
+        "rejection_reasons": [
+          "flange_below_floor"
+        ],
+        "joint_margin_rad": null,
+        "camera_clearance_m": null,
+        "q_rad": null
+      },
+      "below_clearance_floor": false
+    },
+    {
+      "slot": 23,
+      "shell": "A3",
+      "role": "primary",
+      "distance_m": 0.58,
+      "tilt_deg": 50.0,
+      "azimuth_deg": 270.0,
+      "roll_deg": 190.0,
+      "design_roll_deg": 45.0,
+      "target_tcp_pose_m_rad": [
+        0.5316675857177928,
+        0.028886424207043848,
+        0.48689090701663773,
+        0.24075220130913555,
+        2.9375523044025944,
+        0.4174176042845268
+      ],
+      "target_tcp_pose_m_deg": [
+        0.5316675857177928,
+        0.028886424207043848,
+        0.48689090701663773,
+        13.79408504349744,
+        168.30934914119794,
+        23.916267019965293
+      ],
+      "camera_origin_base_m": [
+        0.558361374747363,
+        0.3290564655042313,
+        0.3617894208468715
+      ],
+      "camera_height_above_board_m": 0.3733911311702557,
+      "flange_height_above_board_m": 0.4984926173400219,
+      "viewing_side_check": 0.6427876096865449,
+      "roll_selection": {
+        "scored": 49,
+        "rejected": 23,
+        "rejection_reasons": [
+          "flange_below_floor"
+        ],
+        "joint_margin_rad": null,
+        "camera_clearance_m": null,
+        "q_rad": null
+      },
+      "below_clearance_floor": false
+    },
+    {
+      "slot": 24,
+      "shell": "A3",
+      "role": "primary",
+      "distance_m": 0.58,
+      "tilt_deg": 50.0,
+      "azimuth_deg": 315.0,
+      "roll_deg": 190.0,
+      "design_roll_deg": -45.0,
+      "target_tcp_pose_m_rad": [
+        0.6285461896661605,
+        -0.02222696770709251,
+        0.48763947683501263,
+        1.3113865968142127,
+        2.5505480697888565,
+        0.2925383987367205
+      ],
+      "target_tcp_pose_m_deg": [
+        0.6285461896661605,
+        -0.02222696770709251,
+        0.48763947683501263,
+        75.13691730747851,
+        146.13563984414003,
+        16.761215593129297
+      ],
+      "camera_origin_base_m": [
+        0.8599083232370117,
+        0.17188550172481232,
+        0.3641206269877676
+      ],
+      "camera_height_above_board_m": 0.3757223373111518,
+      "flange_height_above_board_m": 0.4992411871583968,
+      "viewing_side_check": 0.642787609686556,
+      "roll_selection": {
+        "scored": 49,
+        "rejected": 23,
+        "rejection_reasons": [
+          "flange_below_floor"
+        ],
+        "joint_margin_rad": null,
+        "camera_clearance_m": null,
+        "q_rad": null
+      },
+      "below_clearance_floor": false
+    },
+    {
+      "slot": 25,
+      "shell": "A1",
+      "role": "repeatability",
+      "distance_m": 0.35,
+      "tilt_deg": 15.0,
+      "azimuth_deg": 0.0,
+      "roll_deg": 190.0,
+      "design_roll_deg": 25.0,
+      "target_tcp_pose_m_rad": [
+        0.2929706829312528,
+        -0.09419405135275884,
+        0.25469176738924393,
+        1.8056863327206398,
+        1.4497230254887412,
+        0.6515567822671096
+      ],
+      "target_tcp_pose_m_deg": [
+        0.2929706829312528,
+        -0.09419405135275884,
+        0.25469176738924393,
+        103.45820598934799,
+        83.06301082344154,
+        37.3314537370297
+      ],
+      "camera_origin_base_m": [
+        0.6099355092002565,
+        -0.1214578320463413,
+        0.3271830018769468
+      ],
+      "camera_height_above_board_m": 0.338784712200331,
+      "flange_height_above_board_m": 0.2662934777126281,
+      "viewing_side_check": 0.9659258262890834,
+      "roll_selection": {
+        "scored": 47,
+        "rejected": 25,
+        "rejection_reasons": [
+          "flange_below_floor"
+        ],
+        "joint_margin_rad": null,
+        "camera_clearance_m": null,
+        "q_rad": null
+      },
+      "below_clearance_floor": false
+    },
+    {
+      "slot": 26,
+      "shell": "A2",
+      "role": "repeatability",
+      "distance_m": 0.45,
+      "tilt_deg": 30.0,
+      "azimuth_deg": 180.0,
+      "roll_deg": 190.0,
+      "design_roll_deg": -25.0,
+      "target_tcp_pose_m_rad": [
+        0.6197834065304288,
+        -0.12169288914471517,
+        0.3938179862097738,
+        1.7253361407894792,
+        -2.0928002709762237,
+        -0.774705462638677
+      ],
+      "target_tcp_pose_m_deg": [
+        0.6197834065304288,
+        -0.12169288914471517,
+        0.3938179862097738,
+        98.85447910862636,
+        -119.90862289077265,
+        -44.38735337492607
+      ],
+      "camera_origin_base_m": [
+        0.29515775334463956,
+        -0.0938279383462566,
+        0.3763044566483993
+      ],
+      "camera_height_above_board_m": 0.3879061669717835,
+      "flange_height_above_board_m": 0.405419696533158,
+      "viewing_side_check": 0.8660254037844378,
+      "roll_selection": {
+        "scored": 53,
+        "rejected": 19,
+        "rejection_reasons": [
+          "flange_below_floor"
+        ],
+        "joint_margin_rad": null,
+        "camera_clearance_m": null,
+        "q_rad": null
+      },
+      "below_clearance_floor": false
+    }
+  ]
+}

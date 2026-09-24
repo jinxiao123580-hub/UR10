@@ -1,0 +1,212 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-09-18T11:35:01+08:00",
+  "purpose": "offline numerical gate for the top-face cube measurement before any real capture",
+  "scene_model": "pinhole ray cast of table + checkerboard plate + yaw-rotated cube, organised grid with holes, self-occlusion, range noise and spikes",
+  "cases": [
+    {
+      "case": "oblique_top_visible_50mm",
+      "expected_status": "measured",
+      "status": "measured",
+      "reasons": [],
+      "gates": {
+        "cluster_points": true,
+        "reference_plane": true,
+        "top_face_points": true,
+        "top_face_parallel": true,
+        "height_positive": true,
+        "coverage": true,
+        "square": true
+      },
+      "center_error_mm": 0.5107879737858245,
+      "tolerance_mm": 1.5,
+      "measured_height_mm": 49.97454544316414,
+      "measured_edges_mm": [
+        51.1588454246521,
+        50.399117171764374
+      ],
+      "coverage": 0.9825704738780705,
+      "height_vs_edge_mm": -0.8044358550440972,
+      "truth_center_m": [
+        0.06,
+        -0.12,
+        0.025
+      ],
+      "measured_center_m": [
+        0.06046540290117264,
+        -0.12021009624004364,
+        0.024987191266110924
+      ],
+      "passed": true
+    },
+    {
+      "case": "measured_45mm_size_prior_mismatch",
+      "expected_status": "measured_size_prior_mismatch",
+      "status": "measured_size_prior_mismatch",
+      "reasons": [
+        "measured edges [0.04634, 0.04532] m disagree with the nominal 0.050 m prior"
+      ],
+      "gates": {
+        "cluster_points": true,
+        "reference_plane": true,
+        "top_face_points": true,
+        "top_face_parallel": true,
+        "height_positive": true,
+        "coverage": true,
+        "square": true
+      },
+      "center_error_mm": 0.4674303108496133,
+      "tolerance_mm": 1.5,
+      "measured_height_mm": 44.97704862312199,
+      "measured_edges_mm": [
+        46.340346336364746,
+        45.31589895486832
+      ],
+      "coverage": 0.9731583438176264,
+      "height_vs_edge_mm": -0.8510740224945412,
+      "truth_center_m": [
+        0.06,
+        -0.12,
+        0.0225
+      ],
+      "measured_center_m": [
+        0.060457222163677216,
+        -0.11990359425544739,
+        0.022487961687803232
+      ],
+      "passed": true
+    },
+    {
+      "case": "grazing_view_must_reject",
+      "expected_status": "rejected",
+      "status": "rejected",
+      "reasons": [
+        "no plane parallel to the board inside the cluster"
+      ],
+      "gates": {
+        "cluster_points": true,
+        "reference_plane": true
+      },
+      "center_error_mm": null,
+      "tolerance_mm": 0.0,
+      "measured_height_mm": null,
+      "measured_edges_mm": null,
+      "coverage": null,
+      "height_vs_edge_mm": null,
+      "truth_center_m": [
+        0.06,
+        -0.12,
+        0.025
+      ],
+      "measured_center_m": null,
+      "passed": true
+    },
+    {
+      "case": "noisy_sparse_with_outliers",
+      "expected_status": "measured",
+      "status": "measured",
+      "reasons": [],
+      "gates": {
+        "cluster_points": true,
+        "reference_plane": true,
+        "top_face_points": true,
+        "top_face_parallel": true,
+        "height_positive": true,
+        "coverage": true,
+        "square": true
+      },
+      "center_error_mm": 0.6045901867589422,
+      "tolerance_mm": 2.0,
+      "measured_height_mm": 49.92260234934874,
+      "measured_edges_mm": [
+        52.156612277030945,
+        51.32432281970978
+      ],
+      "coverage": 0.9566724995466367,
+      "height_vs_edge_mm": -1.8178651990216204,
+      "truth_center_m": [
+        0.06,
+        -0.12,
+        0.025
+      ],
+      "measured_center_m": [
+        0.06058398634195328,
+        -0.11984782665967941,
+        0.024963496290148594
+      ],
+      "passed": true
+    },
+    {
+      "case": "board_plate_5mm_standing_surface",
+      "expected_status": "measured",
+      "status": "measured",
+      "reasons": [],
+      "gates": {
+        "cluster_points": true,
+        "reference_plane": true,
+        "top_face_points": true,
+        "top_face_parallel": true,
+        "height_positive": true,
+        "coverage": true,
+        "square": true
+      },
+      "center_error_mm": 0.305838448683289,
+      "tolerance_mm": 1.5,
+      "measured_height_mm": 49.96407311184721,
+      "measured_edges_mm": [
+        50.983063876628876,
+        50.48168823122978
+      ],
+      "coverage": 0.9763085466138894,
+      "height_vs_edge_mm": -0.7683029420821121,
+      "truth_center_m": [
+        0.06,
+        -0.12,
+        0.02
+      ],
+      "measured_center_m": [
+        0.060097917914390564,
+        -0.11971084028482437,
+        0.01998167248369379
+      ],
+      "passed": true
+    },
+    {
+      "case": "cube_yaw_20deg",
+      "expected_status": "measured",
+      "status": "measured",
+      "reasons": [],
+      "gates": {
+        "cluster_points": true,
+        "reference_plane": true,
+        "top_face_points": true,
+        "top_face_parallel": true,
+        "height_positive": true,
+        "coverage": true,
+        "square": true
+      },
+      "center_error_mm": 0.39530188474212075,
+      "tolerance_mm": 2.0,
+      "measured_height_mm": 49.969823392932376,
+      "measured_edges_mm": [
+        51.324259489774704,
+        50.84805563092232
+      ],
+      "coverage": 0.9791596900926547,
+      "height_vs_edge_mm": -1.1163341674161331,
+      "truth_center_m": [
+        0.06,
+        -0.12,
+        0.025
+      ],
+      "measured_center_m": [
+        0.060373567044734955,
+        -0.12012835592031479,
+        0.02498463767957612
+      ],
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "failed_cases": []
+}

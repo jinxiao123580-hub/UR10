@@ -1,0 +1,5 @@
+[桥] rclpy 节点 ros_web_bridge 就绪；Mech-Eye 服务类型: 可用
+[桥] HTTP 服务 http://127.0.0.1:8080/  （web_dashboard/）
+[桥] WebSocket ws://127.0.0.1:9090/
+/home/jx/UR10/scripts/ros_web_bridge.py:341: RuntimeWarning: invalid value encountered in cast
+  gray = (norm * 255).astype(np.uint8)

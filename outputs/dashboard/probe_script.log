@@ -1,0 +1,13 @@
+==> 启动 ROS→Web 桥 (ws://:9090, http://:8080)
+==> 启动 ATI 力传感器节点 → /ft_sensor/wrench_raw
+==> 跳过相机
+
+===========================================================
+  监控台地址: http://127.0.0.1:8080/
+  原始力: /ft_sensor/wrench_raw（实时 200Hz，不受 Tare 影响）
+  重力补偿: 未启动（当前模型未独立验证）
+  相机  : Mech-Eye（需 SDK，服务触发式采集）
+  停止  : bash scripts/start_dashboard.sh --stop
+===========================================================
+（未自动打开浏览器，请手动访问 http://127.0.0.1:8080/）
+scripts/start_dashboard.sh: line 112:  9083 Killed                  python3 "$SCRIPT_DIR/ros_web_bridge.py" > "$LOG_DIR/web_bridge.log" 2>&1

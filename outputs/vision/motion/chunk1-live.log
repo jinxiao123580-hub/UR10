@@ -1,0 +1,13 @@
+/usr/lib/python3/dist-packages/scipy/__init__.py:146: UserWarning: A NumPy version >=1.17.3 and <1.25.0 is required for this version of SciPy (detected version 1.26.4
+  warnings.warn(f"A NumPy version >={np_minversion} and <{np_maxversion}"
+当前 TCP: [0.6474, -0.2685, 0.326]
+门禁校验：通过（漂移 0.00002 rad，首段起点差 0.02 mm，共 20 段 / 5 槽）
+重放门禁访问顺序: [5, 4, 3, 2, 22, 13, 21, 20, 1, 25, 19, 18, 10, 14, 8, 7, 6, 12, 11, 26, 16, 24, 23, 15, 9, 17]
+robotmode Robotmode: RUNNING / safetystatus Safetystatus: NORMAL
+静止受力基线 |F| = 7.667 N（用于变化量判据）
+  slot 5   lift       arrived  位置  0.246 mm  姿态  0.019°    5.7s  最大偏离  0.122 mm  |F|变化   1.28 N
+  slot 5   reorient   stalled  位置  0.600 mm  姿态 44.033°   12.2s  最大偏离  0.928 mm  |F|变化   1.69 N
+  -> 该段未正常到位（stalled），停止后续运动
+
+结果：FAIL
+OUTPUT: /home/jx/UR10/outputs/vision/motion/run-20260918-125942.json

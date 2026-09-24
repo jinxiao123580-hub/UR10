@@ -1,0 +1,1410 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-09-19T09:57:25.704378+08:00",
+  "kind": "pose_advisor_plan",
+  "infeasible_slots": [
+    {
+      "slot": 5,
+      "shell": "A1",
+      "distance_m": 0.35,
+      "tilt_deg": 15.0,
+      "azimuth_deg": 180.0,
+      "reason": "no roll satisfies the clearance and IK gates for slot 5 (distance 0.35 m, tilt 15.0 deg, azimuth 180.0 deg)"
+    },
+    {
+      "slot": 6,
+      "shell": "A1",
+      "distance_m": 0.35,
+      "tilt_deg": 15.0,
+      "azimuth_deg": 225.0,
+      "reason": "no roll satisfies the clearance and IK gates for slot 6 (distance 0.35 m, tilt 15.0 deg, azimuth 225.0 deg)"
+    },
+    {
+      "slot": 13,
+      "shell": "A2",
+      "distance_m": 0.45,
+      "tilt_deg": 30.0,
+      "azimuth_deg": 180.0,
+      "reason": "no roll satisfies the clearance and IK gates for slot 13 (distance 0.45 m, tilt 30.0 deg, azimuth 180.0 deg)"
+    },
+    {
+      "slot": 26,
+      "shell": "A2",
+      "distance_m": 0.45,
+      "tilt_deg": 30.0,
+      "azimuth_deg": 180.0,
+      "reason": "no roll satisfies the clearance and IK gates for slot 26 (distance 0.45 m, tilt 30.0 deg, azimuth 180.0 deg)"
+    },
+    {
+      "slot": 21,
+      "shell": "A3",
+      "distance_m": 0.58,
+      "tilt_deg": 50.0,
+      "azimuth_deg": 180.0,
+      "reason": "no roll satisfies the clearance and IK gates for slot 21 (distance 0.58 m, tilt 50.0 deg, azimuth 180.0 deg)"
+    }
+  ],
+  "self_collision_margin_mm": 40.0,
+  "flange_floor_m": 0.25,
+  "guidance_only": true,
+  "warning": "base_from_target is estimated from one reference sample plus the guidance YAML; it inherits that calibration's error and must not be quoted as a measurement",
+  "reference_sample": "20260919-095449-702392",
+  "reference_source": "outputs/handeye/samples/20260919-095449-702392/sample.json",
+  "guidance_calibration": "config/handeye_eye_in_hand_20260917.yaml",
+  "base_from_target_estimate": [
+    [
+      -0.9961193168291022,
+      0.0876440110298843,
+      0.008051954455194636,
+      0.5224225383299288
+    ],
+    [
+      0.08765178157698036,
+      0.9961509850351408,
+      0.0006166035201296144,
+      -0.11330929176045434
+    ],
+    [
+      -0.007966920756301043,
+      0.0013199788303989105,
+      -0.9999673923831521,
+      -0.011601710323384223
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "ik_filtered": true,
+  "ik_seed_source": "explicit --ik-seed-q",
+  "ik_seed_q_rad": [
+    0.244589,
+    -1.737201,
+    -1.905667,
+    -4.27994,
+    4.756569,
+    -2.693686
+  ],
+  "plan": [
+    {
+      "slot": 1,
+      "shell": "A1",
+      "role": "primary",
+      "distance_m": 0.35,
+      "tilt_deg": 15.0,
+      "azimuth_deg": 0.0,
+      "roll_deg": 170.0,
+      "design_roll_deg": 25.0,
+      "target_tcp_pose_m_rad": [
+        0.30137456142609464,
+        -0.19436284077796864,
+        0.25011163807981107,
+        1.6320286776797719,
+        1.7638066907857477,
+        0.9008214500973241
+      ],
+      "target_tcp_pose_m_deg": [
+        0.30137456142609464,
+        -0.19436284077796864,
+        0.25011163807981107,
+        93.5083552753675,
+        101.05867925895957,
+        51.61326718543137
+      ],
+      "camera_origin_base_m": [
+        0.6099355092002565,
+        -0.1214578320463413,
+        0.3271830018769468
+      ],
+      "camera_height_above_board_m": 0.338784712200331,
+      "flange_height_above_board_m": 0.26171334840319527,
+      "viewing_side_check": 0.9659258262890834,
+      "roll_selection": {
+        "scored": 6,
+        "rejected": 66,
+        "rejection_reasons": [
+          "flange_below_floor",
+          "ik:camera_clearance_37mm_lt_40mm(camera_bracket vs wrist_1_link_0)",
+          "ik:camera_clearance_38mm_lt_40mm(camera_bracket vs wrist_1_link_0)",
+          "ik:camera_clearance_39mm_lt_40mm(camera_bracket vs wrist_1_link_0)"
+        ],
+        "joint_margin_rad": 0.7348713979405681,
+        "camera_clearance_m": 0.043020397711689314,
+        "q_rad": [
+          -0.16130976034592812,
+          -1.3427419243732994,
+          -2.406721255649225,
+          -3.2129401930808053,
+          4.488111411704041,
+          -0.13135880204932712
+        ]
+      },
+      "below_clearance_floor": false
+    },
+    {
+      "slot": 25,
+      "shell": "A1",
+      "role": "repeatability",
+      "distance_m": 0.35,
+      "tilt_deg": 15.0,
+      "azimuth_deg": 0.0,
+      "roll_deg": 170.0,
+      "design_roll_deg": 25.0,
+      "target_tcp_pose_m_rad": [
+        0.30137456142609464,
+        -0.19436284077796864,
+        0.25011163807981107,
+        1.6320286776797719,
+        1.7638066907857477,
+        0.9008214500973241
+      ],
+      "target_tcp_pose_m_deg": [
+        0.30137456142609464,
+        -0.19436284077796864,
+        0.25011163807981107,
+        93.5083552753675,
+        101.05867925895957,
+        51.61326718543137
+      ],
+      "camera_origin_base_m": [
+        0.6099355092002565,
+        -0.1214578320463413,
+        0.3271830018769468
+      ],
+      "camera_height_above_board_m": 0.338784712200331,
+      "flange_height_above_board_m": 0.26171334840319527,
+      "viewing_side_check": 0.9659258262890834,
+      "roll_selection": {
+        "scored": 6,
+        "rejected": 66,
+        "rejection_reasons": [
+          "flange_below_floor",
+          "ik:camera_clearance_37mm_lt_40mm(camera_bracket vs wrist_1_link_0)",
+          "ik:camera_clearance_38mm_lt_40mm(camera_bracket vs wrist_1_link_0)",
+          "ik:camera_clearance_39mm_lt_40mm(camera_bracket vs wrist_1_link_0)"
+        ],
+        "joint_margin_rad": 0.7348713979405681,
+        "camera_clearance_m": 0.043020397711689314,
+        "q_rad": [
+          -0.16130976034592812,
+          -1.3427419243732994,
+          -2.406721255649225,
+          -3.2129401930808053,
+          4.488111411704041,
+          -0.13135880204932712
+        ]
+      },
+      "below_clearance_floor": false
+    },
+    {
+      "slot": 2,
+      "shell": "A1",
+      "role": "primary",
+      "distance_m": 0.35,
+      "tilt_deg": 15.0,
+      "azimuth_deg": 45.0,
+      "roll_deg": 210.0,
+      "design_roll_deg": 25.0,
+      "target_tcp_pose_m_rad": [
+        0.4598753502386114,
+        0.11182155736857108,
+        0.2517036497936067,
+        2.1840596879159775,
+        0.2950181441756369,
+        -0.030897853655482293
+      ],
+      "target_tcp_pose_m_deg": [
+        0.4598753502386114,
+        0.11182155736857108,
+        0.2517036497936067,
+        125.13740232224524,
+        16.903294541046023,
+        -1.770316610471998
+      ],
+      "camera_origin_base_m": [
+        0.5778922636746335,
+        -0.18294013482567156,
+        0.32688707126946626
+      ],
+      "camera_height_above_board_m": 0.33848878159285045,
+      "flange_height_above_board_m": 0.2633053601169909,
+      "viewing_side_check": 0.9659258262890826,
+      "roll_selection": {
+        "scored": 7,
+        "rejected": 65,
+        "rejection_reasons": [
+          "flange_below_floor",
+          "ik:camera_clearance_38mm_lt_40mm(camera_bracket vs wrist_1_link_0)",
+          "ik:camera_clearance_40mm_lt_40mm(camera_bracket vs wrist_1_link_0)"
+        ],
+        "joint_margin_rad": 0.858388053541125,
+        "camera_clearance_m": 0.04938091710614285,
+        "q_rad": [
+          0.7320573400226299,
+          -1.9341535259066776,
+          -2.1567029146645242,
+          -4.436693990407445,
+          5.424797253638461,
+          -3.9897766849815257
+        ]
+      },
+      "below_clearance_floor": false
+    },
+    {
+      "slot": 3,
+      "shell": "A1",
+      "role": "primary",
+      "distance_m": 0.35,
+      "tilt_deg": 15.0,
+      "azimuth_deg": 90.0,
+      "roll_deg": 215.0,
+      "design_roll_deg": 25.0,
+      "target_tcp_pose_m_rad": [
+        0.6593658942069438,
+        0.07726247962757826,
+        0.2508000424626745,
+        2.151901166119752,
+        -0.6545700062120184,
+        -0.534011225080422
+      ],
+      "target_tcp_pose_m_deg": [
+        0.6593658942069438,
+        0.07726247962757826,
+        0.2508000424626745,
+        123.29485474794204,
+        -37.50409875180073,
+        -30.596589409718835
+      ],
+      "camera_origin_base_m": [
+        0.511761002828499,
+        -0.20375574575674593,
+        0.32634173260789945
+      ],
+      "camera_height_above_board_m": 0.33794344293128364,
+      "flange_height_above_board_m": 0.2624017527860587,
+      "viewing_side_check": 0.9659258262890789,
+      "roll_selection": {
+        "scored": 10,
+        "rejected": 62,
+        "rejection_reasons": [
+          "flange_below_floor"
+        ],
+        "joint_margin_rad": 1.2632779412158248,
+        "camera_clearance_m": 0.04927334874144346,
+        "q_rad": [
+          0.40980971192047505,
+          -2.2175886739074926,
+          -1.703237002747318,
+          -4.842251479015866,
+          5.019907365963761,
+          -3.5608167856404283
+        ]
+      },
+      "below_clearance_floor": false
+    },
+    {
+      "slot": 4,
+      "shell": "A1",
+      "role": "primary",
+      "distance_m": 0.35,
+      "tilt_deg": 15.0,
+      "azimuth_deg": 135.0,
+      "roll_deg": 180.0,
+      "design_roll_deg": 25.0,
+      "target_tcp_pose_m_rad": [
+        0.6589621104095452,
+        0.06935881711382771,
+        0.2565681423644895,
+        2.0839343309913723,
+        -0.9522400484320458,
+        -0.4596404536432396
+      ],
+      "target_tcp_pose_m_deg": [
+        0.6589621104095452,
+        0.06935881711382771,
+        0.2565681423644895,
+        119.40064194822439,
+        -54.55933585848933,
+        -26.33545808723619
+      ],
+      "camera_origin_base_m": [
+        0.4502805223686856,
+        -0.17171116226522268,
+        0.32586643788410585
+      ],
+      "camera_height_above_board_m": 0.33746814820749005,
+      "flange_height_above_board_m": 0.26816985268787374,
+      "viewing_side_check": 0.9659258262890749,
+      "roll_selection": {
+        "scored": 4,
+        "rejected": 68,
+        "rejection_reasons": [
+          "flange_below_floor",
+          "ik:camera_clearance_-0mm_lt_40mm(camera_housing vs upper_arm_link_0)",
+          "ik:camera_clearance_-1mm_lt_40mm(camera_housing vs upper_arm_link_0)",
+          "ik:camera_clearance_-3mm_lt_40mm(camera_housing vs upper_arm_link_0)",
+          "ik:camera_clearance_-4mm_lt_40mm(camera_housing vs upper_arm_link_0)",
+          "ik:camera_clearance_25mm_lt_40mm(camera_housing vs upper_arm_link_0)",
+          "ik:camera_clearance_9mm_lt_40mm(camera_housing vs upper_arm_link_0)"
+        ],
+        "joint_margin_rad": 1.3240794596787602,
+        "camera_clearance_m": 0.04066778872468699,
+        "q_rad": [
+          0.39012436394070354,
+          -2.206415916782117,
+          -1.6933523273179958,
+          -4.820866708653404,
+          4.959105847500826,
+          -3.350437102278883
+        ]
+      },
+      "below_clearance_floor": false
+    },
+    {
+      "slot": 7,
+      "shell": "A1",
+      "role": "primary",
+      "distance_m": 0.35,
+      "tilt_deg": 15.0,
+      "azimuth_deg": 270.0,
+      "roll_deg": 205.0,
+      "design_roll_deg": 25.0,
+      "target_tcp_pose_m_rad": [
+        0.42710225931250445,
+        -0.3248772406340745,
+        0.2531223158840509,
+        0.5497930361196128,
+        2.487845042023767,
+        1.1914768800899385
+      ],
+      "target_tcp_pose_m_deg": [
+        0.42710225931250445,
+        -0.3248772406340745,
+        0.2531223158840509,
+        31.500820575337443,
+        142.54302099050878,
+        68.26659661656834
+      ],
+      "camera_origin_base_m": [
+        0.5276397602990955,
+        -0.023279753049434526,
+        0.32658087757020693
+      ],
+      "camera_height_above_board_m": 0.3381825878935911,
+      "flange_height_above_board_m": 0.26472402620743507,
+      "viewing_side_check": 0.9659258262890779,
+      "roll_selection": {
+        "scored": 1,
+        "rejected": 71,
+        "rejection_reasons": [
+          "flange_below_floor",
+          "ik:camera_clearance_10mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_14mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_18mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_23mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_28mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_32mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_36mm_lt_40mm(gripper_body vs forearm_link_0)",
+          "ik:camera_clearance_37mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_40mm_lt_40mm(camera_bracket vs forearm_link_0)"
+        ],
+        "joint_margin_rad": 1.1915080122522428,
+        "camera_clearance_m": 0.04074456665804767,
+        "q_rad": [
+          -0.4809602138615443,
+          -1.9142024810403238,
+          -1.9500846413375503,
+          -3.8434033559065384,
+          3.7895760846257045,
+          -1.543930722476542
+        ]
+      },
+      "below_clearance_floor": false
+    },
+    {
+      "slot": 8,
+      "shell": "A1",
+      "role": "primary",
+      "distance_m": 0.35,
+      "tilt_deg": 15.0,
+      "azimuth_deg": 315.0,
+      "roll_deg": 210.0,
+      "design_roll_deg": 25.0,
+      "target_tcp_pose_m_rad": [
+        0.2950136840955096,
+        -0.17389689223098392,
+        0.25019996713311554,
+        1.4050835360073217,
+        1.8519897172658375,
+        0.8102493353784499
+      ],
+      "target_tcp_pose_m_deg": [
+        0.2950136840955096,
+        -0.17389689223098392,
+        0.25019996713311554,
+        80.50535647653757,
+        106.1111945009591,
+        46.42386727046516
+      ],
+      "camera_origin_base_m": [
+        0.5891202407589089,
+        -0.05532433654095775,
+        0.3270561722940005
+      ],
+      "camera_height_above_board_m": 0.3386578826173847,
+      "flange_height_above_board_m": 0.26180167745649974,
+      "viewing_side_check": 0.9659258262890819,
+      "roll_selection": {
+        "scored": 1,
+        "rejected": 71,
+        "rejection_reasons": [
+          "flange_below_floor",
+          "ik:camera_clearance_18mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_20mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_23mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_32mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_33mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_38mm_lt_40mm(camera_bracket vs wrist_1_link_0)",
+          "ik:camera_clearance_39mm_lt_40mm(camera_bracket vs wrist_1_link_0)",
+          "ik:camera_clearance_40mm_lt_40mm(camera_bracket vs wrist_1_link_0)"
+        ],
+        "joint_margin_rad": 0.6957077614342588,
+        "camera_clearance_m": 0.041135082326988086,
+        "q_rad": [
+          -0.07678768558267964,
+          -1.2815108959472443,
+          -2.4458848921555343,
+          -3.188380125894166,
+          4.5688636951234365,
+          -0.2766699197261918
+        ]
+      },
+      "below_clearance_floor": false
+    },
+    {
+      "slot": 9,
+      "shell": "A2",
+      "role": "primary",
+      "distance_m": 0.45,
+      "tilt_deg": 30.0,
+      "azimuth_deg": 0.0,
+      "roll_deg": 280.0,
+      "design_roll_deg": -25.0,
+      "target_tcp_pose_m_rad": [
+        0.6944933447533396,
+        0.16206145647783843,
+        0.25007966518961133,
+        1.9001510091068345,
+        0.09960543040537752,
+        -0.6772344884465026
+      ],
+      "target_tcp_pose_m_deg": [
+        0.6944933447533396,
+        0.16206145647783843,
+        0.25007966518961133,
+        108.87063325934608,
+        5.706970778812177,
+        -38.80267792868591
+      ],
+      "camera_origin_base_m": [
+        0.7434114459177356,
+        -0.13327124005589774,
+        0.37988957098873477
+      ],
+      "camera_height_above_board_m": 0.39149128131211897,
+      "flange_height_above_board_m": 0.26168137551299553,
+      "viewing_side_check": 0.8660254037844578,
+      "roll_selection": {
+        "scored": 19,
+        "rejected": 53,
+        "rejection_reasons": [
+          "flange_below_floor",
+          "ik:camera_clearance_-0mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_-0mm_lt_40mm(force_sensor vs forearm_link_0)",
+          "ik:camera_clearance_-2mm_lt_40mm(force_sensor vs forearm_link_0)",
+          "ik:camera_clearance_10mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_13mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_15mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_26mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_37mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_37mm_lt_40mm(camera_bracket vs wrist_1_link_0)",
+          "ik:camera_clearance_38mm_lt_40mm(camera_bracket vs wrist_1_link_0)",
+          "ik:camera_clearance_39mm_lt_40mm(camera_bracket vs wrist_1_link_0)",
+          "ik:camera_clearance_3mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_40mm_lt_40mm(camera_bracket vs wrist_1_link_0)"
+        ],
+        "joint_margin_rad": 0.9974861357301847,
+        "camera_clearance_m": 0.04946527205780986,
+        "q_rad": [
+          0.5339516730237476,
+          -2.2914411667072145,
+          -1.677653658875047,
+          -5.125047854619874,
+          5.2856991714494015,
+          -3.8682820584468858
+        ]
+      },
+      "below_clearance_floor": false
+    },
+    {
+      "slot": 10,
+      "shell": "A2",
+      "role": "primary",
+      "distance_m": 0.45,
+      "tilt_deg": 30.0,
+      "azimuth_deg": 45.0,
+      "roll_deg": 145.0,
+      "design_roll_deg": -25.0,
+      "target_tcp_pose_m_rad": [
+        0.34476156685326725,
+        -0.22476697403400211,
+        0.3488539984330017,
+        2.1637622479103036,
+        1.4023326804643788,
+        0.8829463830919441
+      ],
+      "target_tcp_pose_m_deg": [
+        0.34476156685326725,
+        -0.22476697403400211,
+        0.3488539984330017,
+        123.97444467500013,
+        80.34774406387677,
+        50.58910128750954
+      ],
+      "camera_origin_base_m": [
+        0.6638221357171962,
+        -0.2859815534926158,
+        0.3791545358033077
+      ],
+      "camera_height_above_board_m": 0.3907562461266919,
+      "flange_height_above_board_m": 0.3604557087563859,
+      "viewing_side_check": 0.8660254037844554,
+      "roll_selection": {
+        "scored": 23,
+        "rejected": 49,
+        "rejection_reasons": [
+          "flange_below_floor",
+          "ik:camera_clearance_-0mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_-2mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_19mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_35mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_37mm_lt_40mm(camera_bracket vs wrist_1_link_0)",
+          "ik:camera_clearance_38mm_lt_40mm(camera_bracket vs wrist_1_link_0)",
+          "ik:camera_clearance_39mm_lt_40mm(camera_bracket vs wrist_1_link_0)",
+          "ik:camera_clearance_40mm_lt_40mm(camera_bracket vs wrist_1_link_0)",
+          "ik:camera_clearance_4mm_lt_40mm(camera_bracket vs forearm_link_0)"
+        ],
+        "joint_margin_rad": 0.3156449319500636,
+        "camera_clearance_m": 0.04932930484819632,
+        "q_rad": [
+          1.9917487947252068,
+          0.322562719613361,
+          -2.5923717060666243,
+          -5.967540375229523,
+          5.40502956009167,
+          -3.730880889609887
+        ]
+      },
+      "below_clearance_floor": false
+    },
+    {
+      "slot": 11,
+      "shell": "A2",
+      "role": "primary",
+      "distance_m": 0.45,
+      "tilt_deg": 30.0,
+      "azimuth_deg": 90.0,
+      "roll_deg": 245.0,
+      "design_roll_deg": -25.0,
+      "target_tcp_pose_m_rad": [
+        0.7551820450568871,
+        -0.13980838452174443,
+        0.3334133093640908,
+        2.1606738820901903,
+        -1.057004447078432,
+        -1.1163793552208816
+      ],
+      "target_tcp_pose_m_deg": [
+        0.7551820450568871,
+        -0.13980838452174443,
+        0.3334133093640908,
+        123.79749434791518,
+        -60.56189374415334,
+        -63.963825389692644
+      ],
+      "camera_origin_base_m": [
+        0.4995646971494636,
+        -0.3376835608339838,
+        0.3778000185817273
+      ],
+      "camera_height_above_board_m": 0.3894017289051115,
+      "flange_height_above_board_m": 0.34501501968747506,
+      "viewing_side_check": 0.8660254037844486,
+      "roll_selection": {
+        "scored": 22,
+        "rejected": 50,
+        "rejection_reasons": [
+          "flange_below_floor",
+          "ik:camera_clearance_-0mm_lt_40mm(camera_housing vs upper_arm_link_0)",
+          "ik:camera_clearance_-1mm_lt_40mm(camera_housing vs upper_arm_link_0)",
+          "ik:camera_clearance_-3mm_lt_40mm(camera_housing vs upper_arm_link_0)",
+          "ik:camera_clearance_1mm_lt_40mm(camera_housing vs upper_arm_link_0)",
+          "ik:camera_clearance_22mm_lt_40mm(gripper_body vs upper_arm_link_0)",
+          "ik:camera_clearance_24mm_lt_40mm(camera_housing vs upper_arm_link_0)",
+          "ik:camera_clearance_29mm_lt_40mm(gripper_body vs upper_arm_link_0)",
+          "ik:camera_clearance_32mm_lt_40mm(force_sensor vs forearm_link_0)",
+          "ik:camera_clearance_36mm_lt_40mm(gripper_body vs upper_arm_link_0)",
+          "ik:camera_clearance_37mm_lt_40mm(camera_bracket vs wrist_1_link_0)",
+          "ik:camera_clearance_37mm_lt_40mm(force_sensor vs forearm_link_0)",
+          "ik:camera_clearance_38mm_lt_40mm(camera_bracket vs wrist_1_link_0)",
+          "ik:camera_clearance_39mm_lt_40mm(camera_bracket vs wrist_1_link_0)"
+        ],
+        "joint_margin_rad": 1.1342162113925642,
+        "camera_clearance_m": 0.043285599975272926,
+        "q_rad": [
+          0.036593163695474475,
+          -2.2897256080986708,
+          -1.4046991343047524,
+          -5.148969095787022,
+          4.749296565713917,
+          -3.74594163856705
+        ]
+      },
+      "below_clearance_floor": false
+    },
+    {
+      "slot": 12,
+      "shell": "A2",
+      "role": "primary",
+      "distance_m": 0.45,
+      "tilt_deg": 30.0,
+      "azimuth_deg": 135.0,
+      "roll_deg": 115.0,
+      "design_roll_deg": -25.0,
+      "target_tcp_pose_m_rad": [
+        0.27451013850977496,
+        0.046119633847768904,
+        0.2834176337774911,
+        2.204346967823537,
+        -0.020700677610715423,
+        0.6411094037620303
+      ],
+      "target_tcp_pose_m_deg": [
+        0.27451013850977496,
+        0.046119633847768904,
+        0.2834176337774911,
+        126.29977783874895,
+        -1.1860614601549506,
+        36.73286304171296
+      ],
+      "camera_origin_base_m": [
+        0.3468589100068501,
+        -0.25809092738134165,
+        0.37661947714192734
+      ],
+      "camera_height_above_board_m": 0.38822118746531153,
+      "flange_height_above_board_m": 0.29501934410087527,
+      "viewing_side_check": 0.8660254037844412,
+      "roll_selection": {
+        "scored": 16,
+        "rejected": 56,
+        "rejection_reasons": [
+          "flange_below_floor",
+          "ik:camera_clearance_-0mm_lt_40mm(camera_housing vs upper_arm_link_0)",
+          "ik:camera_clearance_-10mm_lt_40mm(force_sensor vs forearm_link_0)",
+          "ik:camera_clearance_-12mm_lt_40mm(gripper_body vs upper_arm_link_0)",
+          "ik:camera_clearance_-1mm_lt_40mm(camera_housing vs upper_arm_link_0)",
+          "ik:camera_clearance_-2mm_lt_40mm(camera_housing vs upper_arm_link_0)",
+          "ik:camera_clearance_-3mm_lt_40mm(camera_housing vs upper_arm_link_0)",
+          "ik:camera_clearance_-3mm_lt_40mm(force_sensor vs forearm_link_0)",
+          "ik:camera_clearance_-7mm_lt_40mm(force_sensor vs forearm_link_0)",
+          "ik:camera_clearance_17mm_lt_40mm(camera_housing vs upper_arm_link_0)",
+          "ik:camera_clearance_17mm_lt_40mm(gripper_body vs upper_arm_link_0)",
+          "ik:camera_clearance_2mm_lt_40mm(camera_housing vs upper_arm_link_0)",
+          "ik:camera_clearance_31mm_lt_40mm(camera_housing vs upper_arm_link_0)"
+        ],
+        "joint_margin_rad": 0.5361557798302039,
+        "camera_clearance_m": 0.0439341114806311,
+        "q_rad": [
+          1.1320222706316638,
+          -1.5397938023161002,
+          -2.605436873759589,
+          -4.428731149681474,
+          5.49437894460494,
+          -3.253729084855751
+        ]
+      },
+      "below_clearance_floor": false
+    },
+    {
+      "slot": 14,
+      "shell": "A2",
+      "role": "primary",
+      "distance_m": 0.45,
+      "tilt_deg": 30.0,
+      "azimuth_deg": 225.0,
+      "roll_deg": 230.0,
+      "design_roll_deg": -25.0,
+      "target_tcp_pose_m_rad": [
+        0.4045275811275741,
+        -0.2655065331187876,
+        0.3583325169225675,
+        -0.10937764326037779,
+        2.5243567893140404,
+        1.0407063244976966
+      ],
+      "target_tcp_pose_m_deg": [
+        0.4045275811275741,
+        -0.2655065331187876,
+        0.3583325169225675,
+        -6.26687733190718,
+        144.63499001288966,
+        59.62808010629033
+      ],
+      "camera_origin_base_m": [
+        0.37474706354517895,
+        0.058882375090461486,
+        0.37703949183382635
+      ],
+      "camera_height_above_board_m": 0.38864120215721054,
+      "flange_height_above_board_m": 0.3699342272459517,
+      "viewing_side_check": 0.86602540378444,
+      "roll_selection": {
+        "scored": 4,
+        "rejected": 68,
+        "rejection_reasons": [
+          "flange_below_floor",
+          "ik:camera_clearance_-0mm_lt_40mm(camera_housing vs upper_arm_link_0)",
+          "ik:camera_clearance_-2mm_lt_40mm(camera_housing vs upper_arm_link_0)",
+          "ik:camera_clearance_-3mm_lt_40mm(camera_housing vs upper_arm_link_0)",
+          "ik:camera_clearance_16mm_lt_40mm(camera_housing vs upper_arm_link_0)",
+          "ik:camera_clearance_17mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_19mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_26mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_27mm_lt_40mm(camera_housing vs forearm_link_0)",
+          "ik:camera_clearance_29mm_lt_40mm(gripper_body vs forearm_link_0)",
+          "ik:camera_clearance_30mm_lt_40mm(camera_housing vs forearm_link_0)",
+          "ik:camera_clearance_34mm_lt_40mm(camera_housing vs forearm_link_0)",
+          "ik:camera_clearance_34mm_lt_40mm(gripper_body vs forearm_link_0)",
+          "ik:camera_clearance_35mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_36mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_36mm_lt_40mm(force_sensor vs forearm_link_0)",
+          "ik:camera_clearance_37mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_37mm_lt_40mm(force_sensor vs forearm_link_0)",
+          "ik:camera_clearance_38mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_38mm_lt_40mm(force_sensor vs forearm_link_0)",
+          "ik:camera_clearance_39mm_lt_40mm(camera_housing vs forearm_link_0)",
+          "ik:camera_clearance_39mm_lt_40mm(force_sensor vs forearm_link_0)",
+          "ik:camera_clearance_40mm_lt_40mm(force_sensor vs forearm_link_0)",
+          "ik:camera_clearance_40mm_lt_40mm(gripper_body vs forearm_link_0)"
+        ],
+        "joint_margin_rad": 1.1753558758806533,
+        "camera_clearance_m": 0.041197430616525754,
+        "q_rad": [
+          -0.38695657232372743,
+          -1.7358300999015883,
+          -1.9662367777091398,
+          -4.069978717263363,
+          3.83814510976443,
+          -2.006053707525038
+        ]
+      },
+      "below_clearance_floor": false
+    },
+    {
+      "slot": 15,
+      "shell": "A2",
+      "role": "primary",
+      "distance_m": 0.45,
+      "tilt_deg": 30.0,
+      "azimuth_deg": 270.0,
+      "roll_deg": 180.0,
+      "design_roll_deg": -25.0,
+      "target_tcp_pose_m_rad": [
+        0.5614991742243767,
+        -0.21468375715737048,
+        0.39102812959357447,
+        0.1000859432069641,
+        2.949425129547243,
+        0.9734452508413866
+      ],
+      "target_tcp_pose_m_deg": [
+        0.5614991742243767,
+        -0.21468375715737048,
+        0.39102812959357447,
+        5.734502134345094,
+        168.9896119128831,
+        55.7743044602652
+      ],
+      "camera_origin_base_m": [
+        0.5390045021129115,
+        0.1105843824318295,
+        0.37839400905540677
+      ],
+      "camera_height_above_board_m": 0.38999571937879096,
+      "flange_height_above_board_m": 0.40262983991695867,
+      "viewing_side_check": 0.866025403784447,
+      "roll_selection": {
+        "scored": 7,
+        "rejected": 65,
+        "rejection_reasons": [
+          "flange_below_floor",
+          "ik:camera_clearance_-0mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_-0mm_lt_40mm(force_sensor vs upper_arm_link_0)",
+          "ik:camera_clearance_-1mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_-2mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_-2mm_lt_40mm(camera_housing vs forearm_link_0)",
+          "ik:camera_clearance_-4mm_lt_40mm(camera_housing vs forearm_link_0)",
+          "ik:camera_clearance_-5mm_lt_40mm(force_sensor vs upper_arm_link_0)",
+          "ik:camera_clearance_12mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_15mm_lt_40mm(force_sensor vs upper_arm_link_0)",
+          "ik:camera_clearance_16mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_22mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_27mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_2mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_32mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_32mm_lt_40mm(gripper_body vs upper_arm_link_0)",
+          "ik:camera_clearance_37mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_37mm_lt_40mm(camera_bracket vs wrist_1_link_0)",
+          "ik:camera_clearance_38mm_lt_40mm(camera_bracket vs wrist_1_link_0)",
+          "ik:camera_clearance_39mm_lt_40mm(camera_bracket vs wrist_1_link_0)",
+          "ik:camera_clearance_40mm_lt_40mm(camera_bracket vs wrist_1_link_0)",
+          "ik:camera_clearance_7mm_lt_40mm(camera_bracket vs forearm_link_0)"
+        ],
+        "joint_margin_rad": 1.446548207001521,
+        "camera_clearance_m": 0.04211061130795611,
+        "q_rad": [
+          -0.18241597754694427,
+          -1.898161798446885,
+          -1.6950444465882721,
+          -4.33039663607353,
+          4.077556698357497,
+          -1.7082508459925454
+        ]
+      },
+      "below_clearance_floor": false
+    },
+    {
+      "slot": 16,
+      "shell": "A2",
+      "role": "primary",
+      "distance_m": 0.45,
+      "tilt_deg": 30.0,
+      "azimuth_deg": 315.0,
+      "roll_deg": 275.0,
+      "design_roll_deg": -25.0,
+      "target_tcp_pose_m_rad": [
+        0.43254671676124745,
+        0.18957069007029625,
+        0.2606125563902644,
+        1.6632698678050846,
+        0.8824659255314352,
+        -0.09367459730667135
+      ],
+      "target_tcp_pose_m_deg": [
+        0.43254671676124745,
+        0.18957069007029625,
+        0.2606125563902644,
+        95.2983436165137,
+        50.561573097057234,
+        -5.367159073259817
+      ],
+      "camera_origin_base_m": [
+        0.691710289255525,
+        0.030991748979187356,
+        0.3795745504952067
+      ],
+      "camera_height_above_board_m": 0.3911762608185909,
+      "flange_height_above_board_m": 0.2722142667136487,
+      "viewing_side_check": 0.8660254037844544,
+      "roll_selection": {
+        "scored": 10,
+        "rejected": 62,
+        "rejection_reasons": [
+          "flange_below_floor",
+          "ik:camera_clearance_-0mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_-16mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_-2mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_-3mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_-3mm_lt_40mm(force_sensor vs forearm_link_0)",
+          "ik:camera_clearance_-9mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_17mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_25mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_30mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_37mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_37mm_lt_40mm(camera_bracket vs wrist_1_link_0)",
+          "ik:camera_clearance_38mm_lt_40mm(camera_bracket vs wrist_1_link_0)",
+          "ik:camera_clearance_39mm_lt_40mm(camera_bracket vs wrist_1_link_0)",
+          "ik:camera_clearance_40mm_lt_40mm(camera_bracket vs wrist_1_link_0)",
+          "ik:camera_clearance_8mm_lt_40mm(camera_bracket vs forearm_link_0)"
+        ],
+        "joint_margin_rad": 0.603749799686919,
+        "camera_clearance_m": 0.04748756745286207,
+        "q_rad": [
+          0.9457449039545107,
+          -1.9665884167421586,
+          -2.2399009653395283,
+          -4.649016819327827,
+          5.679435507492667,
+          -4.182555107627464
+        ]
+      },
+      "below_clearance_floor": false
+    },
+    {
+      "slot": 17,
+      "shell": "A3",
+      "role": "primary",
+      "distance_m": 0.58,
+      "tilt_deg": 50.0,
+      "azimuth_deg": 0.0,
+      "roll_deg": 280.0,
+      "design_roll_deg": 45.0,
+      "target_tcp_pose_m_rad": [
+        0.8732056059336114,
+        0.14631372834067,
+        0.268303825526383,
+        1.7944692635157846,
+        0.33222897833508686,
+        -1.0056200929351877
+      ],
+      "target_tcp_pose_m_deg": [
+        0.8732056059336114,
+        0.14631372834067,
+        0.268303825526383,
+        102.81551526540362,
+        19.03531829054374,
+        -57.61778711873987
+      ],
+      "camera_origin_base_m": [
+        0.96200220138398,
+        -0.15248336483987887,
+        0.3647426955439932
+      ],
+      "camera_height_above_board_m": 0.3763444058673774,
+      "flange_height_above_board_m": 0.2799055358497672,
+      "viewing_side_check": 0.6427876096865613,
+      "roll_selection": {
+        "scored": 18,
+        "rejected": 54,
+        "rejection_reasons": [
+          "flange_below_floor",
+          "ik:camera_clearance_-13mm_lt_40mm(force_sensor vs forearm_link_0)",
+          "ik:camera_clearance_-1mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_-3mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_-3mm_lt_40mm(force_sensor vs forearm_link_0)",
+          "ik:camera_clearance_-6mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_16mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_27mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_37mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_37mm_lt_40mm(camera_bracket vs wrist_1_link_0)",
+          "ik:camera_clearance_38mm_lt_40mm(camera_bracket vs wrist_1_link_0)",
+          "ik:camera_clearance_39mm_lt_40mm(camera_bracket vs wrist_1_link_0)",
+          "ik:camera_clearance_3mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_40mm_lt_40mm(camera_bracket vs wrist_1_link_0)"
+        ],
+        "joint_margin_rad": 0.7994226945717635,
+        "camera_clearance_m": 0.04909904898533927,
+        "q_rad": [
+          0.4159572094521232,
+          -2.4867539771173783,
+          -1.274411074833758,
+          -5.483762612607823,
+          5.352286910633608,
+          -4.12300301895719
+        ]
+      },
+      "below_clearance_floor": false
+    },
+    {
+      "slot": 18,
+      "shell": "A3",
+      "role": "primary",
+      "distance_m": 0.58,
+      "tilt_deg": 50.0,
+      "azimuth_deg": 45.0,
+      "roll_deg": 140.0,
+      "design_roll_deg": -45.0,
+      "target_tcp_pose_m_rad": [
+        0.4835087886242004,
+        -0.41738047389126537,
+        0.4065207817344213,
+        2.486339591907371,
+        1.5202042269634557,
+        1.002101359863079
+      ],
+      "target_tcp_pose_m_deg": [
+        0.4835087886242004,
+        -0.41738047389126537,
+        0.4065207817344213,
+        142.45676505257182,
+        87.10128620295391,
+        57.41617856447494
+      ],
+      "camera_origin_base_m": [
+        0.8048378000050398,
+        -0.4540392513678348,
+        0.3632912271920371
+      ],
+      "camera_height_above_board_m": 0.3748929375154213,
+      "flange_height_above_board_m": 0.4181224920578055,
+      "viewing_side_check": 0.6427876096865577,
+      "roll_selection": {
+        "scored": 23,
+        "rejected": 49,
+        "rejection_reasons": [
+          "flange_below_floor",
+          "ik:camera_clearance_-1mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_-3mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_-5mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_36mm_lt_40mm(gripper_body vs forearm_link_0)",
+          "ik:camera_clearance_37mm_lt_40mm(camera_bracket vs wrist_1_link_0)",
+          "ik:camera_clearance_38mm_lt_40mm(camera_bracket vs wrist_1_link_0)",
+          "ik:camera_clearance_39mm_lt_40mm(camera_bracket vs wrist_1_link_0)"
+        ],
+        "joint_margin_rad": 0.12146157656596301,
+        "camera_clearance_m": 0.0492919374498016,
+        "q_rad": [
+          2.076559264469091,
+          0.36362231659360533,
+          -2.094103613873615,
+          -6.161723730613623,
+          5.376447209088706,
+          -3.7202014243469264
+        ]
+      },
+      "below_clearance_floor": false
+    },
+    {
+      "slot": 19,
+      "shell": "A3",
+      "role": "primary",
+      "distance_m": 0.58,
+      "tilt_deg": 50.0,
+      "azimuth_deg": 90.0,
+      "roll_deg": 140.0,
+      "design_roll_deg": 45.0,
+      "target_tcp_pose_m_rad": [
+        0.2790976479497661,
+        -0.3032610267400229,
+        0.40494518761603127,
+        2.6839353132581305,
+        0.41943309377684496,
+        0.8339036129972184
+      ],
+      "target_tcp_pose_m_deg": [
+        0.2790976479497661,
+        -0.3032610267400229,
+        0.40494518761603127,
+        153.77816593581338,
+        24.03174606152809,
+        47.779157545451355
+      ],
+      "camera_origin_base_m": [
+        0.4804798939057256,
+        -0.5561348093444209,
+        0.3606164724071198
+      ],
+      "camera_height_above_board_m": 0.372218182730504,
+      "flange_height_above_board_m": 0.41654689793941546,
+      "viewing_side_check": 0.6427876096865471,
+      "roll_selection": {
+        "scored": 20,
+        "rejected": 52,
+        "rejection_reasons": [
+          "flange_below_floor",
+          "ik:camera_clearance_-1mm_lt_40mm(gripper_body vs forearm_link_0)",
+          "ik:camera_clearance_-2mm_lt_40mm(gripper_body vs forearm_link_0)",
+          "ik:camera_clearance_17mm_lt_40mm(gripper_body vs forearm_link_0)",
+          "ik:camera_clearance_27mm_lt_40mm(gripper_body vs forearm_link_0)",
+          "ik:camera_clearance_37mm_lt_40mm(camera_bracket vs wrist_1_link_0)",
+          "ik:camera_clearance_37mm_lt_40mm(force_sensor vs forearm_link_0)",
+          "ik:camera_clearance_38mm_lt_40mm(camera_bracket vs wrist_1_link_0)",
+          "ik:camera_clearance_39mm_lt_40mm(camera_bracket vs wrist_1_link_0)",
+          "ik:camera_clearance_40mm_lt_40mm(camera_bracket vs wrist_1_link_0)",
+          "ik:camera_clearance_7mm_lt_40mm(gripper_body vs forearm_link_0)"
+        ],
+        "joint_margin_rad": 0.36460492056278326,
+        "camera_clearance_m": 0.049503941318826315,
+        "q_rad": [
+          1.7707662066627268,
+          0.19044052151200733,
+          -2.4976215082290016,
+          -5.918580386616803,
+          5.277257798545629,
+          -3.1426264800013466
+        ]
+      },
+      "below_clearance_floor": false
+    },
+    {
+      "slot": 20,
+      "shell": "A3",
+      "role": "primary",
+      "distance_m": 0.58,
+      "tilt_deg": 50.0,
+      "azimuth_deg": 135.0,
+      "roll_deg": 145.0,
+      "design_roll_deg": -45.0,
+      "target_tcp_pose_m_rad": [
+        0.23527392757592228,
+        -0.08336920364762945,
+        0.41903647719492737,
+        2.5355355714992145,
+        -0.6838061673042544,
+        0.49051828914028833
+      ],
+      "target_tcp_pose_m_deg": [
+        0.23527392757592228,
+        -0.08336920364762945,
+        0.41903647719492737,
+        145.27548705219618,
+        -39.17920739155044,
+        28.104627741716325
+      ],
+      "camera_origin_base_m": [
+        0.17893294541607685,
+        -0.3989638455650019,
+        0.3582852662662237
+      ],
+      "camera_height_above_board_m": 0.3698869765896079,
+      "flange_height_above_board_m": 0.4306381875183116,
+      "viewing_side_check": 0.642787609686536,
+      "roll_selection": {
+        "scored": 16,
+        "rejected": 56,
+        "rejection_reasons": [
+          "flange_below_floor",
+          "ik:camera_clearance_-0mm_lt_40mm(camera_housing vs upper_arm_link_0)",
+          "ik:camera_clearance_-12mm_lt_40mm(force_sensor vs forearm_link_0)",
+          "ik:camera_clearance_-18mm_lt_40mm(force_sensor vs forearm_link_0)",
+          "ik:camera_clearance_-1mm_lt_40mm(camera_housing vs upper_arm_link_0)",
+          "ik:camera_clearance_-23mm_lt_40mm(force_sensor vs forearm_link_0)",
+          "ik:camera_clearance_-24mm_lt_40mm(camera_housing vs upper_arm_link_0)",
+          "ik:camera_clearance_-2mm_lt_40mm(force_sensor vs forearm_link_0)",
+          "ik:camera_clearance_-7mm_lt_40mm(force_sensor vs forearm_link_0)",
+          "ik:camera_clearance_16mm_lt_40mm(force_sensor vs forearm_link_0)",
+          "ik:camera_clearance_21mm_lt_40mm(camera_housing vs upper_arm_link_0)",
+          "ik:camera_clearance_22mm_lt_40mm(force_sensor vs forearm_link_0)",
+          "ik:camera_clearance_29mm_lt_40mm(force_sensor vs forearm_link_0)",
+          "ik:camera_clearance_36mm_lt_40mm(force_sensor vs forearm_link_0)",
+          "ik:camera_clearance_8mm_lt_40mm(camera_housing vs upper_arm_link_0)",
+          "ik:position_residual,rotation_residual,camera_clearance_-1mm_lt_40mm(camera_housing vs upper_arm_link_0)",
+          "ik:position_residual,rotation_residual,camera_clearance_-28mm_lt_40mm(camera_housing vs upper_arm_link_0)",
+          "ik:position_residual,rotation_residual,camera_clearance_-47mm_lt_40mm(camera_housing vs upper_arm_link_0)",
+          "ik:position_residual,rotation_residual,camera_clearance_12mm_lt_40mm(gripper_body vs upper_arm_link_0)",
+          "ik:position_residual,rotation_residual,camera_clearance_18mm_lt_40mm(gripper_body vs upper_arm_link_0)",
+          "ik:position_residual,rotation_residual,camera_clearance_31mm_lt_40mm(force_sensor vs upper_arm_link_0)",
+          "ik:position_residual,rotation_residual,camera_clearance_9mm_lt_40mm(gripper_body vs upper_arm_link_0)"
+        ],
+        "joint_margin_rad": 0.7427132853589407,
+        "camera_clearance_m": 0.04949492043591356,
+        "q_rad": [
+          0.6852267426973541,
+          -1.0982266100354652,
+          -2.3988793682308525,
+          -4.551121780962432,
+          5.279151516927663,
+          -3.4435867569444936
+        ]
+      },
+      "below_clearance_floor": false
+    },
+    {
+      "slot": 22,
+      "shell": "A3",
+      "role": "primary",
+      "distance_m": 0.58,
+      "tilt_deg": 50.0,
+      "azimuth_deg": 225.0,
+      "roll_deg": 120.0,
+      "design_roll_deg": -45.0,
+      "target_tcp_pose_m_rad": [
+        0.5574895688931025,
+        0.26545836295065994,
+        0.34068418095717923,
+        1.3543505011760861,
+        -1.7668701509852986,
+        0.0716269440775432
+      ],
+      "target_tcp_pose_m_deg": [
+        0.5574895688931025,
+        0.26545836295065994,
+        0.34068418095717923,
+        77.59856769881758,
+        -101.23420259910014,
+        4.103921595062793
+      ],
+      "camera_origin_base_m": [
+        0.23400346864804883,
+        0.22696090752764514,
+        0.3591146660619543
+      ],
+      "camera_height_above_board_m": 0.3707163763853385,
+      "flange_height_above_board_m": 0.3522858912805634,
+      "viewing_side_check": 0.6427876096865345,
+      "roll_selection": {
+        "scored": 25,
+        "rejected": 47,
+        "rejection_reasons": [
+          "flange_below_floor",
+          "ik:camera_clearance_12mm_lt_40mm(camera_housing vs forearm_link_0)",
+          "ik:camera_clearance_21mm_lt_40mm(camera_housing vs forearm_link_0)",
+          "ik:camera_clearance_31mm_lt_40mm(camera_housing vs forearm_link_0)",
+          "ik:camera_clearance_38mm_lt_40mm(camera_bracket vs wrist_1_link_0)",
+          "ik:camera_clearance_40mm_lt_40mm(camera_bracket vs wrist_1_link_0)",
+          "ik:camera_clearance_5mm_lt_40mm(camera_housing vs forearm_link_0)",
+          "ik:position_residual,rotation_residual,camera_clearance_37mm_lt_40mm(camera_bracket vs wrist_1_link_0)",
+          "ik:position_residual,rotation_residual,camera_clearance_38mm_lt_40mm(camera_bracket vs wrist_1_link_0)"
+        ],
+        "joint_margin_rad": 1.3334102949932092,
+        "camera_clearance_m": 0.04142686207689642,
+        "q_rad": [
+          0.7138029972497557,
+          -2.0707419689097275,
+          -1.7497698625079194,
+          -4.949775012186377,
+          4.7167353580126115,
+          -2.162837198555088
+        ]
+      },
+      "below_clearance_floor": false
+    },
+    {
+      "slot": 23,
+      "shell": "A3",
+      "role": "primary",
+      "distance_m": 0.58,
+      "tilt_deg": 50.0,
+      "azimuth_deg": 270.0,
+      "roll_deg": 160.0,
+      "design_roll_deg": 45.0,
+      "target_tcp_pose_m_rad": [
+        0.6783270114456503,
+        0.04130020402474388,
+        0.4580680472284278,
+        0.16505720646971664,
+        -2.825031498880515,
+        -0.4293945478858188
+      ],
+      "target_tcp_pose_m_deg": [
+        0.6783270114456503,
+        0.04130020402474388,
+        0.4580680472284278,
+        9.457081308934189,
+        -161.86238187737047,
+        -24.602495339785545
+      ],
+      "camera_origin_base_m": [
+        0.558361374747363,
+        0.3290564655042313,
+        0.3617894208468715
+      ],
+      "camera_height_above_board_m": 0.3733911311702557,
+      "flange_height_above_board_m": 0.46966975755181206,
+      "viewing_side_check": 0.6427876096865449,
+      "roll_selection": {
+        "scored": 10,
+        "rejected": 62,
+        "rejection_reasons": [
+          "flange_below_floor",
+          "ik:camera_clearance_-15mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_-1mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_-22mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_-3mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_-4mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_-7mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_15mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_23mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_31mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_37mm_lt_40mm(camera_bracket vs wrist_1_link_0)",
+          "ik:camera_clearance_38mm_lt_40mm(camera_bracket vs wrist_1_link_0)",
+          "ik:camera_clearance_39mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_39mm_lt_40mm(camera_bracket vs wrist_1_link_0)",
+          "ik:camera_clearance_40mm_lt_40mm(camera_bracket vs wrist_1_link_0)",
+          "ik:camera_clearance_6mm_lt_40mm(camera_bracket vs forearm_link_0)"
+        ],
+        "joint_margin_rad": 1.6445216181009155,
+        "camera_clearance_m": 0.04245516588568877,
+        "q_rad": [
+          0.2573124508193361,
+          -1.9945565419196243,
+          -1.4455960539325377,
+          -4.638663689078671,
+          4.366496151450521,
+          -1.4696425494233492
+        ]
+      },
+      "below_clearance_floor": false
+    },
+    {
+      "slot": 24,
+      "shell": "A3",
+      "role": "primary",
+      "distance_m": 0.58,
+      "tilt_deg": 50.0,
+      "azimuth_deg": 315.0,
+      "roll_deg": 280.0,
+      "design_roll_deg": -45.0,
+      "target_tcp_pose_m_rad": [
+        0.5861133135691837,
+        0.31984856191370314,
+        0.2660991017622794,
+        1.4503045875819722,
+        0.9403709204850257,
+        -0.44025419397289106
+      ],
+      "target_tcp_pose_m_deg": [
+        0.5861133135691837,
+        0.31984856191370314,
+        0.2660991017622794,
+        83.09633187690847,
+        53.8792849206243,
+        -25.22470722758054
+      ],
+      "camera_origin_base_m": [
+        0.8599083232370117,
+        0.17188550172481232,
+        0.3641206269877676
+      ],
+      "camera_height_above_board_m": 0.3757223373111518,
+      "flange_height_above_board_m": 0.27770081208566366,
+      "viewing_side_check": 0.642787609686556,
+      "roll_selection": {
+        "scored": 13,
+        "rejected": 59,
+        "rejection_reasons": [
+          "flange_below_floor",
+          "ik:camera_clearance_-0mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_-14mm_lt_40mm(force_sensor vs forearm_link_0)",
+          "ik:camera_clearance_-16mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_-21mm_lt_40mm(force_sensor vs forearm_link_0)",
+          "ik:camera_clearance_-26mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_-27mm_lt_40mm(force_sensor vs forearm_link_0)",
+          "ik:camera_clearance_-3mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_-4mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_14mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_1mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_27mm_lt_40mm(camera_bracket vs forearm_link_0)",
+          "ik:camera_clearance_37mm_lt_40mm(camera_bracket vs wrist_1_link_0)",
+          "ik:camera_clearance_38mm_lt_40mm(camera_bracket vs wrist_1_link_0)",
+          "ik:camera_clearance_39mm_lt_40mm(camera_bracket vs wrist_1_link_0)",
+          "ik:camera_clearance_40mm_lt_40mm(camera_bracket vs wrist_1_link_0)"
+        ],
+        "joint_margin_rad": 0.6027132937092246,
+        "camera_clearance_m": 0.04676233426097969,
+        "q_rad": [
+          0.8670436813768817,
+          -2.195198125503447,
+          -1.8721021135817624,
+          -5.112508831069067,
+          5.680472013470362,
+          -4.216780614029491
+        ]
+      },
+      "below_clearance_floor": false
+    }
+  ]
+}

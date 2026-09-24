@@ -1,0 +1,362 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-09-18T14:21:51.667816+08:00",
+  "kind": "scripted_move_offline_gate",
+  "motion_sent": false,
+  "plan": "outputs/vision/grasp-plan-20260918.json",
+  "slots_checked": [
+    1,
+    2
+  ],
+  "clearance_z_m": 0.55,
+  "model": {
+    "urdf": "/home/jx/ur_learn/generated/ur10.urdf",
+    "note": "nominal URDF kinematics; the controller uses factory calibration, so a small FK disagreement is expected and is gated below",
+    "fk_position_agreement_m": 0.002154130318652379,
+    "fk_rotation_agreement_rad": 0.0046243811545490674,
+    "fk_position_gate_m": 0.01,
+    "fk_rotation_gate_rad": 0.02,
+    "fk_gate_passed": true
+  },
+  "current": {
+    "q_rad": [
+      -0.07558805147279912,
+      -1.9407251516925257,
+      -1.4537976423846644,
+      -5.066039983426229,
+      4.915102005004883,
+      -3.5327733198748987
+    ],
+    "tcp_m_rad": [
+      0.6131611737819884,
+      -0.22753714737822006,
+      0.5473939451150408,
+      2.1585549140877456,
+      -1.4571936761440278,
+      -0.5567110762773975
+    ],
+    "source": "read from 30003"
+  },
+  "segments": [
+    {
+      "segment": "lift",
+      "order": "translate_first",
+      "start_tcp_m_rad": [
+        0.6131611737819884,
+        -0.22753714737822006,
+        0.5473939451150408,
+        2.158554914087745,
+        -1.4571936761440274,
+        -0.5567110762773974
+      ],
+      "end_tcp_m_rad": [
+        0.6131611737819884,
+        -0.22753714737822006,
+        0.55,
+        2.158554914087745,
+        -1.4571936761440274,
+        -0.5567110762773974
+      ],
+      "worst": {
+        "ik_position_m": 5.379792798704269e-11,
+        "ik_rotation_rad": 2.801454296704362e-10,
+        "joint_margin_rad": 1.2116481315968626,
+        "min_singular": 0.3085273343863603,
+        "max_joint_step_rad": 7.134166160405186e-05,
+        "min_flange_z_m": 0.5473939450923213,
+        "min_camera_clearance_m": 0.049186419590849136,
+        "worst_camera_pair": "force_sensor vs wrist_1_link_0"
+      },
+      "singularity_gate_passed": true,
+      "passed": true,
+      "reasons": [],
+      "slot": 1,
+      "singularity_floor": 0.02,
+      "singularity_fraction_of_baseline": 0.9984417486131063,
+      "clearance_z_m": 0.55
+    },
+    {
+      "segment": "translate",
+      "order": "translate_first",
+      "start_tcp_m_rad": [
+        0.6131611737819884,
+        -0.22753714737822006,
+        0.55,
+        2.158554914087745,
+        -1.4571936761440274,
+        -0.5567110762773974
+      ],
+      "end_tcp_m_rad": [
+        0.651424,
+        -0.270771,
+        0.55,
+        2.158554914087745,
+        -1.4571936761440274,
+        -0.5567110762773974
+      ],
+      "worst": {
+        "ik_position_m": 9.825656848861048e-11,
+        "ik_rotation_rad": 6.785357827406591e-11,
+        "joint_margin_rad": 1.1831985643071183,
+        "min_singular": 0.28902711527833597,
+        "max_joint_step_rad": 0.0021529962527098156,
+        "min_flange_z_m": 0.5499999999680779,
+        "min_camera_clearance_m": 0.04914708256557369,
+        "worst_camera_pair": "force_sensor vs wrist_1_link_0"
+      },
+      "singularity_gate_passed": true,
+      "passed": true,
+      "reasons": [],
+      "slot": 1,
+      "singularity_floor": 0.02,
+      "singularity_fraction_of_baseline": 0.9353360503666974,
+      "clearance_z_m": 0.55
+    },
+    {
+      "segment": "reorient",
+      "order": "translate_first",
+      "start_tcp_m_rad": [
+        0.651424,
+        -0.270771,
+        0.55,
+        2.158554914087745,
+        -1.4571936761440274,
+        -0.5567110762773974
+      ],
+      "end_tcp_m_rad": [
+        0.651424,
+        -0.270771,
+        0.55,
+        1.9351370000000208,
+        -2.3646010000000257,
+        -0.00022100000000006817
+      ],
+      "worst": {
+        "ik_position_m": 2.15021594620617e-10,
+        "ik_rotation_rad": 9.084154363148282e-10,
+        "joint_margin_rad": 1.1831985641926686,
+        "min_singular": 0.27695855672976977,
+        "max_joint_step_rad": 0.008941586959116954,
+        "min_flange_z_m": 0.55,
+        "min_camera_clearance_m": 0.049147082565558144,
+        "worst_camera_pair": "force_sensor vs wrist_1_link_0"
+      },
+      "singularity_gate_passed": true,
+      "passed": true,
+      "reasons": [],
+      "slot": 1,
+      "singularity_floor": 0.02,
+      "singularity_fraction_of_baseline": 0.8962803448991861,
+      "clearance_z_m": 0.55
+    },
+    {
+      "segment": "descend",
+      "order": "translate_first",
+      "start_tcp_m_rad": [
+        0.651424,
+        -0.270771,
+        0.55,
+        1.9351370000000208,
+        -2.3646010000000257,
+        -0.00022100000000006817
+      ],
+      "end_tcp_m_rad": [
+        0.651424,
+        -0.270771,
+        0.336411,
+        1.9351370000000208,
+        -2.3646010000000257,
+        -0.00022100000000006817
+      ],
+      "worst": {
+        "ik_position_m": 2.4586602938189445e-10,
+        "ik_rotation_rad": 4.232221918755793e-10,
+        "joint_margin_rad": 1.5070135785228862,
+        "min_singular": 0.27695855681481263,
+        "max_joint_step_rad": 0.0059952419119522204,
+        "min_flange_z_m": 0.33641100012754505,
+        "min_camera_clearance_m": 0.04956819008579635,
+        "worst_camera_pair": "force_sensor vs wrist_1_link_0"
+      },
+      "singularity_gate_passed": true,
+      "passed": true,
+      "reasons": [],
+      "slot": 1,
+      "singularity_floor": 0.02,
+      "singularity_fraction_of_baseline": 0.8962803451743978,
+      "clearance_z_m": 0.55
+    },
+    {
+      "slot": 1,
+      "segment": "slot_summary",
+      "feasible": true,
+      "order": "translate_first",
+      "clearance_z_m": 0.55,
+      "roll_rescue_offset_deg": null
+    },
+    {
+      "segment": "lift",
+      "order": "reorient_first",
+      "start_tcp_m_rad": [
+        0.651424,
+        -0.270771,
+        0.336411,
+        1.9351370000000208,
+        -2.3646010000000257,
+        -0.00022100000000006817
+      ],
+      "end_tcp_m_rad": [
+        0.651424,
+        -0.270771,
+        0.55,
+        1.9351370000000208,
+        -2.3646010000000257,
+        -0.00022100000000006817
+      ],
+      "worst": {
+        "ik_position_m": 2.4661826083189665e-10,
+        "ik_rotation_rad": 4.2254350338510214e-10,
+        "joint_margin_rad": 1.5070135784907253,
+        "min_singular": 0.2769585569319026,
+        "max_joint_step_rad": 0.005995242693463965,
+        "min_flange_z_m": 0.3364110000000001,
+        "min_camera_clearance_m": 0.04956819008574162,
+        "worst_camera_pair": "force_sensor vs wrist_1_link_0"
+      },
+      "singularity_gate_passed": true,
+      "passed": true,
+      "reasons": [],
+      "slot": 2,
+      "singularity_floor": 0.02,
+      "singularity_fraction_of_baseline": 0.8962803455533188,
+      "clearance_z_m": 0.55
+    },
+    {
+      "segment": "reorient",
+      "order": "reorient_first",
+      "start_tcp_m_rad": [
+        0.651424,
+        -0.270771,
+        0.55,
+        1.9351370000000208,
+        -2.3646010000000257,
+        -0.00022100000000006817
+      ],
+      "end_tcp_m_rad": [
+        0.651424,
+        -0.270771,
+        0.55,
+        1.9351370000000208,
+        -2.3646010000000257,
+        -0.00022100000000006817
+      ],
+      "worst": {
+        "ik_position_m": 3.3422138886441676e-16,
+        "ik_rotation_rad": 4.178415584761515e-16,
+        "joint_margin_rad": 1.5070135785228862,
+        "min_singular": 0.2769585568148129,
+        "max_joint_step_rad": 0.0,
+        "min_flange_z_m": 0.5499999999999998,
+        "min_camera_clearance_m": 0.049568300436894024,
+        "worst_camera_pair": "force_sensor vs wrist_1_link_0"
+      },
+      "singularity_gate_passed": true,
+      "passed": true,
+      "reasons": [],
+      "slot": 2,
+      "singularity_floor": 0.02,
+      "singularity_fraction_of_baseline": 0.8962803451743987,
+      "clearance_z_m": 0.55
+    },
+    {
+      "segment": "translate",
+      "order": "reorient_first",
+      "start_tcp_m_rad": [
+        0.651424,
+        -0.270771,
+        0.55,
+        1.9351370000000208,
+        -2.3646010000000257,
+        -0.00022100000000006817
+      ],
+      "end_tcp_m_rad": [
+        0.651424,
+        -0.270771,
+        0.55,
+        1.9351370000000208,
+        -2.3646010000000257,
+        -0.00022100000000006817
+      ],
+      "worst": {
+        "ik_position_m": 3.3422138886441676e-16,
+        "ik_rotation_rad": 4.178415584761515e-16,
+        "joint_margin_rad": 1.5070135785228862,
+        "min_singular": 0.2769585568148129,
+        "max_joint_step_rad": 0.0,
+        "min_flange_z_m": 0.5499999999999998,
+        "min_camera_clearance_m": 0.049568300436894024,
+        "worst_camera_pair": "force_sensor vs wrist_1_link_0"
+      },
+      "singularity_gate_passed": true,
+      "passed": true,
+      "reasons": [],
+      "slot": 2,
+      "singularity_floor": 0.02,
+      "singularity_fraction_of_baseline": 0.8962803451743987,
+      "clearance_z_m": 0.55
+    },
+    {
+      "segment": "descend",
+      "order": "reorient_first",
+      "start_tcp_m_rad": [
+        0.651424,
+        -0.270771,
+        0.55,
+        1.9351370000000208,
+        -2.3646010000000257,
+        -0.00022100000000006817
+      ],
+      "end_tcp_m_rad": [
+        0.651424,
+        -0.270771,
+        0.276411,
+        1.9351370000000208,
+        -2.3646010000000257,
+        -0.00022100000000006817
+      ],
+      "worst": {
+        "ik_position_m": 3.1433452480416017e-10,
+        "ik_rotation_rad": 5.421059426311202e-10,
+        "joint_margin_rad": 1.5070135785228862,
+        "min_singular": 0.2769585568148129,
+        "max_joint_step_rad": 0.007677359820743135,
+        "min_flange_z_m": 0.27641100015491893,
+        "min_camera_clearance_m": 0.049568190085819475,
+        "worst_camera_pair": "force_sensor vs wrist_1_link_0"
+      },
+      "singularity_gate_passed": true,
+      "passed": true,
+      "reasons": [],
+      "slot": 2,
+      "singularity_floor": 0.02,
+      "singularity_fraction_of_baseline": 0.8962803451743987,
+      "clearance_z_m": 0.55
+    },
+    {
+      "slot": 2,
+      "segment": "slot_summary",
+      "feasible": true,
+      "order": "reorient_first",
+      "clearance_z_m": 0.55,
+      "roll_rescue_offset_deg": null
+    }
+  ],
+  "visit_order": [
+    1,
+    2
+  ],
+  "visit_order_policy": "greedy nearest neighbour in joint space",
+  "baseline_min_singular": 0.30900884785208826,
+  "passed": true,
+  "interpretation": "Numerical feasibility only: reachability, joint limits, singularity proximity and flange clearance along densely sampled straight-line movel segments. Collision-freedom is NOT proven - there is no obstacle model. The lift/reorient/translate/descend structure plus a clearance height above every table object is the substitute, and it still needs human eyes on the workspace before execution."
+}

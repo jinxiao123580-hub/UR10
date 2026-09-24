@@ -1,0 +1,118 @@
+{
+  "settings": {
+    "search_half_xy_m": 0.25,
+    "min_coverage": 0.85,
+    "max_aspect": 1.1,
+    "expect_edge_m": 0.05,
+    "edge_tolerance_m": 0.0025,
+    "max_normal_tilt_deg": 12.0
+  },
+  "input_points": 884788,
+  "gates": {
+    "cluster_points": true,
+    "reference_plane": true
+  },
+  "reasons": [
+    "no plane parallel to the board inside the cluster"
+  ],
+  "status": "rejected",
+  "center_target_m": null,
+  "center_base_m": null,
+  "up_axis_target": [
+    -0.0,
+    -0.0,
+    -1.0
+  ],
+  "camera_origin_target_m": [
+    0.42387708383651374,
+    -0.15991550326633527,
+    -0.40886531718595276
+  ],
+  "cluster_points": 8116,
+  "cluster_height_m": [
+    0.2665953224109563,
+    0.28867331929917833
+  ],
+  "ring_points": 776226,
+  "reference_plane": {
+    "normal": [
+      0.0036182931876252676,
+      -0.00037419696253657153,
+      -0.9999933839436347
+    ],
+    "offset": -0.003602531227315958,
+    "height_m": -0.003706570910688489,
+    "tilt_deg": 0.20841907684957603,
+    "inliers": 523737
+  },
+  "schema_version": 1,
+  "measured_at": "2026-09-21T11:11:18+08:00",
+  "source": "capture",
+  "calibration": "config/handeye_eye_in_hand_20260921.yaml",
+  "robot_motion": {
+    "frame_count": 646,
+    "duration_s": 5.158971605000261,
+    "max_position_motion_mm": 0.057901858704167135,
+    "max_rotation_motion_deg": 0.008005054378897753,
+    "q_actual_mean_rad": [
+      0.06885815682841159,
+      -1.8140471019436142,
+      -1.6458485260291553,
+      -4.755350329282684,
+      4.687675161627424,
+      -3.077186443581427
+    ],
+    "base_to_tool0_tcp_mean": [
+      0.5595112470633004,
+      -0.12140241483049463,
+      0.4980199850833799,
+      2.0282682898853297,
+      -2.021324146205627,
+      -0.374359213472919
+    ],
+    "first_tcp_pose": [
+      0.5595145186881756,
+      -0.12138039100051207,
+      0.49802818517552994,
+      2.0283166166162774,
+      -2.0213123880589428,
+      -0.37435494142257164
+    ],
+    "last_tcp_pose": [
+      0.5595161430057299,
+      -0.12141224225097019,
+      0.4980065907999537,
+      2.0282662457190854,
+      -2.0213133154718905,
+      -0.3743086555366104
+    ]
+  },
+  "camera_from_target": [
+    [
+      -0.072654956201092,
+      0.9973553566788561,
+      -0.0018841028128648296,
+      0.1895190104652702
+    ],
+    [
+      -0.6930758147022188,
+      -0.05184717595946889,
+      -0.7189977645444274,
+      -0.008485461079352514
+    ],
+    [
+      -0.7171939573185719,
+      -0.05093292499964952,
+      0.6950098306763057,
+      0.580022533706043
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "motion_authorization": "none: measurement only, no robot command was sent",
+  "saved_cloud": "outputs/vision/cube-scene-20260921-active-precheck-r3.npz"
+}
