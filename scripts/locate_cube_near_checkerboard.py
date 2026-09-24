@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
-"""Locate a cube beside the fixed checkerboard without moving the robot."""
+"""Read-only: locate a nominal 50 mm cube beside a fixed checkerboard.
+
+The result contains both the cube centre and the checkerboard centre in base
+coordinates.  It never opens the UR motion port.  The checkerboard must remain
+fixed for the single capture; it is permitted to have been moved since an
+earlier calibration session because its pose is measured anew here.
+"""
 import argparse
 import json
 import os
@@ -11,7 +17,7 @@ import rclpy
 import yaml
 
 from check_handeye_checkerboard import camera_matrices, detect, image_to_bgr
-from collect_handeye_sample import URSampler, robot_summary
+from record_ur_trajectory import RealtimeReader
 from solve_handeye_checkerboard import rt
 from validate_checkerboard_pointcloud import BoardCloudCapture, organized_xyz
 
@@ -19,37 +25,52 @@ from validate_checkerboard_pointcloud import BoardCloudCapture, organized_xyz
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--timeout", type=float, default=20.0)
-    parser.add_argument("--output", default="outputs/vision/cube-candidate-20260917.json")
-    parser.add_argument("--calibration", default="config/handeye_eye_in_hand_20260917.yaml")
+    parser.add_argument("--output", default="outputs/vision/cube-board-observation.json")
+    parser.add_argument("--calibration", default="config/handeye_eye_in_hand_20260921.yaml")
+    parser.add_argument("--port", type=int, default=30013,
+                        help="read-only UR realtime state port")
+    parser.add_argument("--board-center-x-m", type=float, default=0.024,
+                        help="centre of the 9x6 inner-corner grid in board coordinates")
+    parser.add_argument("--board-center-y-m", type=float, default=0.015)
+    parser.add_argument("--image-attempts", type=int, default=5,
+                        help="retry colour captures because one trigger can be blurred")
     args = parser.parse_args()
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     calibration_path = os.path.join(root, args.calibration)
     with open(calibration_path, encoding="utf-8") as stream:
         calibration = yaml.safe_load(stream)
 
-    sampler = URSampler("192.168.1.3")
+    reader = RealtimeReader("192.168.1.3", port=args.port)
     rclpy.init()
     node = BoardCloudCapture()
     try:
-        sampler.start()
-        sampler.wait_ready()
-        sampler.begin_window()
-        image_msg, info_msg = node.capture(args.timeout)
+        _, before_tcp, _, _ = reader.read_extended()
+        found, corners, image_msg, info_msg = False, None, None, None
+        for image_attempt in range(1, args.image_attempts + 1):
+            candidate_image, candidate_info = node.capture(args.timeout)
+            candidate_gray = cv2.cvtColor(image_to_bgr(candidate_image), cv2.COLOR_BGR2GRAY)
+            found, corners = detect(candidate_gray, (9, 6))
+            if found:
+                image_msg, info_msg = candidate_image, candidate_info
+                break
+            print("棋盘格第 %d/%d 帧未检测到，重试…" %
+                  (image_attempt, args.image_attempts), flush=True)
+        if not found:
+            raise RuntimeError("checkerboard not detected after %d image attempts" % args.image_attempts)
         cloud_msg = node.capture_cloud(args.timeout)
+        _, after_tcp, _, _ = reader.read_extended()
     finally:
-        sampler.stop()
+        reader.close()
         node.destroy_node()
         rclpy.shutdown()
-    motion = robot_summary(sampler.rows)
-    if motion["max_position_motion_mm"] > 0.5 or motion["max_rotation_motion_deg"] > 0.2:
+    motion_mm = float(np.linalg.norm(np.asarray(after_tcp[:3]) - np.asarray(before_tcp[:3])) * 1000.0)
+    if motion_mm > 0.5:
         raise RuntimeError("robot moved during acquisition")
+    tcp = (np.asarray(before_tcp, dtype=float) + np.asarray(after_tcp, dtype=float)) / 2.0
+    # Never average equivalent +/-pi rotation-vector representations.
+    tcp[3:] = after_tcp[3:]
 
-    image = image_to_bgr(image_msg)
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     pattern = (9, 6)
-    found, corners = detect(gray, pattern)
-    if not found:
-        raise RuntimeError("checkerboard not detected")
     k, distortion = camera_matrices(info_msg)
     objects = np.zeros((54, 3), dtype=np.float64)
     objects[:, :2] = np.mgrid[0:9, 0:6].T.reshape(-1, 2) * 0.006
@@ -96,23 +117,30 @@ def main():
     measured_center = np.asarray(best["center_target_m"])
     extent = np.asarray(best["extent_p5_p95_m"])
     lateral_axis = int(np.argmin(extent[:2]))
-    board_center = np.asarray([0.024, 0.015])
+    board_center = np.asarray([args.board_center_x_m, args.board_center_y_m])
     outward = np.sign(measured_center[lateral_axis] - board_center[lateral_axis])
     inferred_center = measured_center.copy()
     inferred_center[lateral_axis] += outward * 0.025
     inferred_center[2] = best["sign"] * 0.025
     center_target = np.asarray([*inferred_center, 1.0])
     center_camera = camera_from_target @ center_target
-    tcp = motion["base_to_tool0_tcp_mean"]
     base_from_tool = rt(tcp[3:], tcp[:3])
     tool_from_camera = np.eye(4)
     tool_from_camera[:3, :3] = np.asarray(calibration["rotation_matrix"])
     tool_from_camera[:3, 3] = calibration["translation_m"]
     center_base = base_from_tool @ tool_from_camera @ center_camera
+    base_from_target = base_from_tool @ tool_from_camera @ camera_from_target
+    board_center_target = np.array([board_center[0], board_center[1], 0.0, 1.0])
+    board_center_base = base_from_target @ board_center_target
+    # ``sign`` is the side of the board on which the observed cube sits, so it
+    # selects the usable board normal for a later top-down placement.
+    board_normal_base = best["sign"] * base_from_target[:3, 2]
     result = {
         "captured_at": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
         "status": "candidate_not_motion_authorized",
-        "robot_motion": motion,
+        "motion_authorization": "none: observation only; no robot command was sent",
+        "robot_motion_during_capture_mm": motion_mm,
+        "checkerboard_image_attempt": image_attempt,
         "checkerboard_target_to_camera": camera_from_target.tolist(),
         "candidate_count": len(candidates),
         "candidates": candidates,
@@ -124,6 +152,10 @@ def main():
         },
         "estimated_cube_center_camera_m": center_camera[:3].tolist(),
         "estimated_cube_center_base_m": center_base[:3].tolist(),
+        "board_center_base_m": board_center_base[:3].tolist(),
+        "board_normal_base": board_normal_base.tolist(),
+        "board_x_axis_base": base_from_target[:3, 0].tolist(),
+        "board_center_definition": "centre of 9x6 inner-corner grid; configurable CLI x/y",
         "assumed_cube_size_m": [0.05, 0.05, 0.05],
         "note": "Candidate only; no robot command was sent and physical reach validation is pending.",
     }
@@ -133,10 +165,9 @@ def main():
         json.dump(result, stream, indent=2, ensure_ascii=False)
         stream.write("\n")
     print(json.dumps({"candidate_count": len(candidates), "best": best,
-                      "center_camera_m": result["estimated_cube_center_camera_m"],
-                      "center_base_m": result["estimated_cube_center_base_m"],
-                      "robot_motion_mm_deg": [motion["max_position_motion_mm"],
-                                               motion["max_rotation_motion_deg"]]},
+                      "cube_center_base_m": result["estimated_cube_center_base_m"],
+                      "board_center_base_m": result["board_center_base_m"],
+                      "robot_motion_mm": motion_mm},
                      indent=2, ensure_ascii=False))
     print("OUTPUT:", output)
 

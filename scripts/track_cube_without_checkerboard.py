@@ -121,7 +121,16 @@ def main():
 
     with open(absolute(ROOT, args.anchor), encoding="utf-8") as stream:
         anchor_doc = json.load(stream)
-    anchor = anchor_doc.get("center_base_m")
+    # The autonomous first-pass locator writes an explicit estimated centre;
+    # older geometry measurements use centre_base_m.  Both are fixed anchors
+    # for a *local* boardless re-observation, never a board measurement.
+    anchor = (anchor_doc.get("cube_center_base_m") or
+              anchor_doc.get("center_base_m") or
+              anchor_doc.get("estimated_cube_center_base_m") or
+              # An auto pick/place plan stores the same physical point under
+              # its task-specific name; accepting it lets the hover refresh
+              # localise only the cube without re-reading the checkerboard.
+              anchor_doc.get("gripper_center_pick_base_m"))
     if not anchor or len(anchor) != 3:
         raise RuntimeError("anchor has no verified center_base_m")
     with open(absolute(ROOT, args.calibration), encoding="utf-8") as stream:

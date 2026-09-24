@@ -81,6 +81,14 @@ def detect(gray, pattern):
     flags = cv2.CALIB_CB_NORMALIZE_IMAGE | cv2.CALIB_CB_EXHAUSTIVE | cv2.CALIB_CB_ACCURACY
     found, corners = cv2.findChessboardCornersSB(gray, pattern, flags=flags)
     if not found:
+        # ``ACCURACY`` can be counterproductive on a small board observed at a
+        # steep angle (the current cell setup is such a case).  SB without it
+        # still returns the complete grid; PnP reprojection error remains the
+        # downstream quality gate, so this does not turn a partial grid into an
+        # accepted hand-eye sample.
+        relaxed = cv2.CALIB_CB_NORMALIZE_IMAGE | cv2.CALIB_CB_EXHAUSTIVE
+        found, corners = cv2.findChessboardCornersSB(gray, pattern, flags=relaxed)
+    if not found:
         # The classic detector is a useful fallback for small or mildly blurred boards.
         classic_flags = cv2.CALIB_CB_ADAPTIVE_THRESH | cv2.CALIB_CB_NORMALIZE_IMAGE
         found, corners = cv2.findChessboardCorners(gray, pattern, flags=classic_flags)
@@ -88,6 +96,63 @@ def detect(gray, pattern):
             criteria = (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_MAX_ITER,
                         50, 1e-4)
             corners = cv2.cornerSubPix(gray, corners, (7, 7), (-1, -1), criteria)
+    if not found:
+        # Last OpenCV-only fallback for the installed cell: the white board
+        # carrier is clear but the checker grid is seen obliquely beside dark
+        # table slats.  Rectify the largest bright carrier rectangle, run the
+        # normal SB detector on that fronto-parallel view, then map corners
+        # back to the original image for PnP.  This is deliberately a fallback
+        # only; ordinary full-frame SB remains the preferred measurement.
+        _level, bright = cv2.threshold(gray, 120, 255, cv2.THRESH_BINARY)
+        contours, _hierarchy = cv2.findContours(bright, cv2.RETR_EXTERNAL,
+                                                  cv2.CHAIN_APPROX_SIMPLE)
+        candidates = [c for c in contours if cv2.contourArea(c) >= 2000.0]
+        if candidates:
+            carrier = max(candidates, key=cv2.contourArea)
+            box = cv2.boxPoints(cv2.minAreaRect(carrier)).astype(np.float32)
+            sums = box.sum(axis=1)
+            differences = np.diff(box, axis=1).reshape(-1)
+            source = np.asarray([box[np.argmin(sums)], box[np.argmin(differences)],
+                                 box[np.argmax(sums)], box[np.argmax(differences)]],
+                                dtype=np.float32)
+            destination = np.asarray([[0, 0], [799, 0], [799, 499], [0, 499]],
+                                     dtype=np.float32)
+            homography = cv2.getPerspectiveTransform(source, destination)
+            rectified = cv2.warpPerspective(gray, homography, (800, 500))
+            relaxed = cv2.CALIB_CB_NORMALIZE_IMAGE | cv2.CALIB_CB_EXHAUSTIVE
+            found, rectified_corners = cv2.findChessboardCornersSB(
+                rectified, pattern, flags=relaxed)
+            if found:
+                inverse = cv2.getPerspectiveTransform(destination, source)
+                corners = cv2.perspectiveTransform(rectified_corners, inverse)
+    if not found:
+        # Table slats can dominate a full-frame search.  Search compact bright
+        # carrier candidates independently at 2x scale.  The detected points
+        # are mapped exactly back to original pixels, so downstream PnP and
+        # reprojection gates are unchanged.
+        _level, bright = cv2.threshold(gray, 100, 255, cv2.THRESH_BINARY)
+        contours, _hierarchy = cv2.findContours(bright, cv2.RETR_LIST,
+                                                  cv2.CHAIN_APPROX_SIMPLE)
+        candidates = []
+        for contour in contours:
+            area = cv2.contourArea(contour)
+            (cx, cy), (width, height), _angle = cv2.minAreaRect(contour)
+            ratio = max(width, height) / max(min(width, height), 1.0)
+            if area >= 1500.0 and 1.0 <= ratio <= 3.5:
+                candidates.append((area, cx, cy, width, height))
+        for _area, cx, cy, width, height in sorted(candidates, reverse=True)[:6]:
+            side = max(width, height) * 1.35
+            x0 = max(0, int(cx - side / 2)); x1 = min(gray.shape[1], int(cx + side / 2))
+            y0 = max(0, int(cy - side / 2)); y1 = min(gray.shape[0], int(cy + side / 2))
+            if x1 - x0 < 40 or y1 - y0 < 40:
+                continue
+            crop = cv2.resize(gray[y0:y1, x0:x1], None, fx=2.0, fy=2.0,
+                              interpolation=cv2.INTER_CUBIC)
+            found, local = cv2.findChessboardCornersSB(crop, pattern,
+                flags=cv2.CALIB_CB_NORMALIZE_IMAGE | cv2.CALIB_CB_EXHAUSTIVE)
+            if found:
+                corners = local / 2.0 + np.array([[[x0, y0]]], dtype=np.float32)
+                break
     return bool(found), corners
 
 

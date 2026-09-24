@@ -1,0 +1,142 @@
+{
+  "sample_id": "20260924-093153-888297",
+  "captured_at": "2026-09-24T09:32:00.827401+08:00",
+  "accepted": false,
+  "setup": "eye_in_hand",
+  "robot_transform": "base_to_tool0",
+  "camera_transform": "target_to_camera",
+  "board_squares": [
+    10,
+    7
+  ],
+  "inner_corners": [
+    9,
+    6
+  ],
+  "square_size_m": 0.006,
+  "detected": false,
+  "detected_corner_count": 0,
+  "robot": {
+    "frame_count": 742,
+    "duration_s": 5.938378766000369,
+    "max_position_motion_mm": 0.06063444855628382,
+    "max_rotation_motion_deg": 0.008535275198480501,
+    "q_actual_mean_rad": [
+      -0.07941449872575645,
+      -2.1014015301379927,
+      -1.2978433707493735,
+      -4.480717782013654,
+      4.239339014911908,
+      -0.8104772001746652
+    ],
+    "base_to_tool0_tcp_mean": [
+      0.733097664373362,
+      -0.17844619958709074,
+      0.4313692511263472,
+      -1.1811871982411206,
+      -2.6340605660431526,
+      -0.6484924419329535
+    ],
+    "first_tcp_pose": [
+      0.7331046285754093,
+      -0.17842664777320744,
+      0.4313690376631144,
+      -1.1810968008813447,
+      -2.6340993930676166,
+      -0.6485134956261186
+    ],
+    "last_tcp_pose": [
+      0.733103443711326,
+      -0.17845621868953082,
+      0.43133052108825387,
+      -1.181199193733465,
+      -2.634026106923614,
+      -0.6484276712641505
+    ]
+  },
+  "motion_limits": {
+    "position_mm": 0.5,
+    "rotation_deg": 0.2
+  },
+  "camera_info": {
+    "width": 1280,
+    "height": 1024,
+    "distortion_model": "plumb_bob",
+    "k": [
+      1743.688303805104,
+      0.0,
+      538.1910185232366,
+      0.0,
+      1743.688303805104,
+      512.7044230258488,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "d": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "r": [
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "p": [
+      1743.688303805104,
+      0.0,
+      538.1910185232366,
+      -0.0,
+      0.0,
+      1743.688303805104,
+      512.7044230258488,
+      -0.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0
+    ]
+  },
+  "files": {
+    "image": "/home/jx/UR10/outputs/handeye/samples/20260924-093153-888297/image.png",
+    "corners": "/home/jx/UR10/outputs/handeye/samples/20260924-093153-888297/corners.png",
+    "robot_frames": "/home/jx/UR10/outputs/handeye/samples/20260924-093153-888297/robot_frames.json",
+    "cloud": "/home/jx/UR10/outputs/handeye/samples/20260924-093153-888297/cloud.npz"
+  },
+  "cloud": {
+    "resolution": [
+      1280,
+      1024
+    ],
+    "frame_id": "mechmind_camera/point_cloud",
+    "finite_points": 1071001,
+    "finite_fraction": 0.8171089172363282,
+    "npz_keys": [
+      "base_from_tool0",
+      "camera_xyz_m",
+      "cloud_frame_id",
+      "cloud_is_dense",
+      "cloud_resolution",
+      "d",
+      "image_frame_id",
+      "inner_corners",
+      "k",
+      "sample_id",
+      "schema_version",
+      "square_size_m",
+      "transforms_note"
+    ]
+  },
+  "rejection_reasons": [
+    "checkerboard not detected"
+  ]
+}

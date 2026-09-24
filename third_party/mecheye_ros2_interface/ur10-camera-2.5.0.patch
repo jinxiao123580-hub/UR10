@@ -1,0 +1,67 @@
+diff --git a/include/MechMindCamera.h b/include/MechMindCamera.h
+index f4b7d05..9cec232 100644
+--- a/include/MechMindCamera.h
++++ b/include/MechMindCamera.h
+@@ -47,6 +47,9 @@ private:
+     mmind::eye::CameraIntrinsics intrinsics;
+ 
+     std::string camera_ip;
++// >>> UR10-setup
++    std::string camera_fw_version;
++// <<< UR10-setup
+     bool save_file = false;
+     bool use_external_intri = false;
+     double fx = 0;
+diff --git a/src/MechMindCamera.cpp b/src/MechMindCamera.cpp
+index 1ebce18..20d4fa8 100644
+--- a/src/MechMindCamera.cpp
++++ b/src/MechMindCamera.cpp
+@@ -78,6 +78,9 @@ MechMindCamera::MechMindCamera()
+     node = rclcpp::Node::make_shared("mechmind_camera_publisher_service");
+ 
+     node->declare_parameter<std::string>("camera_ip", "");
++// >>> UR10-setup
++    node->declare_parameter<std::string>("camera_fw_version", "2.5.0");
++// <<< UR10-setup
+     node->declare_parameter<bool>("save_file", false);
+     node->declare_parameter<bool>("use_external_intri", false);
+     node->declare_parameter<double>("fx", 0.0);
+@@ -86,6 +89,9 @@ MechMindCamera::MechMindCamera()
+     node->declare_parameter<double>("v", 0.0);
+ 
+     node->get_parameter("camera_ip", camera_ip);
++// >>> UR10-setup
++    node->get_parameter("camera_fw_version", camera_fw_version);
++// <<< UR10-setup
+     node->get_parameter("save_file", save_file);
+     node->get_parameter("use_external_intri", use_external_intri);
+     node->get_parameter("fx", fx);
+@@ -105,6 +111,28 @@ MechMindCamera::MechMindCamera()
+     pub_camera_info =
+         node->create_publisher<sensor_msgs::msg::CameraInfo>("/mechmind/camera_info", 1);
+ 
++// >>> UR10-setup
++    // camera_ip 非空 → 按 IP 直连指定相机；为空 → 保持官方默认的自动发现。
++    // （官方源码里按 IP 连接那段是注释掉的，且写死 Version("2.3.4")，照抄会连不上）
++    if (!camera_ip.empty())
++    {
++        mmind::eye::CameraInfo info;
++        info.ipAddress = camera_ip;
++        info.port = 5577;
++        if (!camera_fw_version.empty())
++        {
++            info.firmwareVersion = mmind::eye::Version(camera_fw_version.c_str());
++        }
++        auto connect_status = camera.connect(info);
++        if (!connect_status.isOK())
++        {
++            throw connect_status;
++        }
++        std::cout << "按 IP 直连相机成功: " << camera_ip
++                  << " (固件 " << camera_fw_version << ")" << std::endl;
++    }
++    else
++// <<< UR10-setup
+     if (!findAndConnect(camera))
+         throw mmind::eye::ErrorStatus{mmind::eye::ErrorStatus::MMIND_STATUS_INVALID_DEVICE,
+                                       "Camera not found."};

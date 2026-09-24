@@ -1,0 +1,75 @@
+{
+  "captured_at": "2026-09-24T10:19:33+0800",
+  "setup": "eye_in_hand",
+  "board_squares": [
+    10,
+    7
+  ],
+  "inner_corners": [
+    9,
+    6
+  ],
+  "expected_corner_count": 54,
+  "square_size_m": 0.006,
+  "detected": false,
+  "detected_corner_count": 0,
+  "image": {
+    "width": 1280,
+    "height": 1024,
+    "encoding": "bgr8",
+    "frame_id": "mechmind_camera/color_map"
+  },
+  "camera_info": {
+    "width": 1280,
+    "height": 1024,
+    "frame_id": "mechmind_camera/color_map",
+    "distortion_model": "plumb_bob",
+    "k": [
+      1743.688303805104,
+      0.0,
+      538.1910185232366,
+      0.0,
+      1743.688303805104,
+      512.7044230258488,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "d": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "r": [
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "p": [
+      1743.688303805104,
+      0.0,
+      538.1910185232366,
+      -0.0,
+      0.0,
+      1743.688303805104,
+      512.7044230258488,
+      -0.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0
+    ]
+  },
+  "files": {
+    "image": "/home/jx/UR10/outputs/vision/checkerboard-debug-20260924-r2/image.png",
+    "corners": "/home/jx/UR10/outputs/vision/checkerboard-debug-20260924-r2/corners.png"
+  }
+}

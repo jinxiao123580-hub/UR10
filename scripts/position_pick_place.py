@@ -7,9 +7,12 @@ import math
 import os
 import signal
 import socket
+import subprocess
 import sys
 import time
 
+import cv2
+import numpy as np
 from record_ur_trajectory import RealtimeReader
 from rq_gripper import RobotiqGripper
 
@@ -72,7 +75,13 @@ class PositionPickPlace:
         with socket.create_connection((ROBOT_IP, COMMAND_PORT), timeout=3.0) as sock:
             sock.sendall(program.encode("ascii"))
 
-        deadline = time.monotonic() + max(8.0, math.dist(pose[:3], self.current[:3]) / self.args.speed * 3.0)
+        def rotation_error(actual, target):
+            left, _ = cv2.Rodrigues(np.asarray(actual[3:], dtype=float))
+            right, _ = cv2.Rodrigues(np.asarray(target[3:], dtype=float))
+            return float(np.linalg.norm(cv2.Rodrigues(left.T @ right)[0]))
+        expected = max(math.dist(pose[:3], self.current[:3]) / self.args.speed,
+                       rotation_error(self.current, pose) / self.args.speed)
+        deadline = time.monotonic() + max(15.0, expected * 2.5 + 8.0)
         last = self.current
         while time.monotonic() < deadline:
             if self.stopped:
@@ -80,10 +89,112 @@ class PositionPickPlace:
             _, last, velocity = self.reader.read()
             position_error = math.dist(last[:3], pose[:3])
             linear_speed = math.sqrt(sum(value * value for value in velocity[:3]))
-            if position_error <= self.args.position_tolerance and linear_speed <= 0.003:
+            if (position_error <= self.args.position_tolerance and
+                    rotation_error(last, pose) <= 0.02 and linear_speed <= 0.003):
                 self.current = list(last)
                 return
-        raise RuntimeError("未到位：%s，位置误差 %.1f mm" % (label, math.dist(last[:3], pose[:3]) * 1000.0))
+        self.stop_robot()
+        raise RuntimeError("未到位且已发送 stopj：%s，位置误差 %.1f mm" %
+                           (label, math.dist(last[:3], pose[:3]) * 1000.0))
+
+    def refresh_auto_plan(self):
+        """Re-observe from the pick hover and rebuild a board-aligned plan.
+
+        This is intentionally fixed-command rather than a user-provided shell
+        hook: a plan may gain a new target only through the read-only camera
+        locator and the bounded 50 mm-cube planner.  Any failed observation
+        aborts before the descent and leaves the gripper open.
+        """
+        root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        env = os.environ.copy()
+        env.setdefault("FASTDDS_BUILTIN_TRANSPORTS", "UDPv4")
+        observation = self.args.refresh_observation
+        refreshed = self.args.refresh_poses
+        initial_path = (self.args.poses if os.path.isabs(self.args.poses)
+                        else os.path.join(root, self.args.poses))
+        print("① 悬停位复拍：只识别物块点云（不看棋盘；失败则不下降）", flush=True)
+        tracked = subprocess.run(
+            [sys.executable, os.path.join(root, "scripts", "track_cube_without_checkerboard.py"),
+             "--anchor", initial_path, "--min-coverage", "0.45", "--output", observation],
+            cwd=root, env=env).returncode == 0
+        if not tracked:
+            # Near the jaws a complete top face is often occluded.  Fall back
+            # to a bounded analytic-cube registration; it can correct only a
+            # small translation and never changes the frozen board-aligned yaw.
+            fitted = subprocess.run(
+                [sys.executable, os.path.join(root, "scripts", "fit_cube_partial_cloud.py"),
+                 "--template", initial_path, "--partial", observation,
+                 "--max-shift-mm", "8", "--max-p80-mm", "9",
+                 "--output", observation + ".partial-fit.json"],
+                cwd=root, env=env).returncode == 0
+            if fitted:
+                observation += ".partial-fit.json"
+            elif self.args.active_view_plan:
+                print("② 普通复拍不稳定：开始门禁后的低速多视角环视", flush=True)
+                active_dir = self.args.active_view_output_dir
+                subprocess.run(
+                    [sys.executable, os.path.join(root, "scripts", "run_active_cube_views.py"),
+                     "--plan", self.args.active_view_plan, "--anchor", initial_path,
+                     "--output-dir", active_dir, "--execute"],
+                    cwd=root, env=env, check=True)
+                merged = os.path.join(active_dir, "merged.json")
+                subprocess.run(
+                    [sys.executable, os.path.join(root, "scripts", "merge_active_cube_views.py"),
+                     "--manifest", os.path.join(active_dir, "manifest.json"), "--output", merged],
+                    cwd=root, env=env, check=True)
+                subprocess.run(
+                    [sys.executable, os.path.join(root, "scripts", "fit_cube_partial_cloud.py"),
+                     "--template", initial_path, "--partial", merged,
+                     "--max-shift-mm", "8", "--max-p80-mm", "2.5",
+                     "--output", merged + ".partial-fit.json"],
+                    cwd=root, env=env, check=True)
+                observation = merged + ".partial-fit.json"
+            else:
+                raise RuntimeError("悬停点云不稳定，且未提供主动多视角计划；停止下降")
+        replan_command = [sys.executable, os.path.join(root, "scripts", "replan_pick_from_cube_track.py"),
+                          "--plan", initial_path, "--track", observation, "--output", refreshed]
+        replan = subprocess.run(replan_command, cwd=root, env=env).returncode == 0
+        if not replan:
+            # A stable cloud that differs greatly from the first board-based
+            # estimate is evidence, not permission.  It may be a real first
+            # pass bias or a different cluster.  Use it solely to centre a
+            # high hover multi-view scan; the final correction is then bounded
+            # tightly against this provisional candidate.
+            if not tracked or not self.args.active_view_plan:
+                raise RuntimeError("复拍修正超限，未获得可执行的多视角复核；停止下降")
+            provisional = refreshed + ".provisional.json"
+            print("② 首次/复拍差异过大：仅上方环视复核，不允许下降", flush=True)
+            subprocess.run(
+                [sys.executable, os.path.join(root, "scripts", "replan_pick_from_cube_track.py"),
+                 "--plan", initial_path, "--track", observation, "--max-correction-mm", "50",
+                 "--output", provisional], cwd=root, env=env, check=True)
+            subprocess.run(
+                [sys.executable, os.path.join(root, "scripts", "plan_active_cube_views.py"),
+                 "--plan", provisional, "--output", self.args.active_view_plan],
+                cwd=root, env=env, check=True)
+            active_dir = self.args.active_view_output_dir
+            subprocess.run(
+                [sys.executable, os.path.join(root, "scripts", "run_active_cube_views.py"),
+                 "--plan", self.args.active_view_plan, "--anchor", provisional,
+                 "--output-dir", active_dir, "--execute"], cwd=root, env=env, check=True)
+            merged = os.path.join(active_dir, "merged.json")
+            subprocess.run(
+                [sys.executable, os.path.join(root, "scripts", "merge_active_cube_views.py"),
+                 "--manifest", os.path.join(active_dir, "manifest.json"), "--output", merged],
+                cwd=root, env=env, check=True)
+            fitted = merged + ".partial-fit.json"
+            subprocess.run(
+                [sys.executable, os.path.join(root, "scripts", "fit_cube_partial_cloud.py"),
+                 "--template", provisional, "--partial", merged,
+                 "--max-shift-mm", "8", "--max-p80-mm", "9", "--output", fitted],
+                cwd=root, env=env, check=True)
+            subprocess.run(
+                [sys.executable, os.path.join(root, "scripts", "replan_pick_from_cube_track.py"),
+                 "--plan", provisional, "--track", fitted, "--max-correction-mm", "8",
+                 "--output", refreshed], cwd=root, env=env, check=True)
+        pick, place = self.load_poses(refreshed)
+        self.validate(pick, place)
+        return pick, place
 
     def run(self):
         pick, place = self.load_poses(self.args.poses)
@@ -95,8 +206,10 @@ class PositionPickPlace:
         if self.args.dry_run:
             print("DRY-RUN：点位和参数有效，未连接机器人。")
             return 0
+        if not self.args.execute:
+            raise RuntimeError("默认拒绝真机运动；先用 --dry-run，现场确认后才可加 --execute")
 
-        self.reader = RealtimeReader(ROBOT_IP)
+        self.reader = RealtimeReader(ROBOT_IP, port=self.args.state_port)
         _, self.current, _ = self.reader.read()
         gripper = RobotiqGripper()
         try:
@@ -118,6 +231,12 @@ class PositionPickPlace:
                        "起点" if reverse else "终点"), flush=True)
                 gripper.open()
                 self.move_and_verify(src_up, "① 到取物点上方")
+                if self.args.reobserve_at_hover:
+                    pick, place = self.refresh_auto_plan()
+                    src, dst = (place, pick) if reverse else (pick, place)
+                    src_up = list(src); src_up[2] += self.args.height
+                    dst_up = list(dst); dst_up[2] += self.args.height
+                    self.move_and_verify(src_up, "①b 按复测结果调整到取物点上方")
                 self.move_and_verify(src, "② 下降到取物点")
                 print("③ 闭合夹爪（仅检查 Robotiq OBJ，不使用力传感器）")
                 gripper.close()
@@ -129,6 +248,9 @@ class PositionPickPlace:
                 if obj != 2 and self.args.demo:
                     print("   演示模式：忽略 OBJ=%s，继续位置搬运（不代表夹持成功）" % obj)
                 self.move_and_verify(src_up, "④ 抬起")
+                if self.args.hold_after_pick:
+                    print("✔ 已抓取并抬起：保持夹紧，交由接触式放置流程处理。")
+                    return 0
                 self.move_and_verify(dst_up, "⑤ 到放置点上方")
                 self.move_and_verify(dst, "⑥ 下降到放置点")
                 print("⑦ 张开夹爪")
@@ -159,6 +281,21 @@ def parse_args():
                         help="往返：奇数轮 pick→place，偶数轮 place→pick")
     parser.add_argument("--cycles", type=int, default=1, help="执行轮数，默认 1")
     parser.add_argument("--dry-run", action="store_true", help="只检查 JSON 和门限，不连接硬件")
+    parser.add_argument("--execute", action="store_true",
+                        help="显式授权真机运动；未提供时脚本拒绝打开运动流程")
+    parser.add_argument("--state-port", type=int, default=30013,
+                        help="UR 只读状态端口；本机为 30013")
+    parser.add_argument("--reobserve-at-hover", action="store_true",
+                        help="到初始取物悬停位后，复拍物块/棋盘并重算点位；失败则不下降")
+    parser.add_argument("--refresh-observation",
+                        default="outputs/vision/cube-track-refresh.json")
+    parser.add_argument("--refresh-poses",
+                        default="outputs/vision/auto-cube-pick-place-plan-refresh.json")
+    parser.add_argument("--active-view-plan", default=None,
+                        help="optional active_cube_view_plan; used only after ordinary hover tracking fails")
+    parser.add_argument("--active-view-output-dir", default="outputs/vision/active-cube-views")
+    parser.add_argument("--hold-after-pick", action="store_true",
+                        help="after verified grasp/lift, keep the cube clamped and exit without fixed-height placement")
     return parser.parse_args()
 
 

@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "mode": "bounded_translation_only_partial_cloud_fit",
+  "status": "partial_fit_consistent",
+  "motion_authorization": "none: partial-cloud consistency/refinement only; never authorizes contact or grasp",
+  "template": "/home/jx/UR10/outputs/vision/auto-cube-pick-place-plan.json",
+  "partial": "outputs/vision/cube-track-refresh.json",
+  "template_kind": "analytic_50mm_cube_from_initial_plan",
+  "template_center_base_m": [
+    0.5761406685997094,
+    -0.21116771613392882,
+    0.012251638504067852
+  ],
+  "fitted_center_base_m": [
+    0.5765573763313481,
+    -0.21892951467776212,
+    0.012290779780155445
+  ],
+  "translation_correction_mm": [
+    0.4167077316387102,
+    -7.761798543833298,
+    0.03914127608759281
+  ],
+  "max_shift_mm": 8.0,
+  "table_z_base_m": -0.01274836149593215,
+  "template_cube_surface_points": 7532,
+  "partial_cube_surface_points": 50000,
+  "nearest_template_residual_mm": {
+    "p50": 1.7368685385314702,
+    "p80": 2.8756470897807356,
+    "p95": 26.31382220364193
+  },
+  "bound_not_hit": true,
+  "iterations": [
+    {
+      "trimmed_p80_mm": 8.86315832848638,
+      "delta_m": [
+        0.00027794579063933345,
+        -0.00582177819292129,
+        2.1304993612020554e-05
+      ],
+      "points": 40000
+    },
+    {
+      "trimmed_p80_mm": 4.350138967964077,
+      "delta_m": [
+        0.00035715770412642067,
+        -0.0070529857881156816,
+        2.8695536725206403e-05
+      ],
+      "points": 40000
+    },
+    {
+      "trimmed_p80_mm": 3.4090203400686288,
+      "delta_m": [
+        0.0003907126320073506,
+        -0.007512838430218993,
+        3.2825090268115246e-05
+      ],
+      "points": 40000
+    },
+    {
+      "trimmed_p80_mm": 3.0697000744635767,
+      "delta_m": [
+        0.00040792238101849954,
+        -0.007732715988069225,
+        3.5987699341434067e-05
+      ],
+      "points": 40000
+    },
+    {
+      "trimmed_p80_mm": 2.8982249683678685,
+      "delta_m": [
+        0.0004167077316387102,
+        -0.007761798543833298,
+        3.914127608759281e-05
+      ],
+      "points": 40000
+    }
+  ],
+  "limitations": [
+    "translation only; cube yaw is not observable from a symmetric partial view",
+    "template and partial clouds must be from an unchanged scene",
+    "a rejected strict full-cube observation remains rejected for contact planning"
+  ]
+}

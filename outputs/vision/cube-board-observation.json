@@ -1,0 +1,109 @@
+{
+  "captured_at": "2026-09-24T11:54:57+0800",
+  "status": "candidate_not_motion_authorized",
+  "motion_authorization": "none: observation only; no robot command was sent",
+  "robot_motion_during_capture_mm": 0.01122473270598666,
+  "checkerboard_image_attempt": 1,
+  "checkerboard_target_to_camera": [
+    [
+      -0.22804664962654572,
+      -0.9684699321269363,
+      -0.10030312138789543,
+      0.1165074882572774
+    ],
+    [
+      0.6231494918343088,
+      -0.06602147404115516,
+      -0.7793111546693501,
+      -0.03418905928020286
+    ],
+    [
+      0.748117261143432,
+      -0.24022313696120207,
+      0.6185575220201993,
+      0.40644257705461534
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "candidate_count": 1,
+  "candidates": [
+    {
+      "sign": -1.0,
+      "pixels": 29900,
+      "score": 0.010916740423325383,
+      "center_target_m": [
+        0.13958083295858123,
+        0.022068268625912824,
+        -0.043076485625147015
+      ],
+      "extent_p5_p95_m": [
+        0.04513961184295592,
+        0.04600677395152761,
+        0.024755067736141497
+      ],
+      "height_m": 0.043076485625147015
+    }
+  ],
+  "best": {
+    "sign": -1.0,
+    "pixels": 29900,
+    "score": 0.010916740423325383,
+    "center_target_m": [
+      0.13958083295858123,
+      0.022068268625912824,
+      -0.043076485625147015
+    ],
+    "extent_p5_p95_m": [
+      0.04513961184295592,
+      0.04600677395152761,
+      0.024755067736141497
+    ],
+    "height_m": 0.043076485625147015
+  },
+  "inference": {
+    "basis": "visible side plane plus known 0.05 m cube size",
+    "side_normal_target_axis": "x",
+    "cube_center_target_m": [
+      0.16458083295858122,
+      0.022068268625912824,
+      -0.025
+    ]
+  },
+  "estimated_cube_center_camera_m": [
+    0.060110504124727376,
+    0.08639520238611909,
+    0.5088030922771696
+  ],
+  "estimated_cube_center_base_m": [
+    0.5761406685997094,
+    -0.21116771613392882,
+    0.012251638504067852
+  ],
+  "board_center_base_m": [
+    0.4352139072841169,
+    -0.2106906886145605,
+    -0.011776499304353536
+  ],
+  "board_normal_base": [
+    0.006909300317312946,
+    0.0025035871580690525,
+    0.9999729964456378
+  ],
+  "board_x_axis_base": [
+    0.9988989244217832,
+    0.04638627237773281,
+    -0.00701801424263568
+  ],
+  "board_center_definition": "centre of 9x6 inner-corner grid; configurable CLI x/y",
+  "assumed_cube_size_m": [
+    0.05,
+    0.05,
+    0.05
+  ],
+  "note": "Candidate only; no robot command was sent and physical reach validation is pending."
+}

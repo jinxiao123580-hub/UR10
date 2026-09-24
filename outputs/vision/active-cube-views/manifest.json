@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "kind": "active_cube_view_capture_manifest",
+  "motion_sent": true,
+  "complete": true,
+  "plan": "outputs/vision/active-cube-view-plan.json",
+  "gate": "outputs/vision/active-cube-view-gate.json",
+  "views": [
+    {
+      "slot": 1,
+      "roll_deg": 0.0,
+      "settled_tcp_m_rad": [
+        0.438807523894089,
+        -0.303995007304902,
+        0.3117637669810486,
+        3.1361186883566914,
+        -0.05350502022682283,
+        -0.011334275474726466
+      ],
+      "report": "/home/jx/UR10/outputs/vision/active-cube-views/view-01.json",
+      "tracker_returncode": 0
+    },
+    {
+      "slot": 2,
+      "roll_deg": 25.0,
+      "settled_tcp_m_rad": [
+        0.4388665941132894,
+        -0.3037722717353253,
+        0.31171944356854625,
+        3.05592211544996,
+        -0.7004548576967706,
+        -0.009255023534192082
+      ],
+      "report": "/home/jx/UR10/outputs/vision/active-cube-views/view-02.json",
+      "tracker_returncode": 0
+    },
+    {
+      "slot": 3,
+      "roll_deg": -25.0,
+      "settled_tcp_m_rad": [
+        0.4388429955443199,
+        -0.30374935712696177,
+        0.3117624025731939,
+        3.0808866753677338,
+        0.5965138729440099,
+        -0.012683051825515546
+      ],
+      "report": "/home/jx/UR10/outputs/vision/active-cube-views/view-03.json",
+      "tracker_returncode": 0
+    }
+  ],
+  "runtime_board_usage": "none after hover: cloud only"
+}

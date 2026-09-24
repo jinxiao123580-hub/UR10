@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "kind": "auto_cube_pick_place_plan",
+  "motion_sent": false,
+  "authorization": "none: inspect and gate before any --execute motion",
+  "inputs": {
+    "observation": "outputs/vision/cube-board-observation.json",
+    "grasp_center": "config/gripper_grasp_center_20260922.yaml"
+  },
+  "cube_edge_m": 0.05,
+  "board_normal_base": [
+    0.006909300317312946,
+    0.0025035871580690525,
+    0.9999729964456378
+  ],
+  "board_tilt_deg": 0.4210649325273757,
+  "gripper_center_pick_base_m": [
+    0.5765573763313481,
+    -0.21892951467776212,
+    0.06229077978015545
+  ],
+  "gripper_center_place_base_m": [
+    0.4353866397920497,
+    -0.21062809893560877,
+    0.013222825606787407
+  ],
+  "tool_orientation_source": "tool +Z down; tool X parallel to checkerboard X",
+  "pick": [
+    0.5780774224011582,
+    -0.2183787255030035,
+    0.28228483899819573,
+    3.138385787971994,
+    0.07284201395431533,
+    -0.010933355745434225
+  ],
+  "place": [
+    0.43690668586185855,
+    -0.21007730976083358,
+    0.23321688482482772,
+    3.138385787971994,
+    0.07284201395431533,
+    -0.010933355745434225
+  ],
+  "height": 0.08,
+  "execution_limits": {
+    "speed_m_s": 0.015,
+    "acceleration_m_s2": 0.04,
+    "position_tolerance_m": 0.002
+  },
+  "cube_center_base_m": [
+    0.5765573763313481,
+    -0.21892951467776212,
+    0.012290779780155445
+  ],
+  "pointcloud_grasp_level": {
+    "cube_height_m": 0.05,
+    "cube_top_z_base_m": 0.03729077978015545,
+    "depth_below_top_mm": -25.0,
+    "height_above_top_mm": 25.0,
+    "gripper_center_z_base_m": 0.06229077978015545,
+    "policy": "pointcloud_top_plus_25mm"
+  },
+  "second_observation": {
+    "mode": "boardless_cube_cloud_only",
+    "board_usage": "none; board centre and orientation frozen from initial plan",
+    "track": "outputs/vision/cube-track-refresh.json.partial-fit.json",
+    "translation_correction_mm": 7.773074939054297
+  }
+}

@@ -57,6 +57,20 @@ def cube_only(points, centre, table_z, half=0.065):
     return points[keep]
 
 
+def synthetic_cube_surface(centre, rotation, edge=0.05, count=44):
+    """Known 50 mm cube template used when no full-view cloud was archived."""
+    half = edge / 2.0
+    grid = np.linspace(-half, half, count)
+    u, v = np.meshgrid(grid, grid)
+    local = [np.column_stack((u.ravel(), v.ravel(), np.full(u.size, half)))]
+    for axis, sign in ((0, -1), (0, 1), (1, -1), (1, 1)):
+        points = np.zeros((u.size, 3)); points[:, axis] = sign * half
+        other = [value for value in range(3) if value != axis]
+        points[:, other[0]], points[:, other[1]] = u.ravel(), v.ravel()
+        local.append(points)
+    return np.concatenate(local) @ rotation.T + centre
+
+
 def robust_icp(source, target, bound_m, iterations=12):
     """Translation-only, trimmed ICP with a hard prior bound around zero."""
     tree = cKDTree(target)
@@ -93,17 +107,26 @@ def main():
         parser.error("--max-shift-mm must be within 0.5..20")
     template = load_report(args.template)
     partial = load_report(args.partial)
-    if template.get("status") != "tracked_stable":
-        raise RuntimeError("template must be a stable complete cube observation")
-    centre = np.asarray(template["center_base_m"], dtype=float)
-    geometry = [row["geometry"] for row in template["observations"]
-                if row.get("status") == "measured"]
-    if not geometry:
-        raise RuntimeError("template has no measured geometry")
-    height = float(np.median([row["measured_height_m"] for row in geometry]))
-    table_z = float(centre[2] - height / 2.0)
+    if template.get("status") == "tracked_stable":
+        centre = np.asarray(template["center_base_m"], dtype=float)
+        geometry = [row["geometry"] for row in template["observations"]
+                    if row.get("status") == "measured"]
+        if not geometry:
+            raise RuntimeError("template has no measured geometry")
+        height = float(np.median([row["measured_height_m"] for row in geometry]))
+        table_z = float(centre[2] - height / 2.0)
+        template_points = np.concatenate([base_points(value) for value in saved_paths(template)])
+        template_kind = "archived_full_view_cloud"
+    elif template.get("kind") == "auto_cube_pick_place_plan":
+        centre = np.asarray(template.get("cube_center_base_m") or
+                            template["gripper_center_pick_base_m"], dtype=float)
+        rotation, _ = __import__("cv2").Rodrigues(np.asarray(template["pick"][3:], dtype=float))
+        height, table_z = 0.05, float(centre[2] - 0.025)
+        template_points = synthetic_cube_surface(centre, rotation, edge=0.05)
+        template_kind = "analytic_50mm_cube_from_initial_plan"
+    else:
+        raise RuntimeError("template must be a stable cloud report or an auto cube plan")
     rng = np.random.default_rng(20260922)
-    template_points = np.concatenate([base_points(value) for value in saved_paths(template)])
     partial_points = np.concatenate([base_points(value) for value in saved_paths(partial)])
     model = cube_only(template_points, centre, table_z)
     source = cube_only(partial_points, centre, table_z)
@@ -122,6 +145,7 @@ def main():
         "status": status,
         "motion_authorization": "none: partial-cloud consistency/refinement only; never authorizes contact or grasp",
         "template": args.template, "partial": args.partial,
+        "template_kind": template_kind,
         "template_center_base_m": centre.tolist(),
         "fitted_center_base_m": (centre + delta).tolist(),
         "translation_correction_mm": (delta * 1000.0).tolist(),

@@ -1,9 +1,23 @@
 # 交接文档 · UR10 视觉力觉抓取系统
 
-最后更新：2026-09-18。本文只保留当前可用状态；原始数据、失败实验和历史过程在
+最后更新：2026-09-24。本文只保留当前可用状态；原始数据、失败实验和历史过程在
 `outputs/`、`experiments/` 与 `legacy/`。
 
 ## 0A. 最新接手状态
+
+### 2026-09-24 视觉自主抓取验收（当前入口）
+
+- 当前自动入口为 `FASTDDS_BUILTIN_TRANSPORTS=UDPv4 python3 scripts/auto_cube_pick_place.py --execute`；
+  完整前置项与命令见 `docs/17-视觉自主抓取验收.md`。它会先复拍物块；首次/复拍不一致时使用
+  三视角点云复核，而不是直接按首次棋盘定位下降。
+- 夹取点是用户实测的 tool0 `+Z` 220 mm 夹取中心；当前策略对准**点云物块顶面上方 25 mm**。
+  本轮 Robotiq 返回 `OBJ=2` 后才执行搬运。
+- 放置为原始 ATI `Fz` 接触式：安全高度起始、2 mm 步进、相对基线突变 `>=8 N` 时 stopj、张开、
+  抬离。2026-09-24 实测在第 18 步触发 `10.24 N`，已完成释放和离开；这不使用未验证的重力补偿。
+- 棋盘格检测新增抗栅格干扰的裁剪放大回退；预检证据
+  `outputs/vision/checkerboard-preflight-fixed-20260924/result.json` 为 54/54，RMS 0.253 px。
+- 相机 ROS 的本机直连补丁和启动文件已归档在 `third_party/mecheye_ros2_interface/`；厂商 SDK 2.5.0
+  是不可随仓库再分发的外部前置项，恢复脚本为 `scripts/bootstrap_mecheye_workspace.sh`。
 
 ### 设备与环境
 

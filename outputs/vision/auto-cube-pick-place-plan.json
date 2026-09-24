@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "kind": "auto_cube_pick_place_plan",
+  "motion_sent": false,
+  "authorization": "none: inspect and gate before any --execute motion",
+  "inputs": {
+    "observation": "outputs/vision/cube-board-observation.json",
+    "grasp_center": "config/gripper_grasp_center_20260922.yaml"
+  },
+  "cube_edge_m": 0.05,
+  "board_normal_base": [
+    0.006909300317312946,
+    0.0025035871580690525,
+    0.9999729964456378
+  ],
+  "board_tilt_deg": 0.4210649325273757,
+  "gripper_center_pick_base_m": [
+    0.5761406685997094,
+    -0.21116771613392882,
+    0.012251638504067852
+  ],
+  "gripper_center_place_base_m": [
+    0.4353866397920497,
+    -0.21062809893560877,
+    0.013222825606787407
+  ],
+  "tool_orientation_source": "tool +Z down; tool X parallel to checkerboard X",
+  "pick": [
+    0.5776607146695182,
+    -0.21061692695915363,
+    0.23224569772210815,
+    3.138385787971994,
+    0.07284201395431533,
+    -0.010933355745434225
+  ],
+  "place": [
+    0.43690668586185855,
+    -0.21007730976083358,
+    0.23321688482482772,
+    3.138385787971994,
+    0.07284201395431533,
+    -0.010933355745434225
+  ],
+  "height": 0.08,
+  "execution_limits": {
+    "speed_m_s": 0.015,
+    "acceleration_m_s2": 0.04,
+    "position_tolerance_m": 0.002
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "kind": "active_cube_view_plan",
+  "motion_sent": false,
+  "authorization": "none: must pass per-segment collision/J6 gate before execution",
+  "cube_hover_gripper_center_base_m": [
+    0.5766934126250944,
+    -0.2109674291612833,
+    0.09224947821971888
+  ],
+  "views": [
+    {
+      "slot": 1,
+      "tool_roll_deg": 0.0,
+      "target_tcp_pose_m_rad": [
+        0.5782134586949046,
+        -0.21041663998652468,
+        0.3122435374377592,
+        3.138385787971994,
+        0.07284201395431732,
+        -0.010933355745423938
+      ]
+    },
+    {
+      "slot": 2,
+      "tool_roll_deg": 25.0,
+      "target_tcp_pose_m_rad": [
+        0.5782134586949046,
+        -0.21041663998652468,
+        0.3122435374377592,
+        3.0783382584062706,
+        -0.6078750080184372,
+        -0.009873781034590346
+      ]
+    },
+    {
+      "slot": 3,
+      "tool_roll_deg": -25.0,
+      "target_tcp_pose_m_rad": [
+        0.5782134586949046,
+        -0.21041663998652468,
+        0.3122435374377592,
+        3.049743589142034,
+        0.7507595648463589,
+        -0.011475748119269337
+      ]
+    }
+  ],
+  "inputs": {
+    "initial_plan": "outputs/vision/auto-cube-pick-place-plan.json"
+  }
+}
