@@ -17,6 +17,8 @@ host.prepend(renderer.domElement);
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(42, 1, 0.01, 8);
+// ROS/RViz use Z up; Three.js defaults to Y up. OrbitControls reads camera.up.
+camera.up.set(0, 0, 1);
 camera.position.set(1.05, -1.20, 0.95);
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.target.set(-0.42, 0, 0.42);
@@ -30,10 +32,16 @@ scene.add(new THREE.HemisphereLight(0xd9edff, 0x202830, 2.2));
 const key = new THREE.DirectionalLight(0xffffff, 2.3);
 key.position.set(1.2, -1.4, 2.5);
 scene.add(key);
-scene.add(new THREE.GridHelper(2.0, 20, 0x3e4b59, 0x26313d));
+const groundGrid = new THREE.GridHelper(2.0, 20, 0x3e4b59, 0x26313d);
+groundGrid.rotation.x = Math.PI / 2;
+scene.add(groundGrid);
 scene.add(new THREE.AxesHelper(0.18));
 
 const arm = new THREE.Group();
+// URDF world/base_link X and Y oppose the controller base coordinates shown
+// elsewhere on this dashboard.  Apply the fixed REP-103/controller π rotation
+// once to the entire scene, never separately to individual links.
+arm.rotation.z = Math.PI;
 scene.add(arm);
 const baseLink = new THREE.Group();
 const shoulder = new THREE.Group();
@@ -50,7 +58,8 @@ Object.values(linkGroups).forEach(group => arm.add(group));
 
 function translation(x, y, z) { return new THREE.Matrix4().makeTranslation(x, y, z); }
 function rpy(roll, pitch, yaw) {
-  return new THREE.Matrix4().makeRotationFromEuler(new THREE.Euler(roll, pitch, yaw, "XYZ"));
+  // URDF fixed-axis roll/pitch/yaw is Rz(yaw) * Ry(pitch) * Rx(roll).
+  return new THREE.Matrix4().makeRotationFromEuler(new THREE.Euler(roll, pitch, yaw, "ZYX"));
 }
 function pose(xyz, angles, q = 0) {
   return translation(...xyz).multiply(rpy(...angles)).multiply(new THREE.Matrix4().makeRotationZ(q));
@@ -100,7 +109,8 @@ const loader = new STLLoader();
 // collision meshes remain in model/ur10/ for collision work, but are not used
 // for the dashboard picture.
 const ur10Assets = [
-  ["base.dae", baseLink, [0, 0, 0], [0, 0, Math.PI]],
+  // base_link -> base_link_inertia rotates π, then its visual rotates π again.
+  ["base.dae", baseLink, [0, 0, 0], [0, 0, 0]],
   ["shoulder.dae", shoulder, [0, 0, 0], [0, 0, Math.PI]],
   ["upperarm.dae", upperArm, [0, 0, 0.220941], [Math.PI / 2, 0, -Math.PI / 2]],
   ["forearm.dae", forearm, [0, 0, 0.049042], [Math.PI / 2, 0, -Math.PI / 2]],
@@ -129,6 +139,8 @@ const daeLoader = new ColladaLoader();
 function loadDae(url, parent, localMatrix) {
   return new Promise((resolve, reject) => daeLoader.load(url, asset => {
     const mesh = asset.scene;
+    // ColladaLoader inserts a Z-up -> Y-up root rotation.  URDF visual
+    // transforms and all link matrices here already use ROS Z-up coordinates.
     mesh.matrixAutoUpdate = false;
     mesh.matrix.copy(localMatrix);
     parent.add(mesh);
@@ -138,10 +150,11 @@ function loadDae(url, parent, localMatrix) {
 const armLoads = ur10Assets.map(([name, parent, xyz, angles]) => {
   return loadDae("/model/ur10/visual/" + name, parent, pose(xyz, angles));
 });
-Promise.all([...cadLoads, ...armLoads]).then(() => {
-  status.textContent = "完整 UR10 + SolidWorks STL 已加载 · 关节状态实时同步";
-  // Frame the full robot only once after all mesh bounds are known.  Subsequent
-  // joint updates preserve the operator's chosen view instead of snapping it.
+let meshesReady = false;
+let initialViewSet = false;
+function frameRobotOnce() {
+  if (!meshesReady || initialViewSet || !window.latestRobotState?.link_world_matrices) return;
+  initialViewSet = true;
   requestAnimationFrame(() => {
     arm.updateMatrixWorld(true);
     const box = new THREE.Box3().setFromObject(arm);
@@ -153,6 +166,11 @@ Promise.all([...cadLoads, ...armLoads]).then(() => {
     controls.target.copy(center);
     controls.update();
   });
+}
+Promise.all([...cadLoads, ...armLoads]).then(() => {
+  meshesReady = true;
+  status.textContent = "完整 UR10 + SolidWorks STL 已加载 · 关节状态实时同步";
+  frameRobotOnce();
 }).catch(error => {
   console.error("SolidWorks STL load failed", error);
   status.textContent = "STL 加载失败（模型文件不可用）";
@@ -166,7 +184,10 @@ function resize() {
 }
 new ResizeObserver(resize).observe(host);
 resize();
-window.addEventListener("ur10-realtime-state", event => updateArm(event.detail.link_world_matrices));
+window.addEventListener("ur10-realtime-state", event => {
+  updateArm(event.detail.link_world_matrices);
+  frameRobotOnce();
+});
 if (window.latestRobotState) updateArm(window.latestRobotState.link_world_matrices);
 
 function render() {
