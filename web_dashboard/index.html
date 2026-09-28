@@ -6,6 +6,14 @@
 <title>UR10 视觉 · 力觉 监控台</title>
 <link rel="stylesheet" href="style.css">
 <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
+<script type="importmap">
+{
+  "imports": {
+    "three": "./vendor/three/three.module.min.js",
+    "three/addons/": "./vendor/three/addons/"
+  }
+}
+</script>
 </head>
 <body>
 <header>
@@ -93,7 +101,10 @@
           <div><span>Ry</span><b id="tcp-ry">--</b><i>rad</i></div>
           <div><span>Rz</span><b id="tcp-rz">--</b><i>rad</i></div>
         </div>
-        <canvas id="tcp-scene" width="760" height="360"></canvas>
+        <div id="robot-3d" class="robot-3d" aria-label="UR10 实时三维模型">
+          <div class="robot-3d-overlay"><b>实时 SolidWorks 末端模型</b><span id="robot-3d-status">正在加载 STL…</span></div>
+          <div class="robot-3d-help">拖拽旋转 · 滚轮缩放 · 右键平移</div>
+        </div>
       </div>
     </div>
   </section>
@@ -108,5 +119,6 @@
 </footer>
 
 <script src="app.js"></script>
+<script type="module" src="robot_view.js"></script>
 </body>
 </html>

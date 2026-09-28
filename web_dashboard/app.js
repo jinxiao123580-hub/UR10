@@ -116,7 +116,6 @@ JOINTS.forEach(([name, limit], i) => {
 });
 
 let robotState = null;
-let sceneYaw = -0.72, scenePitch = 0.48, sceneZoom = 1;
 function onRobotState(d) {
   const badge = $("ur-badge");
   if (!d.connected) {
@@ -125,6 +124,9 @@ function onRobotState(d) {
     return;
   }
   robotState = d;
+  // 供独立的 WebGL 模型视图使用；该事件只携带 30013/30003 的只读状态。
+  window.latestRobotState = d;
+  window.dispatchEvent(new CustomEvent("ur10-realtime-state", { detail: d }));
   badge.textContent = "机械臂在线"; badge.className = "badge badge-on";
   $("ur-rate").textContent = `${d.port} ${d.source_hz.toFixed(1)} Hz · 网页 20 Hz · ${d.frame_size} B`;
   d.q.forEach((rad, i) => {
@@ -138,39 +140,7 @@ function onRobotState(d) {
   ["x", "y", "z", "rx", "ry", "rz"].forEach((key, i) => {
     $(`tcp-${key}`).textContent = d.tcp[i].toFixed(i < 3 ? 4 : 3);
   });
-  drawTcpScene();
 }
-
-function rotvecMatrix(v) {
-  const a = Math.hypot(...v); if (a < 1e-9) return [[1,0,0],[0,1,0],[0,0,1]];
-  const [x,y,z] = v.map(n => n / a), c = Math.cos(a), s = Math.sin(a), C = 1-c;
-  return [[c+x*x*C,x*y*C-z*s,x*z*C+y*s],[y*x*C+z*s,c+y*y*C,y*z*C-x*s],[z*x*C-y*s,z*y*C+x*s,c+z*z*C]];
-}
-function drawTcpScene() {
-  const cv = $("tcp-scene"), ctx = cv.getContext("2d"), rect = cv.getBoundingClientRect();
-  const dpr = window.devicePixelRatio || 1, w = Math.max(320, rect.width), h = Math.max(220, rect.height);
-  cv.width = w*dpr; cv.height = h*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,w,h);
-  const project = ([x,y,z]) => {
-    const cy=Math.cos(sceneYaw), sy=Math.sin(sceneYaw), cp=Math.cos(scenePitch), sp=Math.sin(scenePitch);
-    const x1=cy*x-sy*y, y1=sy*x+cy*y, y2=cp*y1-sp*z, z2=sp*y1+cp*z;
-    const scale=145*sceneZoom, persp=1/(1+Math.max(-.8,z2)*.18);
-    return [w*.5+x1*scale*persp, h*.72-y2*scale*persp];
-  };
-  const line = (a,b,color,width=1) => { const p=project(a),q=project(b); ctx.beginPath();ctx.moveTo(...p);ctx.lineTo(...q);ctx.strokeStyle=color;ctx.lineWidth=width;ctx.stroke(); };
-  for(let n=-1;n<=1.001;n+=.25){ line([n,-1,0],[n,1,0],"#25303b"); line([-1,n,0],[1,n,0],"#25303b"); }
-  line([0,0,0],[1,0,0],"#d95757",2); line([0,0,0],[0,1,0],"#55b86b",2); line([0,0,0],[0,0,1],"#5598df",2);
-  [["X",[1,0,0],"#d95757"],["Y",[0,1,0],"#55b86b"],["Z",[0,0,1],"#5598df"]].forEach(([t,p,c])=>{const q=project(p);ctx.fillStyle=c;ctx.fillText(t,q[0]+4,q[1]-4);});
-  if (!robotState) return;
-  const p=robotState.tcp.slice(0,3), origin=project(p); line([0,0,0],p,"#91a0af",1.5);
-  ctx.beginPath();ctx.arc(origin[0],origin[1],5,0,Math.PI*2);ctx.fillStyle="#f2f5f8";ctx.fill();
-  const R=rotvecMatrix(robotState.tcp.slice(3)), len=.18, colors=["#ff6b6b","#63d47a","#63a9ef"];
-  for(let j=0;j<3;j++) line(p,[p[0]+R[0][j]*len,p[1]+R[1][j]*len,p[2]+R[2][j]*len],colors[j],3);
-}
-const scene = $("tcp-scene"); let drag = null;
-scene.addEventListener("pointerdown", e => { drag=[e.clientX,e.clientY]; scene.setPointerCapture(e.pointerId); });
-scene.addEventListener("pointermove", e => { if(!drag)return; sceneYaw+=(e.clientX-drag[0])*.008; scenePitch=Math.max(-1.2,Math.min(1.2,scenePitch+(e.clientY-drag[1])*.008)); drag=[e.clientX,e.clientY]; drawTcpScene(); });
-scene.addEventListener("pointerup", () => { drag=null; });
-scene.addEventListener("wheel", e => { e.preventDefault(); sceneZoom=Math.max(.55,Math.min(2,sceneZoom*(e.deltaY>0?.9:1.1))); drawTcpScene(); }, {passive:false});
 
 // ---------------------------------------------------------------- 六轴力
 const wrenchBuffers = { raw: wrenchBuf };

@@ -43,6 +43,7 @@ import socket
 import struct
 import threading
 import time
+import urllib.parse
 
 import numpy as np
 import rclpy
@@ -67,6 +68,8 @@ except Exception:
 WS_PORT = 9090
 HTTP_PORT = 8080
 WEB_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "web_dashboard")
+REPO_ROOT = os.path.abspath(os.path.join(WEB_ROOT, ".."))
+CAD_WEB_ROOT = os.path.join(REPO_ROOT, "model", "solidworks")
 
 import cv2  # noqa: E402
 
@@ -294,6 +297,23 @@ class RosWebBridge(Node):
 class _StaticHandler(http.server.SimpleHTTPRequestHandler):
     def log_message(self, *a):
         pass
+
+    def translate_path(self, path):
+        """Serve only the checked-in SolidWorks assets outside web_dashboard.
+
+        The dashboard needs the original binary STL files, but the normal static
+        root is deliberately limited to ``web_dashboard``.  Keep this one
+        read-only namespace narrow and reject traversal attempts.
+        """
+        request_path = urllib.parse.unquote(urllib.parse.urlparse(path).path)
+        prefix = "/model/solidworks/"
+        if request_path.startswith(prefix):
+            relative = request_path[len(prefix):]
+            candidate = os.path.abspath(os.path.join(CAD_WEB_ROOT, relative))
+            if candidate == CAD_WEB_ROOT or candidate.startswith(CAD_WEB_ROOT + os.sep):
+                return candidate
+            return os.path.join(WEB_ROOT, "__forbidden__")
+        return super().translate_path(path)
 
     def end_headers(self):
         # 允许网页在本机任意端口加载 CDN 等资源时不出跨域问题
