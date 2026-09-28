@@ -1,8 +1,9 @@
-/* Live, browser-side UR10 view.  It renders the nominal UR10 kinematic chain
+/* Live, browser-side UR10 view.  It renders the RViz URDF kinematic chain
  * from the read-only realtime joint stream and mounts the same four STL assets
  * used by the preliminary CAD RViz model.  It sends no ROS/UR command. */
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { ColladaLoader } from "three/addons/loaders/ColladaLoader.js";
 import { STLLoader } from "three/addons/loaders/STLLoader.js";
 
 const host = document.getElementById("robot-3d");
@@ -16,9 +17,9 @@ host.prepend(renderer.domElement);
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(42, 1, 0.01, 8);
-camera.position.set(1.45, -1.65, 1.15);
+camera.position.set(1.05, -1.20, 0.95);
 const controls = new OrbitControls(camera, renderer.domElement);
-controls.target.set(-0.35, 0, 0.45);
+controls.target.set(-0.42, 0, 0.42);
 controls.enableDamping = true;
 controls.dampingFactor = 0.08;
 controls.minDistance = 0.45;
@@ -29,66 +30,47 @@ scene.add(new THREE.HemisphereLight(0xd9edff, 0x202830, 2.2));
 const key = new THREE.DirectionalLight(0xffffff, 2.3);
 key.position.set(1.2, -1.4, 2.5);
 scene.add(key);
-scene.add(new THREE.GridHelper(2.4, 24, 0x3e4b59, 0x26313d));
+scene.add(new THREE.GridHelper(2.0, 20, 0x3e4b59, 0x26313d));
 scene.add(new THREE.AxesHelper(0.18));
 
 const arm = new THREE.Group();
 scene.add(arm);
+const baseLink = new THREE.Group();
+const shoulder = new THREE.Group();
+const upperArm = new THREE.Group();
+const forearm = new THREE.Group();
+const wrist1 = new THREE.Group();
+const wrist2 = new THREE.Group();
+const wrist3 = new THREE.Group();
 const tool0 = new THREE.Group();
-arm.add(tool0);
-const metal = new THREE.MeshStandardMaterial({ color: 0x53677a, roughness: 0.43, metalness: 0.62 });
-const jointMat = new THREE.MeshStandardMaterial({ color: 0x2b3845, roughness: 0.36, metalness: 0.72 });
-const linkMeshes = [];
-const jointMeshes = [];
-
-function sphere(radius) {
-  const mesh = new THREE.Mesh(new THREE.SphereGeometry(radius, 20, 14), jointMat);
-  arm.add(mesh); jointMeshes.push(mesh); return mesh;
-}
-function bar() {
-  const mesh = new THREE.Mesh(new THREE.CylinderGeometry(0.042, 0.055, 1, 18), metal);
-  arm.add(mesh); linkMeshes.push(mesh); return mesh;
-}
-for (let i = 0; i < 7; i++) sphere(i === 0 ? 0.085 : 0.064);
-for (let i = 0; i < 6; i++) bar();
-const base = new THREE.Mesh(new THREE.CylinderGeometry(0.115, 0.14, 0.125, 32), jointMat);
-base.position.z = 0.0625;
-arm.add(base);
+const linkGroups = { base_link: baseLink, shoulder_link: shoulder, upper_arm_link: upperArm,
+  forearm_link: forearm, wrist_1_link: wrist1, wrist_2_link: wrist2,
+  wrist_3_link: wrist3, tool0 };
+Object.values(linkGroups).forEach(group => arm.add(group));
 
 function translation(x, y, z) { return new THREE.Matrix4().makeTranslation(x, y, z); }
 function rpy(roll, pitch, yaw) {
   return new THREE.Matrix4().makeRotationFromEuler(new THREE.Euler(roll, pitch, yaw, "XYZ"));
 }
-function joint(parent, xyz, angles, q) {
-  return parent.clone().multiply(translation(...xyz)).multiply(rpy(...angles))
-    .multiply(new THREE.Matrix4().makeRotationZ(q));
+function pose(xyz, angles, q = 0) {
+  return translation(...xyz).multiply(rpy(...angles)).multiply(new THREE.Matrix4().makeRotationZ(q));
 }
-function setBar(mesh, a, b) {
-  const delta = b.clone().sub(a), length = delta.length();
-  mesh.position.copy(a).add(b).multiplyScalar(0.5);
-  mesh.scale.set(1, length, 1);
-  mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), delta.normalize());
+function applyFixed(group, matrix) {
+  group.matrixAutoUpdate = false;
+  group.matrix.copy(matrix);
+  group.matrixWorldNeedsUpdate = true;
 }
 
-// Same kinematic origins as the UR10 CB3 URDF used by RViz.  This is nominal
-// geometry only; the realtime values are q_actual read from 30013/30003.
-function updateArm(q) {
-  if (!Array.isArray(q) || q.length !== 6 || q.some(v => !Number.isFinite(v))) return;
-  let m = new THREE.Matrix4().makeRotationZ(Math.PI); // base_link -> base_link_inertia
-  const frames = [new THREE.Vector3(0, 0, 0)];
-  m = joint(m, [0, 0, 0.1273], [0, 0, 0], q[0]); frames.push(new THREE.Vector3().setFromMatrixPosition(m));
-  m = joint(m, [0, 0, 0], [Math.PI / 2, 0, 0], q[1]); frames.push(new THREE.Vector3().setFromMatrixPosition(m));
-  m = joint(m, [-0.612, 0, 0], [0, 0, 0], q[2]); frames.push(new THREE.Vector3().setFromMatrixPosition(m));
-  m = joint(m, [-0.5723, 0, 0.163941], [0, 0, 0], q[3]); frames.push(new THREE.Vector3().setFromMatrixPosition(m));
-  m = joint(m, [0, -0.1157, 0], [Math.PI / 2, 0, 0], q[4]); frames.push(new THREE.Vector3().setFromMatrixPosition(m));
-  m = joint(m, [0, 0, 0.0922], [Math.PI / 2, Math.PI, Math.PI], q[5]); frames.push(new THREE.Vector3().setFromMatrixPosition(m));
-  jointMeshes.forEach((mesh, i) => mesh.position.copy(frames[Math.min(i, frames.length - 1)]));
-  linkMeshes.forEach((mesh, i) => setBar(mesh, frames[i], frames[i + 1]));
-  // URDF: wrist_3 -> flange -> tool0 fixed transforms.
-  m.multiply(rpy(0, -Math.PI / 2, -Math.PI / 2)).multiply(rpy(Math.PI / 2, 0, Math.PI / 2));
-  tool0.matrixAutoUpdate = false;
-  tool0.matrix.copy(m);
-  tool0.matrixWorldNeedsUpdate = true;
+// Browser never reimplements FK.  The bridge evaluates the same complete URDF
+// used by RViz and sends absolute link matrices from that authoritative chain.
+function updateArm(matrices) {
+  if (!matrices) return;
+  Object.entries(linkGroups).forEach(([name, group]) => {
+    const values = matrices[name];
+    if (!Array.isArray(values) || values.length !== 16) return;
+    const matrix = new THREE.Matrix4().set(...values);
+    applyFixed(group, matrix);
+  });
 }
 
 // The CAD assembly is exported in millimetres.  These are the exact mounting
@@ -114,17 +96,63 @@ const stlAssets = [
   ["末端执行器 - 连接1-1.STL", 0xa2abb4],
 ];
 const loader = new STLLoader();
-Promise.all(stlAssets.map(([name, color]) => new Promise((resolve, reject) => {
-  const url = "/model/solidworks/end_effector/" + encodeURIComponent(name);
-  loader.load(url, geometry => {
+// These are the actual DAE visual meshes from the URDF used by RViz.  The STL
+// collision meshes remain in model/ur10/ for collision work, but are not used
+// for the dashboard picture.
+const ur10Assets = [
+  ["base.dae", baseLink, [0, 0, 0], [0, 0, Math.PI]],
+  ["shoulder.dae", shoulder, [0, 0, 0], [0, 0, Math.PI]],
+  ["upperarm.dae", upperArm, [0, 0, 0.220941], [Math.PI / 2, 0, -Math.PI / 2]],
+  ["forearm.dae", forearm, [0, 0, 0.049042], [Math.PI / 2, 0, -Math.PI / 2]],
+  ["wrist1.dae", wrist1, [0, 0, -0.1149], [Math.PI / 2, 0, 0]],
+  ["wrist2.dae", wrist2, [0, 0, -0.1158], [0, 0, 0]],
+  ["wrist3.dae", wrist3, [0, 0, -0.0922], [Math.PI / 2, 0, 0]],
+];
+function loadStl(url, parent, color, localMatrix = null, scale = 0.001) {
+  return new Promise((resolve, reject) => loader.load(url, geometry => {
     geometry.computeVertexNormals();
     const mesh = new THREE.Mesh(geometry, new THREE.MeshStandardMaterial({ color, roughness: 0.42, metalness: 0.55 }));
-    mesh.scale.setScalar(0.001); // SolidWorks STL is in mm
-    cadAssembly.add(mesh);
+    mesh.scale.setScalar(scale);
+    if (localMatrix) {
+      mesh.matrixAutoUpdate = false;
+      mesh.matrix.copy(localMatrix);
+    }
+    parent.add(mesh);
     resolve();
-  }, undefined, reject);
-}))).then(() => {
-  status.textContent = "STL 已加载 · 关节状态实时同步";
+  }, undefined, reject));
+}
+const cadLoads = stlAssets.map(([name, color]) => {
+  const url = "/model/solidworks/end_effector/" + encodeURIComponent(name);
+  return loadStl(url, cadAssembly, color);
+});
+const daeLoader = new ColladaLoader();
+function loadDae(url, parent, localMatrix) {
+  return new Promise((resolve, reject) => daeLoader.load(url, asset => {
+    const mesh = asset.scene;
+    mesh.matrixAutoUpdate = false;
+    mesh.matrix.copy(localMatrix);
+    parent.add(mesh);
+    resolve();
+  }, undefined, reject));
+}
+const armLoads = ur10Assets.map(([name, parent, xyz, angles]) => {
+  return loadDae("/model/ur10/visual/" + name, parent, pose(xyz, angles));
+});
+Promise.all([...cadLoads, ...armLoads]).then(() => {
+  status.textContent = "完整 UR10 + SolidWorks STL 已加载 · 关节状态实时同步";
+  // Frame the full robot only once after all mesh bounds are known.  Subsequent
+  // joint updates preserve the operator's chosen view instead of snapping it.
+  requestAnimationFrame(() => {
+    arm.updateMatrixWorld(true);
+    const box = new THREE.Box3().setFromObject(arm);
+    const center = box.getCenter(new THREE.Vector3());
+    const size = box.getSize(new THREE.Vector3());
+    const radius = Math.max(size.x, size.y, size.z) * 0.62;
+    const distance = radius / Math.tan(THREE.MathUtils.degToRad(camera.fov * 0.5));
+    camera.position.copy(center).add(new THREE.Vector3(0.95, -1.15, 0.78).normalize().multiplyScalar(distance));
+    controls.target.copy(center);
+    controls.update();
+  });
 }).catch(error => {
   console.error("SolidWorks STL load failed", error);
   status.textContent = "STL 加载失败（模型文件不可用）";
@@ -138,8 +166,8 @@ function resize() {
 }
 new ResizeObserver(resize).observe(host);
 resize();
-window.addEventListener("ur10-realtime-state", event => updateArm(event.detail.q));
-if (window.latestRobotState) updateArm(window.latestRobotState.q);
+window.addEventListener("ur10-realtime-state", event => updateArm(event.detail.link_world_matrices));
+if (window.latestRobotState) updateArm(window.latestRobotState.link_world_matrices);
 
 function render() {
   controls.update();

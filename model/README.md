@@ -6,6 +6,8 @@
 | --- | --- | --- |
 | `solidworks/end_effector/` | 用户从 SolidWorks 导出的完整末端装配：ATI 六轴力传感器、连接件、Robotiq 2F-85（闭合）和 Mech-Eye 相机 STL；另保留原始 STEP。 | 当前 CAD 可视化来源 |
 | `collision/ur10_cell.collision.xacro` | 根据实测尺寸建立的简化包络碰撞模型。 | 仅供碰撞/间隙初步检查，不能作为真机安全判据 |
+| `ur10/visual/` | UR10 本体七个 DAE 视觉网格副本，与当前 CAD RViz 使用的 URDF 视觉网格完全一致。 | 网页监控台实时模型来源 |
+| `ur10/*.stl` | UR10 本体各连杆的碰撞网格副本。 | 离线碰撞/间隙检查备用 |
 
 ## 查看完整 CAD
 

@@ -164,7 +164,7 @@ button:hover { filter: brightness(1.12); }
 .pose-values div { background: var(--panel2); border: 1px solid var(--line); padding: 6px 7px; text-align: center; }
 .pose-values span, .pose-values i { color: var(--muted); font-size: 10px; font-style: normal; }
 .pose-values b { display: block; font-size: 15px; font-variant-numeric: tabular-nums; }
-.robot-3d { position: relative; width: 100%; height: 250px; margin-top: 8px; background: #10151b; border: 1px solid var(--line); overflow: hidden; }
+.robot-3d { position: relative; width: 100%; height: 330px; margin-top: 8px; background: #10151b; border: 1px solid var(--line); overflow: hidden; }
 .robot-3d canvas { display: block; width: 100%; height: 100%; touch-action: none; }
 .robot-3d-overlay { position: absolute; z-index: 1; top: 8px; left: 10px; display: grid; gap: 1px; pointer-events: none; text-shadow: 0 1px 2px #000; }
 .robot-3d-overlay b { font-size: 12px; }

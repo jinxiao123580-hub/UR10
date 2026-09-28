@@ -310,8 +310,7 @@ setInterval(() => {
 // 时钟
 setInterval(() => { $("clock").textContent = new Date().toLocaleTimeString(); }, 1000);
 
-window.addEventListener("resize", () => { chart.resize(); drawTcpScene(); });
+window.addEventListener("resize", () => { chart.resize(); });
 connect();
-drawTcpScene();
 drawPlaceholder($("cam-color"), "连接中…");
 drawPlaceholder($("cam-depth"), "连接中…");

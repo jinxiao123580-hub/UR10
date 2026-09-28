@@ -69,7 +69,7 @@ WS_PORT = 9090
 HTTP_PORT = 8080
 WEB_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "web_dashboard")
 REPO_ROOT = os.path.abspath(os.path.join(WEB_ROOT, ".."))
-CAD_WEB_ROOT = os.path.join(REPO_ROOT, "model", "solidworks")
+MODEL_WEB_ROOT = os.path.join(REPO_ROOT, "model")
 
 import cv2  # noqa: E402
 
@@ -97,11 +97,37 @@ class RosWebBridge(Node):
             Trigger, "/ft_sensor/tare")
         self._lock = threading.Lock()
         self._http = None
+        self._fk_model, self._fk_data, self._fk_frames = self._load_dashboard_fk()
         self._ur_stop = threading.Event()
         self._ur_thread = threading.Thread(target=self._ur_realtime_loop, daemon=True)
         self._ur_thread.start()
         print("[桥] rclpy 节点 ros_web_bridge 就绪；Mech-Eye 服务类型: %s"
               % ("可用" if MECHEYE_OK else "不可用(mecheye_ros_interface 未编译)"))
+
+    @staticmethod
+    def _load_dashboard_fk():
+        """Load the exact URDF chain used by the CAD RViz scene (read-only)."""
+        import pinocchio as pin
+        urdf = os.path.join(REPO_ROOT, "outputs", "vision", "ur10_preliminary_cad_meshes.urdf")
+        model = pin.buildModelFromUrdf(urdf)
+        names = ("base_link", "shoulder_link", "upper_arm_link", "forearm_link",
+                 "wrist_1_link", "wrist_2_link", "wrist_3_link", "tool0")
+        frames = {name: model.getFrameId(name) for name in names}
+        return model, model.createData(), frames
+
+    def _dashboard_link_matrices(self, q):
+        """Return absolute 4x4 link transforms from the canonical RViz URDF."""
+        import pinocchio as pin
+        pin.forwardKinematics(self._fk_model, self._fk_data, np.asarray(q, dtype=float))
+        pin.updateFramePlacements(self._fk_model, self._fk_data)
+        out = {}
+        for name, frame_id in self._fk_frames.items():
+            pose = self._fk_data.oMf[frame_id]
+            out[name] = [float(value) for value in np.block([
+                [pose.rotation, pose.translation.reshape(3, 1)],
+                [np.zeros((1, 3)), np.ones((1, 1))],
+            ]).reshape(-1)]
+        return out
 
     def _ur_realtime_loop(self):
         """Read-only UR CB3 realtime stream; publish a browser-sized 20 Hz view."""
@@ -144,6 +170,7 @@ class RosWebBridge(Node):
                         self.push({"topic": topic, "data": {
                             "connected": True,
                             "q": q, "tcp": tcp, "tcp_speed": speed,
+                            "link_world_matrices": self._dashboard_link_matrices(q),
                             "source_hz": frame_count / elapsed,
                             "frame_size": size, "port": port,
                             "timestamp": time.time(),
@@ -306,11 +333,11 @@ class _StaticHandler(http.server.SimpleHTTPRequestHandler):
         read-only namespace narrow and reject traversal attempts.
         """
         request_path = urllib.parse.unquote(urllib.parse.urlparse(path).path)
-        prefix = "/model/solidworks/"
+        prefix = "/model/"
         if request_path.startswith(prefix):
             relative = request_path[len(prefix):]
-            candidate = os.path.abspath(os.path.join(CAD_WEB_ROOT, relative))
-            if candidate == CAD_WEB_ROOT or candidate.startswith(CAD_WEB_ROOT + os.sep):
+            candidate = os.path.abspath(os.path.join(MODEL_WEB_ROOT, relative))
+            if candidate == MODEL_WEB_ROOT or candidate.startswith(MODEL_WEB_ROOT + os.sep):
                 return candidate
             return os.path.join(WEB_ROOT, "__forbidden__")
         return super().translate_path(path)
