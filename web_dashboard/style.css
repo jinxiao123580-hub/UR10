@@ -11,13 +11,12 @@
   --err: #e74c3c;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { height: 100%; }
+html, body { min-height: 100%; }
 body {
+  min-height: 100vh;
   background: var(--bg);
   color: var(--text);
   font: 14px/1.5 "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
-  display: flex;
-  flex-direction: column;
 }
 
 /* ---------- 头部 ---------- */
@@ -41,16 +40,16 @@ header {
 
 /* ---------- 主体 ---------- */
 main {
-  flex: 1;
   display: grid;
   grid-template-columns: 1.15fr 1fr;
-  grid-template-rows: minmax(400px, 1fr) 260px;
+  grid-template-rows: clamp(380px, 45vh, 480px) clamp(480px, 62vh, 700px);
   gap: 12px;
   padding: 12px;
-  min-height: 0;
-  overflow: auto;
 }
-@media (max-width: 1100px) { main { grid-template-columns: 1fr; grid-template-rows: none; } }
+@media (max-width: 1100px) {
+  main { grid-template-columns: 1fr; grid-template-rows: none; }
+  .camera-panel, .ft-panel { min-height: 400px; }
+}
 
 .panel {
   background: var(--panel);
@@ -166,17 +165,17 @@ button:hover { filter: brightness(1.12); }
 .pose-values div { background: var(--panel2); border: 1px solid var(--line); padding: 6px 7px; text-align: center; }
 .pose-values span, .pose-values i { color: var(--muted); font-size: 10px; font-style: normal; }
 .pose-values b { display: block; font-size: 15px; font-variant-numeric: tabular-nums; }
-.robot-3d { position: relative; width: 100%; flex: 1; min-height: 75px; margin-top: 8px; background: #10151b; border: 1px solid var(--line); overflow: hidden; }
+.robot-3d { position: relative; width: 100%; flex: 1; min-height: 300px; margin-top: 8px; background: #10151b; border: 1px solid var(--line); overflow: hidden; }
 .robot-3d canvas { display: block; width: 100%; height: 100%; touch-action: none; }
 .robot-3d-overlay { position: absolute; z-index: 1; top: 8px; left: 10px; display: grid; gap: 1px; pointer-events: none; text-shadow: 0 1px 2px #000; }
 .robot-3d-overlay b { font-size: 12px; }
 .robot-3d-overlay span, .robot-3d-help { color: var(--muted); font-size: 11px; }
 .robot-3d-help { position: absolute; z-index: 1; right: 10px; bottom: 7px; pointer-events: none; text-shadow: 0 1px 2px #000; }
 @media (max-width: 1100px) {
-  .robot-panel { grid-column: 1; }
+  .robot-panel { grid-column: 1; min-height: 690px; }
   .robot-content { grid-template-columns: 1fr; flex: none; }
   .joint-section { border-right: 0; border-bottom: 1px solid var(--line); }
-  .robot-3d { height: 220px; flex: none; }
+  .robot-3d { height: 340px; flex: none; }
 }
 @media (max-width: 620px) {
   .robot-content { display: block; }

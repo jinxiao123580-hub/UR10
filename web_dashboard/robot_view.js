@@ -24,6 +24,7 @@ const controls = new OrbitControls(camera, renderer.domElement);
 controls.target.set(-0.42, 0, 0.42);
 controls.enableDamping = true;
 controls.dampingFactor = 0.08;
+controls.enableZoom = false; // The wheel scrolls the whole dashboard, including over this canvas.
 controls.minDistance = 0.45;
 controls.maxDistance = 4.2;
 controls.update();
