@@ -9,8 +9,7 @@
 
 // ---------------------------------------------------------------- 全局
 const WS_PORT = 9090;
-const CAPTURE_POLL_MS = 200;        // 检查上一帧完成后立即采下一帧
-const AUX_CAPTURE_INTERVAL = 15000; // 深度与点云交替采集间隔 ms
+const CAPTURE_RETRY_MS = 1000;      // 服务失败后退避，避免反复打满相机
 const WRENCH_WINDOW = 10;           // 固定宽度滚动时间窗（秒）
 const WRENCH_MAX = 2500;            // 约 12.5 秒原始数据（输入约 200Hz）
 const CHART_MAX_POINTS = 1200;      // 绘图抽样上限，避免长窗口拖慢浏览器
@@ -84,8 +83,15 @@ function connect() {
     wsSend({ op: "subscribe", topic: "/mechmind/depth_map", kind: "depth" });
     wsSend({ op: "subscribe", topic: "/mechmind/point_cloud", kind: "pcl_stats" });
     $("cam-color-info").textContent = "已订阅，等待相机数据…";
+    scheduleAutoCapture(0);
   };
-  ws.onclose = () => { setWs(false); setTimeout(connect, 2000); };
+  ws.onclose = () => {
+    setWs(false);
+    activeCapture = null;
+    auxPending = false;
+    clearTimeout(autoCaptureTimer);
+    setTimeout(connect, 2000);
+  };
   ws.onerror = () => { setWs(false); };
   ws.onmessage = (ev) => handleMessage(JSON.parse(ev.data));
 }
@@ -229,6 +235,9 @@ function drawPlaceholder(cv, text) {
 function onColorImage(d) {
   cameraFrames++;
   setCam(true);
+  colorFrameTimes.push(performance.now());
+  if (colorFrameTimes.length > 9) colorFrameTimes.shift();
+  updateLiveStatus();
   drawCanvas($("cam-color"), d, $("cam-color-info"), "单色 2D 图");
 }
 function onDepthImage(d) {
@@ -248,33 +257,53 @@ function onPclStats(d) {
   }
 }
 
-// 自动采集：只允许一个在途请求，防止慢速工业相机积压服务队列。
-let reqId = 0, activeCapture = null;
-let nextAuxCapture = Date.now() + AUX_CAPTURE_INTERVAL;
-let nextAuxKind = "depth";
+// 2D 预览：服务完成后再发下一次请求，不排队、不以固定频率挤压工业相机。
+// 深度/点云按需采集，避免慢速 3D 采集周期性打断 2D 预览。
+let reqId = 0, activeCapture = null, autoCaptureTimer = null;
+let auxPending = false, lastCaptureMs = null;
+const colorFrameTimes = [];
+function updateLiveStatus() {
+  const times = colorFrameTimes;
+  const hz = times.length > 1 ? 1000 * (times.length - 1) / (times[times.length - 1] - times[0]) : 0;
+  const rate = hz > 0 && Number.isFinite(hz) ? `${hz.toFixed(1)} 帧/秒` : "等待首帧…";
+  const latency = lastCaptureMs == null ? "" : ` · 采集往返 ${Math.round(lastCaptureMs)} ms`;
+  $("cam-live-status").textContent = rate + latency;
+}
+function scheduleAutoCapture(delayMs) {
+  clearTimeout(autoCaptureTimer);
+  if (!wsOk || document.hidden || !$("auto-capture").checked || auxPending) return;
+  autoCaptureTimer = setTimeout(autoCapture, delayMs);
+}
 function autoCapture() {
-  if (!wsOk || activeCapture) return;
-  const now = Date.now();
-  if (now >= nextAuxCapture) {
-    const service = nextAuxKind === "depth" ? "/capture_depth_map" : "/capture_point_cloud";
-    nextAuxKind = nextAuxKind === "depth" ? "point_cloud" : "depth";
-    nextAuxCapture = now + AUX_CAPTURE_INTERVAL;
-    requestCapture(service);
-    return;
-  }
+  if (!wsOk || activeCapture || document.hidden || !$("auto-capture").checked || auxPending) return;
   requestCapture("/capture_color_image");
 }
 
 function requestCapture(service) {
+  if (!wsOk || activeCapture) return false;
   reqId++;
-  activeCapture = { service, requestId: reqId };
+  activeCapture = { service, requestId: reqId, startedAt: performance.now() };
   wsSend({ op: "call_service", service, kind: "mecheye_capture", request_id: reqId });
+  return true;
 }
 function handleServiceReply(m) {
-  if (activeCapture && m.request_id === activeCapture.requestId) activeCapture = null;
+  const completed = activeCapture && m.request_id === activeCapture.requestId;
+  if (completed) {
+    lastCaptureMs = performance.now() - activeCapture.startedAt;
+    activeCapture = null;
+    updateLiveStatus();
+  }
   if (m.service === "/capture_color_image" || m.service === "/capture_depth_map") {
     if (m.ok) { setCam(true); }
     else { setCam(false); }
+  }
+  if (completed && m.service === "/capture_color_image" && auxPending) {
+    requestCapture("/capture_depth_map");
+  } else if (completed && m.service === "/capture_depth_map" && auxPending && m.ok) {
+    requestCapture("/capture_point_cloud");
+  } else if (completed) {
+    if (m.service === "/capture_point_cloud" || m.service === "/capture_depth_map") auxPending = false;
+    scheduleAutoCapture(m.ok ? 0 : CAPTURE_RETRY_MS);
   }
   if (m.service === "/ft_sensor/tare") {
     alert("去皮完成: " + (m.ok ? JSON.stringify(m.response) : m.error));
@@ -285,12 +314,24 @@ $("btn-capture").onclick = () => {
   if (!wsOk) return alert("未连接桥");
   if (!activeCapture) requestCapture("/capture_color_image");
 };
+$("btn-depth").onclick = () => {
+  if (!wsOk) return alert("未连接桥");
+  if (auxPending) return;
+  clearTimeout(autoCaptureTimer);
+  auxPending = true;
+  $("cam-depth-info").textContent = "等待当前 2D 帧完成后更新深度…";
+  if (!activeCapture) requestCapture("/capture_depth_map");
+};
+$("auto-capture").onchange = () => scheduleAutoCapture(0);
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) clearTimeout(autoCaptureTimer);
+  else scheduleAutoCapture(0);
+});
 $("btn-tare").onclick = () => {
   if (!wsOk) return alert("未连接桥");
   reqId++;
   wsSend({ op: "call_service", service: "/ft_sensor/tare", kind: "trigger", request_id: reqId });
 };
-setInterval(() => { if ($("auto-capture").checked) autoCapture(); }, CAPTURE_POLL_MS);
 
 // ---------------------------------------------------------------- 演示与看门狗
 // 2 秒没有真数据就进演示模式（页面仍可用，标注 DEMO）

@@ -37,6 +37,13 @@ def transform_from_tcp(tcp):
     return transform
 
 
+def crop_local_cloud(points_local, roi_half_xy_m):
+    """Keep cube and nearby table plane, not distant clutter in the frame."""
+    window = ((np.abs(points_local[:, 0]) < roi_half_xy_m) &
+              (np.abs(points_local[:, 1]) < roi_half_xy_m))
+    return points_local[window]
+
+
 def one_observation(node, reader, tool_from_camera, anchor, args, index, stamp):
     """Capture cloud once with poses immediately before/after; require stillness."""
     _, before_tcp, _, _ = reader.read_extended()
@@ -83,15 +90,21 @@ def one_observation(node, reader, tool_from_camera, anchor, args, index, stamp):
     # board observation or a re-localisation of the workcell.
     local_origin = np.array([anchor[0], anchor[1], 0.0])
     points_local = points_base - local_origin
+    cropped_local = crop_local_cloud(points_local, args.roi_half_xy_m)
     camera_local = base_from_camera[:3, 3] - local_origin
     cfg = {"expect_edge_m": args.expect_edge, "min_coverage": args.min_coverage,
+           "search_half_xy_m": args.search_half_xy_m,
            "allow_partial": False}
-    measured = measure_cube_geometry(points_local, camera_local, cfg,
+    measured = measure_cube_geometry(cropped_local, camera_local, cfg,
                                      board_half_extent=[0.0, 0.0])
     result = {
         "status": measured["status"], "geometry": measured,
         "tcp_base_tool0": tcp.tolist(), "robot_motion_during_capture_mm": motion_mm,
         "finite_cloud_points": int(len(finite)),
+        "local_roi": {"anchor_base_xy_m": local_origin[:2].tolist(),
+                      "search_half_xy_m": args.search_half_xy_m,
+                      "crop_half_xy_m": args.roi_half_xy_m,
+                      "retained_points": int(len(cropped_local))},
         "camera_origin_base_m": base_from_camera[:3, 3].tolist(),
         "saved_cloud": (os.path.relpath(saved_cloud, ROOT) if saved_cloud else None),
     }
@@ -111,6 +124,10 @@ def main():
     parser.add_argument("--max-center-spread-mm", type=float, default=3.0)
     parser.add_argument("--expect-edge", type=float, default=0.05)
     parser.add_argument("--min-coverage", type=float, default=DEFAULTS["min_coverage"])
+    parser.add_argument("--search-half-xy-m", type=float, default=0.10,
+                        help="precise cube search half-width around coarse anchor")
+    parser.add_argument("--roi-half-xy-m", type=float, default=0.14,
+                        help="point-cloud crop half-width; includes table ring")
     parser.add_argument("--output", default=None)
     parser.add_argument("--save-cloud-dir", default="outputs/vision/clouds",
                         help="directory for compressed raw camera clouds + synchronized transforms; "
@@ -118,6 +135,9 @@ def main():
     args = parser.parse_args()
     if args.captures < 2:
         parser.error("--captures must be at least 2 for a stability check")
+    if not (0.08 <= args.search_half_xy_m <= 0.20 and
+            args.search_half_xy_m + 0.04 <= args.roi_half_xy_m <= 0.30):
+        parser.error("ROI needs 0.08..0.20 m search and >=40 mm surrounding table ring")
 
     with open(absolute(ROOT, args.anchor), encoding="utf-8") as stream:
         anchor_doc = json.load(stream)

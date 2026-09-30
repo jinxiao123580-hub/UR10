@@ -26,12 +26,16 @@ def main():
                         help="use an already verified refreshed plan; do not run camera tracking again")
     parser.add_argument("--fixed-height-place", action="store_true",
                         help="legacy only: use fixed Cartesian placement instead of raw-Fz contact placement")
+    parser.add_argument("--allow-unmodelled-detour", action="store_true",
+                        help="operator-verified workcell clearance for lateral detour; no external obstacle map")
     args = parser.parse_args()
     path = args.plan if os.path.isabs(args.plan) else os.path.join(ROOT, args.plan)
     with open(path, encoding="utf-8") as stream:
         plan = json.load(stream)
     if plan.get("kind") != "auto_cube_pick_place_plan" or plan.get("motion_sent"):
         raise SystemExit("not an unexecuted auto-cube pick/place plan")
+    if args.execute and (args.skip_reobserve_at_hover or args.fixed_height_place):
+        raise SystemExit("automatic execution requires fresh cube yaw tracking and guarded Fz placement")
     limits = plan.get("execution_limits", {})
     command = [sys.executable, os.path.join(ROOT, "scripts", "position_pick_place.py"),
                "--poses", path, "--height", str(plan["height"]),
@@ -44,10 +48,12 @@ def main():
                     "--refresh-poses", "outputs/vision/auto-cube-pick-place-plan-refresh.json"]
     if args.active_view_plan:
         command += ["--active-view-plan", args.active_view_plan]
+    if args.allow_unmodelled_detour:
+        command.append("--allow-unmodelled-detour")
     if not args.fixed_height_place:
         command.append("--hold-after-pick")
     if args.execute:
-        command.append("--execute")
+        command += ["--require-cube-orientation", "--execute"]
         print("真机执行：请保持急停可用并全程监看。", flush=True)
     else:
         command.append("--dry-run")

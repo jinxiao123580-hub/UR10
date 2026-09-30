@@ -153,6 +153,28 @@ def detect(gray, pattern):
             if found:
                 corners = local / 2.0 + np.array([[[x0, y0]]], dtype=np.float32)
                 break
+    if not found:
+        # A dark, small checkerboard need not form a bright carrier contour.
+        # Search overlapping half-frame tiles after local contrast enhancement.
+        # The 3x scale makes the 6 mm cells large enough for OpenCV's SB
+        # detector; map subpixel corners back to the original CameraInfo image.
+        height, width = gray.shape[:2]
+        tile_h, tile_w = height // 2, width // 2
+        starts = [(2, 2), (1, 1), (0, 0), (2, 0), (0, 2),
+                  (1, 0), (0, 1), (2, 1), (1, 2)]
+        clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
+        for row, col in starts:
+            x0, y0 = col * width // 4, row * height // 4
+            crop = gray[y0:y0 + tile_h, x0:x0 + tile_w]
+            enhanced = clahe.apply(crop)
+            enlarged = cv2.resize(enhanced, None, fx=3.0, fy=3.0,
+                                  interpolation=cv2.INTER_CUBIC)
+            found, local = cv2.findChessboardCornersSB(
+                enlarged, pattern,
+                flags=cv2.CALIB_CB_NORMALIZE_IMAGE | cv2.CALIB_CB_EXHAUSTIVE)
+            if found:
+                corners = local / 3.0 + np.array([[[x0, y0]]], dtype=np.float32)
+                break
     return bool(found), corners
 
 

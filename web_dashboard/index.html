@@ -34,8 +34,10 @@
     <div class="panel-head">
       <h2>📷 Mech-Eye 相机</h2>
       <div class="panel-actions">
-        <button id="btn-capture" title="手动采集一次">采集一次</button>
-        <label class="chk"><input type="checkbox" id="auto-capture" checked> 自动刷新(1.5s)</label>
+        <button id="btn-capture" title="手动采集一帧 2D 图">采集一次</button>
+        <button id="btn-depth" title="按需更新深度图和点云统计">更新深度</button>
+        <label class="chk"><input type="checkbox" id="auto-capture" checked> 实时 2D 预览</label>
+        <span id="cam-live-status" class="cam-live-status">等待首帧…</span>
       </div>
     </div>
     <div class="cam-grid">
@@ -45,7 +47,7 @@
         <div id="cam-color-info" class="cam-info">等待数据…</div>
       </div>
       <div class="cam-box">
-        <div class="cam-label">深度图（伪彩色）</div>
+        <div class="cam-label">深度图（伪彩色，按需更新）</div>
         <canvas id="cam-depth" width="640" height="480"></canvas>
         <div id="cam-depth-info" class="cam-info">等待数据…</div>
       </div>

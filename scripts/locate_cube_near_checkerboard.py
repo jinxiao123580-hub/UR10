@@ -34,7 +34,11 @@ def main():
     parser.add_argument("--board-center-y-m", type=float, default=0.015)
     parser.add_argument("--image-attempts", type=int, default=5,
                         help="retry colour captures because one trigger can be blurred")
+    parser.add_argument("--search-half-xy-m", type=float, default=0.50,
+                        help="board-frame half-width for coarse 50 mm cube search")
     args = parser.parse_args()
+    if not 0.20 <= args.search_half_xy_m <= 0.50:
+        parser.error("--search-half-xy-m must be within 0.20..0.50 m")
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     calibration_path = os.path.join(root, args.calibration)
     with open(calibration_path, encoding="utf-8") as stream:
@@ -78,6 +82,15 @@ def main():
                                   flags=cv2.SOLVEPNP_ITERATIVE)
     if not ok:
         raise RuntimeError("solvePnP failed")
+    projected, _ = cv2.projectPoints(objects, rvec, tvec, k, distortion)
+    residual = np.linalg.norm(projected.reshape(-1, 2) - corners.reshape(-1, 2), axis=1)
+    reprojection_rms_px = float(np.sqrt(np.mean(residual ** 2)))
+    reprojection_max_px = float(np.max(residual))
+    if reprojection_rms_px > 1.5 or reprojection_max_px > 4.0:
+        raise RuntimeError("checkerboard PnP reprojection %.2f RMS / %.2f max px is unreliable" %
+                           (reprojection_rms_px, reprojection_max_px))
+    print("棋盘格已由 OpenCV 检出：54/54 角点，PnP 重投影 RMS %.3f px" %
+          reprojection_rms_px, flush=True)
     camera_from_target = rt(rvec.reshape(3), tvec.reshape(3))
     target_from_camera = np.linalg.inv(camera_from_target)
     xyz = organized_xyz(cloud_msg)
@@ -85,9 +98,11 @@ def main():
     homogeneous = np.column_stack((flat, np.ones(len(flat))))
     target = (target_from_camera @ homogeneous.T).T[:, :3].reshape(xyz.shape)
     finite = np.all(np.isfinite(target), axis=2)
-    # Search up to 20 cm around the small board for a 2-8 cm tall object.
-    nearby = (finite & (target[:, :, 0] > -0.20) & (target[:, :, 0] < 0.25) &
-              (target[:, :, 1] > -0.20) & (target[:, :, 1] < 0.22))
+    # The cube can be 35-40 cm from the board in the current workcell.
+    # Keep the search bounded and require a 2-8 cm raised component below.
+    half = args.search_half_xy_m
+    nearby = (finite & (np.abs(target[:, :, 0]) < half) &
+              (np.abs(target[:, :, 1]) < half))
     candidates = []
     for sign in (1.0, -1.0):
         height = sign * target[:, :, 2]
@@ -106,21 +121,28 @@ def main():
             # Prefer a compact component whose visible lateral span resembles 5 cm.
             lateral = sorted([float(extent[0]), float(extent[1])])
             score = abs(lateral[1] - 0.05) + abs(height_m - 0.05)
+            top_face_like = bool(extent[2] < 0.012 and
+                                 all(0.035 <= span <= 0.070 for span in extent[:2]))
             candidates.append({"sign": sign, "pixels": int(len(points)),
                                "score": score, "center_target_m": center_target.tolist(),
                                "extent_p5_p95_m": extent.tolist(),
+                               "surface_type": "top_face" if top_face_like else "side_or_partial",
                                "height_m": height_m})
     if not candidates:
-        raise RuntimeError("no 2-8 cm connected object found beside checkerboard")
+        raise RuntimeError("棋盘格已检出，但棋盘附近点云中没有 2–8 cm 的连通物体；"
+                           "确认物块完整入镜、靠近棋盘，并检查深度点云")
     candidates.sort(key=lambda item: item["score"])
     best = candidates[0]
     measured_center = np.asarray(best["center_target_m"])
     extent = np.asarray(best["extent_p5_p95_m"])
     lateral_axis = int(np.argmin(extent[:2]))
     board_center = np.asarray([args.board_center_x_m, args.board_center_y_m])
-    outward = np.sign(measured_center[lateral_axis] - board_center[lateral_axis])
     inferred_center = measured_center.copy()
-    inferred_center[lateral_axis] += outward * 0.025
+    if best["surface_type"] != "top_face":
+        # Side-only first looks are provisional; hover re-observation must
+        # replace this 25 mm nominal half-edge inference before descent.
+        outward = np.sign(measured_center[lateral_axis] - board_center[lateral_axis])
+        inferred_center[lateral_axis] += outward * 0.025
     inferred_center[2] = best["sign"] * 0.025
     center_target = np.asarray([*inferred_center, 1.0])
     center_camera = camera_from_target @ center_target
@@ -141,15 +163,21 @@ def main():
         "motion_authorization": "none: observation only; no robot command was sent",
         "robot_motion_during_capture_mm": motion_mm,
         "checkerboard_image_attempt": image_attempt,
+        "checkerboard_reprojection_rms_px": reprojection_rms_px,
+        "checkerboard_reprojection_max_px": reprojection_max_px,
         "checkerboard_target_to_camera": camera_from_target.tolist(),
         "candidate_count": len(candidates),
         "candidates": candidates,
         "best": best,
         "inference": {
-            "basis": "visible side plane plus known 0.05 m cube size",
-            "side_normal_target_axis": "xy"[lateral_axis],
+            "basis": ("measured top-face XY plus known 0.05 m height"
+                      if best["surface_type"] == "top_face" else
+                      "visible side plane plus known 0.05 m cube size"),
+            "side_normal_target_axis": (None if best["surface_type"] == "top_face"
+                                        else "xy"[lateral_axis]),
             "cube_center_target_m": inferred_center.tolist(),
         },
+        "search_half_xy_m": half,
         "estimated_cube_center_camera_m": center_camera[:3].tolist(),
         "estimated_cube_center_base_m": center_base[:3].tolist(),
         "board_center_base_m": board_center_base[:3].tolist(),

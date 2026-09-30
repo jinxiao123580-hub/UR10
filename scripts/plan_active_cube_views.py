@@ -22,7 +22,10 @@ def main():
     parser.add_argument("--plan", required=True)
     parser.add_argument("--grasp-center", default="config/gripper_grasp_center_20260922.yaml")
     parser.add_argument("--hover-mm", type=float, default=80.0)
-    parser.add_argument("--roll-deg", type=float, nargs="+", default=[0.0, 25.0, -25.0])
+    # In the archived workcell scan, +25 deg moved the offset camera away
+    # from the cube and all three clouds failed.  The 0/-25 pair produced
+    # consistent measured top-face edges from distinct camera positions.
+    parser.add_argument("--roll-deg", type=float, nargs="+", default=[0.0, -25.0])
     parser.add_argument("--output", default="outputs/vision/active-cube-view-plan.json")
     args = parser.parse_args()
     if not 40.0 <= args.hover_mm <= 150.0 or any(abs(x) > 70.0 for x in args.roll_deg):

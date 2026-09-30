@@ -34,27 +34,47 @@ class RawForceZ:
         self.lock = threading.Lock()
         self.values = []
         self.latest = None
+        self.latest_at = None
         self.node = Node("guarded_held_cube_place")
         def callback(msg):
             with self.lock:
                 self.latest = float(msg.wrench.force.z)
+                self.latest_at = time.monotonic()
                 self.values.append(self.latest)
                 self.values = self.values[-1000:]
         self.node.create_subscription(WrenchStamped, topic, callback, 200)
         self.thread = threading.Thread(target=rclpy.spin, args=(self.node,), daemon=True)
         self.thread.start()
 
-    def baseline(self, seconds=1.0):
+    def baseline(self, seconds=1.0, timeout=8.0):
+        """Wait for DDS discovery, then collect a fresh, full-rate baseline."""
+        deadline = time.monotonic() + timeout
+        first_count = 0
+        while time.monotonic() < deadline:
+            with self.lock:
+                first_count = len(self.values)
+            if first_count:
+                break
+            time.sleep(0.05)
+        if not first_count:
+            raise RuntimeError("no raw Fz samples within %.1f s; placement remains stopped" % timeout)
+        with self.lock:
+            start_count = len(self.values)
         time.sleep(seconds)
         with self.lock:
-            values = list(self.values)
+            values = list(self.values[start_count:])
+            latest_at = self.latest_at
         if len(values) < 80:
-            raise RuntimeError("insufficient raw Fz samples: %d" % len(values))
+            raise RuntimeError("insufficient fresh raw Fz samples: %d" % len(values))
+        if latest_at is None or time.monotonic() - latest_at > 0.5:
+            raise RuntimeError("raw Fz stream became stale before placement")
         return float(np.median(values))
 
     def delta(self, baseline):
         with self.lock:
-            return None if self.latest is None else abs(self.latest - baseline)
+            if self.latest_at is None or time.monotonic() - self.latest_at > 0.5:
+                return None
+            return abs(self.latest - baseline)
 
     def close(self):
         self.node.destroy_node()
@@ -88,10 +108,15 @@ def move(reader, start, target, speed, accel, label, force=None, baseline=None, 
     departed = False
     while time.monotonic() < deadline:
         _q, latest, velocity = reader.read()
-        if force is not None and force.delta(baseline) >= spike_n:
-            stopj()
-            raise ContactDetected("raw Fz transient %.2f N >= %.2f N" %
-                                  (force.delta(baseline), spike_n))
+        if force is not None:
+            force_delta = force.delta(baseline)
+            if force_delta is None:
+                stopj()
+                raise RuntimeError("raw Fz stream lost during descent; stopj sent, gripper remains closed")
+            if force_delta >= spike_n:
+                stopj()
+                raise ContactDetected("raw Fz transient %.2f N >= %.2f N" %
+                                      (force_delta, spike_n))
         departed = departed or math.dist(latest[:3], start[:3]) > position_tolerance
         if (departed and math.dist(latest[:3], target[:3]) <= position_tolerance and
                 rotation_error(latest, target) <= 0.02 and
@@ -118,21 +143,39 @@ def main():
         raise SystemExit("requires --execute")
     path = args.plan if os.path.isabs(args.plan) else os.path.join(ROOT, args.plan)
     with open(path, encoding="utf-8") as stream:
-        place = [float(x) for x in json.load(stream)["place"]]
+        plan = json.load(stream)
+    place = [float(x) for x in plan["place"]]
+    oriented_route = plan.get("oriented_route")
     if not 1.0 <= args.step_mm <= 3.0 or not 10.0 <= args.max_descent_mm <= 100.0:
         parser.error("step must be 1..3 mm; max descent must be 10..100 mm")
     reader = RealtimeReader("192.168.1.3", 30013)
     gripper = RobotiqGripper()
     force = None
+    collision_model = None
     try:
-        _q, current, _velocity = reader.read(max_wait_seconds=5)
+        current_q, current, _velocity = reader.read(max_wait_seconds=5)
         gripper.connect()
         status = gripper.status()
         if status.get("OBJ") != 2:
             raise RuntimeError("refuse placement: gripper OBJ=%s, cube is not confirmed held" % status.get("OBJ"))
         up = list(place); up[2] += args.height
-        current = move(reader, current, up, args.speed, args.acceleration,
-                       "⑥ 到放置区上方（与抬起同高度）")
+        if oriented_route is not None:
+            if not oriented_route.get("passed") or not oriented_route.get("waypoints"):
+                raise RuntimeError("oriented transfer route is missing or failed")
+            expected = oriented_route["waypoints"][-1]["tcp_m_rad"]
+            if (math.dist(current[:3], expected[:3]) > 0.003 or
+                    rotation_error(current, expected) > 0.025 or
+                    math.dist(expected[:3], up[:3]) > 0.003 or
+                    np.max(np.abs(np.asarray(current_q) -
+                                  np.asarray(oriented_route["waypoints"][-1]["end_q_rad"]))) > 0.10):
+                raise RuntimeError("held cube is not at the validated board hover; refuse placement")
+            from self_collision import SelfCollisionModel
+            from plan_oriented_cube_transfer import gate_linear_segment
+            collision_model = SelfCollisionModel()
+            print("⑥ 已按物块路径到达标定板上方；不重复转运", flush=True)
+        else:
+            current = move(reader, current, up, args.speed, args.acceleration,
+                           "⑥ 到放置区上方（与抬起同高度）")
         force = RawForceZ(args.force_topic)
         baseline = force.baseline()
         print("⑦ 原始 Fz 基线 %.2f N；每次下探 %.1f mm，突变 %.1f N 停止" %
@@ -140,6 +183,9 @@ def main():
         contacted = False
         for index in range(int(args.max_descent_mm / args.step_mm)):
             target = list(current); target[2] -= args.step_mm / 1000.0
+            if collision_model is not None:
+                current_q, actual, _velocity = reader.read(max_wait_seconds=5)
+                gate_linear_segment(current_q, actual, target, collision_model)
             try:
                 current = move(reader, current, target, args.speed, args.acceleration,
                                "  下探 %d" % (index + 1), force, baseline, args.fz_spike_n,
@@ -153,6 +199,8 @@ def main():
             raise RuntimeError("max guarded descent reached without raw-Fz contact; cube remains clamped")
         _q, current, _velocity = reader.read(max_wait_seconds=5)
         retreat = list(current); retreat[2] += args.height
+        if collision_model is not None:
+            gate_linear_segment(_q, current, retreat, collision_model, samples=24)
         move(reader, current, retreat, args.speed, args.acceleration, "⑨ 抬起离开")
         print("✔ 放置收尾完成", flush=True)
     finally:

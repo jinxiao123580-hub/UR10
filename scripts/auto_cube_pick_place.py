@@ -35,6 +35,8 @@ def main():
     parser.add_argument("--board-center-y-m", type=float, default=0.015)
     parser.add_argument("--no-publish-scene", action="store_true",
                         help="skip the read-only MoveIt PlanningScene publication")
+    parser.add_argument("--allow-unmodelled-detour", action="store_true",
+                        help="operator-verified clearance for an unmodelled lateral transfer detour")
     args = parser.parse_args()
     env = os.environ.copy()
     env.setdefault("FASTDDS_BUILTIN_TRANSPORTS", "UDPv4")
@@ -53,6 +55,8 @@ def main():
                "--active-view-plan", args.active_view_plan]
     if args.execute:
         command.append("--execute")
+    if args.allow_unmodelled_detour:
+        command.append("--allow-unmodelled-detour")
     run(command, env)
 
 

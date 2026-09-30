@@ -348,8 +348,8 @@ class _StaticHandler(http.server.SimpleHTTPRequestHandler):
         super().end_headers()
 
 
-def _image_to_jpeg(msg, quality=82):
-    """sensor_msgs/Image (bgr8) → {format,width,height,data:base64}；失败返回 None"""
+def _image_to_jpeg(msg, quality=72, max_width=960):
+    """Encode a lighter web preview; the original ROS image remains untouched."""
     try:
         if msg.encoding not in ("bgr8", "rgb8", "mono8"):
             return {"format": "raw", "encoding": msg.encoding, "width": msg.width,
@@ -357,13 +357,13 @@ def _image_to_jpeg(msg, quality=82):
         arr = np.frombuffer(msg.data, dtype=np.uint8).reshape((msg.height, msg.width, -1))
         if msg.encoding == "rgb8":
             arr = cv2.cvtColor(arr, cv2.COLOR_RGB2BGR)
-        if msg.encoding == "mono8":
-            ok, buf = cv2.imencode(".jpg", arr, [cv2.IMWRITE_JPEG_QUALITY, quality])
-        else:
-            ok, buf = cv2.imencode(".jpg", arr, [cv2.IMWRITE_JPEG_QUALITY, quality])
+        if msg.width > max_width:
+            preview_height = max(1, round(msg.height * max_width / msg.width))
+            arr = cv2.resize(arr, (max_width, preview_height), interpolation=cv2.INTER_AREA)
+        ok, buf = cv2.imencode(".jpg", arr, [cv2.IMWRITE_JPEG_QUALITY, quality])
         if not ok:
             return None
-        return {"format": "jpeg", "width": msg.width, "height": msg.height,
+        return {"format": "jpeg", "width": arr.shape[1], "height": arr.shape[0],
                 "data": base64.b64encode(buf.tobytes()).decode("ascii")}
     except Exception:
         return None
