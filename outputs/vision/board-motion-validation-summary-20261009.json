@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "kind": "checkerboard_relative_displacement_check",
+  "date": "2026-10-09",
+  "claimed_command_base_y_mm": 100.0,
+  "note": "This was a separate operator-confirmed movement from the recorded ur_relative_movel execution. Robot joint/flange state was not synchronized to all four images.",
+  "board_inner_corners": [9, 6],
+  "square_size_m": 0.006,
+  "before_capture_dirs": [
+    "outputs/vision/board-motion-validation-preflight-20261009",
+    "outputs/vision/board-motion-validation-repeat-20261009"
+  ],
+  "after_capture_dirs": [
+    "outputs/vision/board-motion-validation-after-yplus100mm-20261009",
+    "outputs/vision/board-motion-validation-after-repeat-20261009"
+  ],
+  "before_detection_fallback": {
+    "roi_xyxy_px": [560, 230, 850, 350],
+    "method": "CLAHE clipLimit=2.0 tileGridSize=8x8, 3x cubic resize, OpenCV findChessboardCornersSB with NORMALIZE_IMAGE and EXHAUSTIVE"
+  },
+  "pnp_reprojection_rms_px": [0.2912916803668872, 0.2718957537995438, 0.3173685246253429, 0.33534328717795125],
+  "max_reprojection_px": 1.4343801332696133,
+  "before_pair_spread_mm": 0.15544224655633743,
+  "after_pair_spread_mm": 0.3268837291803287,
+  "camera_displacement_in_board_mm": [6.791760283271275, -99.87820190893449, -0.8795553594557193],
+  "camera_displacement_norm_mm": 100.11272067992985,
+  "base_direction_estimate": {
+    "handeye_config": "config/handeye_eye_in_hand_20260921.yaml",
+    "tcp_pose_read_after_images_m_rad": [0.385854, -0.200077, 0.441093, -3.029543, 0.410419, 0.01466],
+    "camera_displacement_in_base_mm": [-1.2466571, 100.101243, 0.86246059],
+    "angle_to_base_positive_y_deg": 0.8676093817625511,
+    "off_axis_mm": 1.5159129874298751,
+    "visual_pose_orientation_change_deg": [0.1957539263177954, 0.22655900449991795],
+    "limitation": "Camera rather than flange direction; non-synchronized UR pose and hand-eye/rotation uncertainties prevent attributing this angle to the robot."
+  },
+  "absolute_robot_accuracy_certified": false,
+  "factory_dh_modified": false
+}

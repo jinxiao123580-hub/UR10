@@ -200,6 +200,9 @@ class PositionPickPlace:
                     raise RuntimeError("主动视角记录不完整；停止下降")
                 accepted = []
                 for view in manifest.get("views", []):
+                    if view.get("tracker_returncode") != 0:
+                        print("视角 %s 点云采集失败：不读取旧报告" % view.get("slot"), flush=True)
+                        continue
                     view_path = view["report"]
                     view_quality, view_reason = orientation_quality(view_path)
                     if view_quality is not None:
@@ -307,7 +310,8 @@ class PositionPickPlace:
             merged = os.path.join(active_dir, "merged.json")
             subprocess.run(
                 [sys.executable, os.path.join(root, "scripts", "merge_active_cube_views.py"),
-                 "--manifest", os.path.join(active_dir, "manifest.json"), "--output", merged],
+                 "--manifest", os.path.join(active_dir, "manifest.json"),
+                 "--prior-track", observation, "--output", merged],
                 cwd=root, env=env, check=True)
             fitted = merged + ".partial-fit.json"
             subprocess.run(

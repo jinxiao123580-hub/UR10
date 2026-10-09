@@ -38,6 +38,8 @@ def build_consensus(initial, manifest):
         raise ValueError("active-view manifest is incomplete")
     rows = []
     for view in manifest.get("views", []):
+        if view.get("tracker_returncode") != 0:
+            continue  # A failed capture may leave an old report at this path.
         with open(absolute(view["report"]), encoding="utf-8") as stream:
             report = json.load(stream)
         for row in report.get("observations", []):

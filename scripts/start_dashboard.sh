@@ -64,6 +64,19 @@ bridge_answering() {
     curl -sf -m 2 -o /dev/null "$HTTP_URL"
 }
 
+# Cold ROS/Python imports and the dashboard URDF can take much longer than a
+# fixed sleep.  Wait for an actual HTTP response, but fail promptly if the
+# child exits instead of hiding its error behind an empty startup log.
+wait_bridge() {
+    local bridge_pid="$1" deadline=$((SECONDS + 60))
+    while [ "$SECONDS" -lt "$deadline" ]; do
+        bridge_answering && return 0
+        kill -0 "$bridge_pid" 2>/dev/null || return 1
+        sleep 1
+    done
+    return 1
+}
+
 # 优雅停止：SIGTERM → 最多等 3 s → SIGKILL；返回后保证进程消失
 stop_pattern() {
     local pattern="$1" name="$2" pids
@@ -122,18 +135,21 @@ ALREADY_RUNNING=0
 if bridge_answering; then
     echo "==> 桥已在运行且 $HTTP_URL 正常应答"
     ALREADY_RUNNING=1
-elif [ -n "$(match_pids ros_web_bridge.py)" ]; then
-    echo "==> 发现僵死的桥进程（端口不应答），先清理再启动"
-    stop_pattern "ros_web_bridge.py" "僵尸桥进程" || true
-    echo "==> 启动 ROS→Web 桥 (ws://:$WS_PORT, http://:$HTTP_PORT)"
-    python3 -u "$SCRIPT_DIR/ros_web_bridge.py" > "$LOG_DIR/web_bridge.log" 2>&1 &
-    PIDS+=($!)
-    sleep 2
 else
+    if [ -n "$(match_pids ros_web_bridge.py)" ]; then
+        echo "==> 发现僵死的桥进程（端口不应答），先清理再启动"
+        stop_pattern "ros_web_bridge.py" "僵尸桥进程" || true
+    fi
     echo "==> 启动 ROS→Web 桥 (ws://:$WS_PORT, http://:$HTTP_PORT)"
     python3 -u "$SCRIPT_DIR/ros_web_bridge.py" > "$LOG_DIR/web_bridge.log" 2>&1 &
-    PIDS+=($!)
-    sleep 2
+    BRIDGE_PID=$!
+    PIDS+=("$BRIDGE_PID")
+    echo "==> 等待桥 HTTP 就绪（最多 60 秒）"
+    if ! wait_bridge "$BRIDGE_PID"; then
+        echo "✘ 桥未能启动；请查看 $LOG_DIR/web_bridge.log" >&2
+        tail -20 "$LOG_DIR/web_bridge.log" >&2 2>/dev/null || true
+        exit 1
+    fi
 fi
 
 # ---------- ② 力传感器 ----------
@@ -169,12 +185,6 @@ else
 fi
 
 # ---------- ④ 启动自检（不通过就报错退出，不再打印假的成功地址）----------
-if ! bridge_answering; then
-    for _ in 1 2 3 4 5; do
-        sleep 1
-        bridge_answering && break
-    done
-fi
 if ! bridge_answering; then
     echo
     echo "✘ 桥没有在 $HTTP_URL 应答，页面无法打开。诊断信息：" >&2

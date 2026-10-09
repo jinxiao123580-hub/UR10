@@ -13,6 +13,7 @@ import socket
 import subprocess
 import sys
 import time
+from datetime import datetime
 
 import cv2
 import numpy as np
@@ -104,23 +105,30 @@ def main():
         if not json.load(stream).get("passed"):
             raise SystemExit("gate report not passed")
     manifest_path = os.path.join(output_dir, "manifest.json")
+    capture_run_id = datetime.now().astimezone().strftime("%Y%m%d-%H%M%S-%f")
     reports = []
     # Preserve already archived earlier views on an interrupted scan.  They
     # are raw evidence, so resuming must not silently discard them.
     if args.resume:
+        if not os.path.exists(manifest_path):
+            raise SystemExit("cannot resume: previous active-view manifest is missing")
+        with open(manifest_path, encoding="utf-8") as stream:
+            previous = json.load(stream)
+        if (previous.get("kind") != "active_cube_view_capture_manifest" or
+                previous.get("plan") != os.path.relpath(plan_path, ROOT)):
+            raise SystemExit("cannot resume: previous manifest belongs to another plan")
+        previous_by_slot = {item["slot"]: item for item in previous.get("views", [])}
         for view in plan["views"]:
             if view["slot"] >= start_slot:
                 continue
-            report = os.path.join(output_dir, "view-%02d.json" % view["slot"])
-            if not os.path.exists(report):
+            item = previous_by_slot.get(view["slot"])
+            if not item or not os.path.exists(item["report"]):
                 raise SystemExit("cannot resume: archived report missing for view %d" % view["slot"])
-            reports.append({"slot": view["slot"], "roll_deg": view["tool_roll_deg"],
-                            "settled_tcp_m_rad": None, "report": report,
-                            "tracker_returncode": None, "resumed_archived": True})
+            reports.append({**item, "resumed_archived": True})
 
     def write_manifest(completed):
         manifest = {"schema_version": 1, "kind": "active_cube_view_capture_manifest",
-                    "motion_sent": True, "complete": completed,
+                    "motion_sent": True, "complete": completed, "capture_run_id": capture_run_id,
                     "plan": os.path.relpath(plan_path, ROOT),
                     "gate": os.path.relpath(gate_path, ROOT), "views": reports,
                     "runtime_board_usage": "none after hover: cloud only"}
@@ -141,7 +149,8 @@ def main():
                 print("  已在该视角：补采点云，不重复转动", flush=True)
             else:
                 after = move(reader, view["target_tcp_pose_m_rad"], args.speed, args.acceleration)
-            report = os.path.join(output_dir, "view-%02d.json" % view["slot"])
+            report = os.path.join(output_dir, "view-%02d-%s.json" %
+                                  (view["slot"], capture_run_id))
             command = [sys.executable, os.path.join(ROOT, "scripts", "track_cube_without_checkerboard.py"),
                        "--anchor", args.anchor, "--captures", "3", "--min-coverage", "0.45",
                        "--output", report]

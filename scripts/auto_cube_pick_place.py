@@ -40,7 +40,14 @@ def main():
     args = parser.parse_args()
     env = os.environ.copy()
     env.setdefault("FASTDDS_BUILTIN_TRANSPORTS", "UDPv4")
+    # The robot pipeline uses Ubuntu's matched NumPy 1.21 / SciPy 1.8 stack.
+    # This host also has NumPy 1.26 in ~/.local, which otherwise shadows only
+    # NumPy and leaves the incompatible system SciPy in place.  Scope the fix
+    # to child processes; the separately launched dashboard keeps its own
+    # user-site packages (including websockets).
+    env["PYTHONNOUSERSITE"] = "1"
     python = sys.executable
+    print("自动抓取子进程使用系统 Python 包（忽略 ~/.local，避免 NumPy/SciPy 混用）", flush=True)
     run([python, "scripts/locate_cube_near_checkerboard.py", "--output", args.observation,
          "--board-center-x-m", str(args.board_center_x_m),
          "--board-center-y-m", str(args.board_center_y_m)], env)

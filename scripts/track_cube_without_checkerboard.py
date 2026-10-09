@@ -44,10 +44,21 @@ def crop_local_cloud(points_local, roi_half_xy_m):
     return points_local[window]
 
 
+def capture_cloud_with_retry(node, timeout, attempts):
+    """Retry a transient service timeout without reusing an older cloud."""
+    for attempt in range(1, attempts + 1):
+        try:
+            return node.capture_cloud(timeout)
+        except TimeoutError:
+            if attempt == attempts:
+                raise
+            print("点云服务超时，原视角重试 %d/%d…" % (attempt, attempts - 1), flush=True)
+
+
 def one_observation(node, reader, tool_from_camera, anchor, args, index, stamp):
     """Capture cloud once with poses immediately before/after; require stillness."""
     _, before_tcp, _, _ = reader.read_extended()
-    cloud = node.capture_cloud(args.timeout)
+    cloud = capture_cloud_with_retry(node, args.timeout, args.cloud_attempts)
     _, after_tcp, _, _ = reader.read_extended()
     before = np.asarray(before_tcp, dtype=float)
     after = np.asarray(after_tcp, dtype=float)
@@ -120,6 +131,8 @@ def main():
     parser.add_argument("--port", type=int, default=30013)
     parser.add_argument("--captures", type=int, default=3)
     parser.add_argument("--timeout", type=float, default=20.0)
+    parser.add_argument("--cloud-attempts", type=int, default=2,
+                        help="每次观测的点云服务尝试次数，默认 2")
     parser.add_argument("--max-robot-motion-mm", type=float, default=0.5)
     parser.add_argument("--max-center-spread-mm", type=float, default=3.0)
     parser.add_argument("--expect-edge", type=float, default=0.05)
@@ -135,6 +148,8 @@ def main():
     args = parser.parse_args()
     if args.captures < 2:
         parser.error("--captures must be at least 2 for a stability check")
+    if not 1 <= args.cloud_attempts <= 3:
+        parser.error("--cloud-attempts must be within 1..3")
     if not (0.08 <= args.search_half_xy_m <= 0.20 and
             args.search_half_xy_m + 0.04 <= args.roi_half_xy_m <= 0.30):
         parser.error("ROI needs 0.08..0.20 m search and >=40 mm surrounding table ring")
@@ -170,9 +185,13 @@ def main():
     try:
         for index in range(args.captures):
             print("点云观测 %d/%d（不采图、不看标定板）..." % (index + 1, args.captures), flush=True)
-            observations.append(one_observation(node, reader, tool_from_camera,
-                                                np.asarray(anchor, dtype=float), args,
-                                                index, capture_stamp))
+            try:
+                observations.append(one_observation(node, reader, tool_from_camera,
+                                                    np.asarray(anchor, dtype=float), args,
+                                                    index, capture_stamp))
+            except TimeoutError as exc:
+                observations.append({"status": "rejected", "reason": str(exc),
+                                     "saved_cloud": None})
     finally:
         reader.close()
         node.destroy_node()
