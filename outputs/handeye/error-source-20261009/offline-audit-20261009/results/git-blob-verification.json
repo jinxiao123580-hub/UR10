@@ -1,0 +1,552 @@
+{
+  "commit": "0489e5d505f3924ae5eb9cd39b791f70de69646e",
+  "passed": true,
+  "files": [
+    {
+      "path": "config/handeye_eye_in_hand_20260921.yaml",
+      "blob_sha1": "1666aead47764d46cff628a6503ba3a00f3c2fcd",
+      "expected": "1666aead47764d46cff628a6503ba3a00f3c2fcd",
+      "passed": true
+    },
+    {
+      "path": "scripts/analyze_handeye_closure.py",
+      "blob_sha1": "0021ebe618e20ac863d26df14ee20709b25799d7",
+      "expected": "0021ebe618e20ac863d26df14ee20709b25799d7",
+      "passed": true
+    },
+    {
+      "path": "scripts/collect_handeye_sample.py",
+      "blob_sha1": "aca9b13e8dcd5028f96347b099ede44430f0d92b",
+      "expected": "aca9b13e8dcd5028f96347b099ede44430f0d92b",
+      "passed": true
+    },
+    {
+      "path": "scripts/check_handeye_checkerboard.py",
+      "blob_sha1": "031e10a71181b3501223e80c6b7eb3a26fcf85c0",
+      "expected": "031e10a71181b3501223e80c6b7eb3a26fcf85c0",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/README.md",
+      "blob_sha1": "ce7375582062019bce155410084ccfa17f0411ea",
+      "expected": "ce7375582062019bce155410084ccfa17f0411ea",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/dataset.json",
+      "blob_sha1": "81b2670222609516b9a9c08126d255e2c080494f",
+      "expected": "81b2670222609516b9a9c08126d255e2c080494f",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/pose-change/dataset.json",
+      "blob_sha1": "4bcbc6f8af7a37598a596e8a0a19be98d15e5363",
+      "expected": "4bcbc6f8af7a37598a596e8a0a19be98d15e5363",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/translation-only/dataset.json",
+      "blob_sha1": "36a6e8d7f935f2c247327dca09f42445657c595e",
+      "expected": "36a6e8d7f935f2c247327dca09f42445657c595e",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/return-to-pose/dataset.json",
+      "blob_sha1": "1ff452cce28258cda856beb18c9e3a811c307168",
+      "expected": "1ff452cce28258cda856beb18c9e3a811c307168",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/xminus-160/dataset.json",
+      "blob_sha1": "56b29debe33a0f4e4a64b7c7386e7004334a4af6",
+      "expected": "56b29debe33a0f4e4a64b7c7386e7004334a4af6",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/x-return/dataset.json",
+      "blob_sha1": "e68f73a6997f23a9edfd2efa61b12def048b712f",
+      "expected": "e68f73a6997f23a9edfd2efa61b12def048b712f",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/samples/20261009-114728-288650/image.png",
+      "blob_sha1": "0ea7cbcdd1ac2e86d6e0211299c815c9aec72230",
+      "expected": "0ea7cbcdd1ac2e86d6e0211299c815c9aec72230",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/samples/20261009-114728-288650/cloud.npz",
+      "blob_sha1": "6d0304e91a738f92035b1bf2ee90275ce25a99a9",
+      "expected": "6d0304e91a738f92035b1bf2ee90275ce25a99a9",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/samples/20261009-114728-288650/robot_frames.json",
+      "blob_sha1": "09dce3e24f5647d8309b6d12023d57bdafe85c92",
+      "expected": "09dce3e24f5647d8309b6d12023d57bdafe85c92",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/samples/20261009-114728-288650/sample.json",
+      "blob_sha1": "5d93901a7ceb1ae323129925d5433fa7d5a2c64b",
+      "expected": "5d93901a7ceb1ae323129925d5433fa7d5a2c64b",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/samples/20261009-114742-151970/image.png",
+      "blob_sha1": "3cc5319c5e990bd220a9bfa9674ad0c5b6a500c4",
+      "expected": "3cc5319c5e990bd220a9bfa9674ad0c5b6a500c4",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/samples/20261009-114742-151970/cloud.npz",
+      "blob_sha1": "f13dae09cdea3bdc096d90ee1af62e705e41f6e8",
+      "expected": "f13dae09cdea3bdc096d90ee1af62e705e41f6e8",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/samples/20261009-114742-151970/robot_frames.json",
+      "blob_sha1": "1c08cbb48fcdbfea00e7c5dc8b0d429273f04d77",
+      "expected": "1c08cbb48fcdbfea00e7c5dc8b0d429273f04d77",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/samples/20261009-114742-151970/sample.json",
+      "blob_sha1": "2d6ae073605e6bfea8648945b9cb937bd4450a90",
+      "expected": "2d6ae073605e6bfea8648945b9cb937bd4450a90",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/samples/20261009-114748-333909/image.png",
+      "blob_sha1": "61e6bff3939d9bfe7184126a58054e1396831300",
+      "expected": "61e6bff3939d9bfe7184126a58054e1396831300",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/samples/20261009-114748-333909/cloud.npz",
+      "blob_sha1": "03cfe5242843d6a006285b9922c408aec6eb4497",
+      "expected": "03cfe5242843d6a006285b9922c408aec6eb4497",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/samples/20261009-114748-333909/robot_frames.json",
+      "blob_sha1": "85495007f7c833f5c3cedd258f258f61bf6d7e2e",
+      "expected": "85495007f7c833f5c3cedd258f258f61bf6d7e2e",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/samples/20261009-114748-333909/sample.json",
+      "blob_sha1": "8405d53b3fa7a9130e4aa1d72c86bf1781508dda",
+      "expected": "8405d53b3fa7a9130e4aa1d72c86bf1781508dda",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/samples/20261009-114753-536503/image.png",
+      "blob_sha1": "85b294e5b05f7f2baed3747b19e4dd27114870fc",
+      "expected": "85b294e5b05f7f2baed3747b19e4dd27114870fc",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/samples/20261009-114753-536503/cloud.npz",
+      "blob_sha1": "f71f179aa6b6dba218eb6497a9d30e222a834023",
+      "expected": "f71f179aa6b6dba218eb6497a9d30e222a834023",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/samples/20261009-114753-536503/robot_frames.json",
+      "blob_sha1": "680d1b00198542ace6bbaaaa00beded4c4acbed4",
+      "expected": "680d1b00198542ace6bbaaaa00beded4c4acbed4",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/samples/20261009-114753-536503/sample.json",
+      "blob_sha1": "4b90eaf35a734983bd05e24e39e378dabe0ee829",
+      "expected": "4b90eaf35a734983bd05e24e39e378dabe0ee829",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/samples/20261009-114758-726370/image.png",
+      "blob_sha1": "eb709e93c3aee4b9de3328403e385938006ff4ef",
+      "expected": "eb709e93c3aee4b9de3328403e385938006ff4ef",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/samples/20261009-114758-726370/cloud.npz",
+      "blob_sha1": "515bd898e636dcb724f78069114545be6ba2f39a",
+      "expected": "515bd898e636dcb724f78069114545be6ba2f39a",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/samples/20261009-114758-726370/robot_frames.json",
+      "blob_sha1": "2bf9ee633612cbfc5c0ac088d97b7bdcfba07a4e",
+      "expected": "2bf9ee633612cbfc5c0ac088d97b7bdcfba07a4e",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/samples/20261009-114758-726370/sample.json",
+      "blob_sha1": "28f1480a624a2948d0918a4f5fa22d8a13d2a67b",
+      "expected": "28f1480a624a2948d0918a4f5fa22d8a13d2a67b",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/pose-change/samples/20261009-115100-833978/image.png",
+      "blob_sha1": "f5b317a2460b5ff1adcb8d963ce70636927e63fb",
+      "expected": "f5b317a2460b5ff1adcb8d963ce70636927e63fb",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/pose-change/samples/20261009-115100-833978/cloud.npz",
+      "blob_sha1": "358989d8c5c8f558a12dcefe717867310759e4c5",
+      "expected": "358989d8c5c8f558a12dcefe717867310759e4c5",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/pose-change/samples/20261009-115100-833978/robot_frames.json",
+      "blob_sha1": "ece96303d46ef8ba23b6279572a42dc998fd46a3",
+      "expected": "ece96303d46ef8ba23b6279572a42dc998fd46a3",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/pose-change/samples/20261009-115100-833978/sample.json",
+      "blob_sha1": "06ffceab2bafda518125850305dd519131d02d87",
+      "expected": "06ffceab2bafda518125850305dd519131d02d87",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/pose-change/samples/20261009-115114-976651/image.png",
+      "blob_sha1": "e5a3fac5a8c43654b6ae8a5cf639fb3b073c1e26",
+      "expected": "e5a3fac5a8c43654b6ae8a5cf639fb3b073c1e26",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/pose-change/samples/20261009-115114-976651/cloud.npz",
+      "blob_sha1": "a3cce966759c30607a58255a18d5bd517ed4cf18",
+      "expected": "a3cce966759c30607a58255a18d5bd517ed4cf18",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/pose-change/samples/20261009-115114-976651/robot_frames.json",
+      "blob_sha1": "71392f69cf8871a366bc5f4423b0d0e646f22809",
+      "expected": "71392f69cf8871a366bc5f4423b0d0e646f22809",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/pose-change/samples/20261009-115114-976651/sample.json",
+      "blob_sha1": "232ac6914762cb132b9da4d7a0f58d3754d3cf3b",
+      "expected": "232ac6914762cb132b9da4d7a0f58d3754d3cf3b",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/pose-change/samples/20261009-115124-489966/image.png",
+      "blob_sha1": "f33037796ea49e0faa31ae453620d0756233a113",
+      "expected": "f33037796ea49e0faa31ae453620d0756233a113",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/pose-change/samples/20261009-115124-489966/cloud.npz",
+      "blob_sha1": "7f9c8077f5031e866da92ac24ca3a4a3c968776b",
+      "expected": "7f9c8077f5031e866da92ac24ca3a4a3c968776b",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/pose-change/samples/20261009-115124-489966/robot_frames.json",
+      "blob_sha1": "c2e484085e998fff882f03a88c98f90171a41d8f",
+      "expected": "c2e484085e998fff882f03a88c98f90171a41d8f",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/pose-change/samples/20261009-115124-489966/sample.json",
+      "blob_sha1": "c70b6ca83e48c5060aa903cfddf402fdae8a3f70",
+      "expected": "c70b6ca83e48c5060aa903cfddf402fdae8a3f70",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/translation-only/samples/20261009-115448-094561/image.png",
+      "blob_sha1": "bed1d249f952a72000e3fab8fa4b734d6111dfb6",
+      "expected": "bed1d249f952a72000e3fab8fa4b734d6111dfb6",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/translation-only/samples/20261009-115448-094561/cloud.npz",
+      "blob_sha1": "d31fc22be488e66ed635481bf37217e334077e87",
+      "expected": "d31fc22be488e66ed635481bf37217e334077e87",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/translation-only/samples/20261009-115448-094561/robot_frames.json",
+      "blob_sha1": "91bd9a3d20441efc6969aa0c5c02b739127e2fdd",
+      "expected": "91bd9a3d20441efc6969aa0c5c02b739127e2fdd",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/translation-only/samples/20261009-115448-094561/sample.json",
+      "blob_sha1": "18c03611e305ed1b8461720f9c41f5b1204cbb25",
+      "expected": "18c03611e305ed1b8461720f9c41f5b1204cbb25",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/translation-only/samples/20261009-115455-222814/image.png",
+      "blob_sha1": "4234e56d213d38f2164bbaa3382f9e829a619e5b",
+      "expected": "4234e56d213d38f2164bbaa3382f9e829a619e5b",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/translation-only/samples/20261009-115455-222814/cloud.npz",
+      "blob_sha1": "fbf7f25207a0c1564f276f5ec5defe1445c712ad",
+      "expected": "fbf7f25207a0c1564f276f5ec5defe1445c712ad",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/translation-only/samples/20261009-115455-222814/robot_frames.json",
+      "blob_sha1": "d5634f57f678b8a9b31c8f4048599969691826e2",
+      "expected": "d5634f57f678b8a9b31c8f4048599969691826e2",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/translation-only/samples/20261009-115455-222814/sample.json",
+      "blob_sha1": "d52aabfdf8299cfa04cdfba221a5bb24b141788f",
+      "expected": "d52aabfdf8299cfa04cdfba221a5bb24b141788f",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/translation-only/samples/20261009-115501-085801/image.png",
+      "blob_sha1": "ea63db7623924f08686883c06d818aa55709e54f",
+      "expected": "ea63db7623924f08686883c06d818aa55709e54f",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/translation-only/samples/20261009-115501-085801/cloud.npz",
+      "blob_sha1": "7f38d385ec31608dbfb3d6d320c7168be14465cf",
+      "expected": "7f38d385ec31608dbfb3d6d320c7168be14465cf",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/translation-only/samples/20261009-115501-085801/robot_frames.json",
+      "blob_sha1": "891fcb3a81ba607af471740b4d8cdce941f7eac0",
+      "expected": "891fcb3a81ba607af471740b4d8cdce941f7eac0",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/translation-only/samples/20261009-115501-085801/sample.json",
+      "blob_sha1": "704e14ddee6026fcdaae5afb91886182561d65d3",
+      "expected": "704e14ddee6026fcdaae5afb91886182561d65d3",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/return-to-pose/samples/20261009-120336-017392/image.png",
+      "blob_sha1": "33223def323953dd364210f15a8992e4d3fe392d",
+      "expected": "33223def323953dd364210f15a8992e4d3fe392d",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/return-to-pose/samples/20261009-120336-017392/cloud.npz",
+      "blob_sha1": "682bb057d25434e6daccc6782f9c3885d1dbd492",
+      "expected": "682bb057d25434e6daccc6782f9c3885d1dbd492",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/return-to-pose/samples/20261009-120336-017392/robot_frames.json",
+      "blob_sha1": "b965c7101bdc51f4e4ea3a5b78e383f4f79599c7",
+      "expected": "b965c7101bdc51f4e4ea3a5b78e383f4f79599c7",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/return-to-pose/samples/20261009-120336-017392/sample.json",
+      "blob_sha1": "f3ab126609efa95d346c054affc8dbe3f6bee06c",
+      "expected": "f3ab126609efa95d346c054affc8dbe3f6bee06c",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/return-to-pose/samples/20261009-120348-130237/image.png",
+      "blob_sha1": "b39778a02b4053688496767d69b2b432ebc362cf",
+      "expected": "b39778a02b4053688496767d69b2b432ebc362cf",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/return-to-pose/samples/20261009-120348-130237/cloud.npz",
+      "blob_sha1": "3063b2184099966df04b1974828c75d239747b13",
+      "expected": "3063b2184099966df04b1974828c75d239747b13",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/return-to-pose/samples/20261009-120348-130237/robot_frames.json",
+      "blob_sha1": "143e8bd9cab3c18aa060290122e4e3201754300e",
+      "expected": "143e8bd9cab3c18aa060290122e4e3201754300e",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/return-to-pose/samples/20261009-120348-130237/sample.json",
+      "blob_sha1": "fdc1e644d1409e3e1a5fd4d83115abf0c070c266",
+      "expected": "fdc1e644d1409e3e1a5fd4d83115abf0c070c266",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/return-to-pose/samples/20261009-120353-728071/image.png",
+      "blob_sha1": "8587df1b3d23b40e29cd02fd2de5c87ce6b16b5c",
+      "expected": "8587df1b3d23b40e29cd02fd2de5c87ce6b16b5c",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/return-to-pose/samples/20261009-120353-728071/cloud.npz",
+      "blob_sha1": "328cae1eec9f4225cb7d2fa2a91e163ec254d0a5",
+      "expected": "328cae1eec9f4225cb7d2fa2a91e163ec254d0a5",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/return-to-pose/samples/20261009-120353-728071/robot_frames.json",
+      "blob_sha1": "0eb0758781952d4bc16fc1138cac7b6d5140f714",
+      "expected": "0eb0758781952d4bc16fc1138cac7b6d5140f714",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/return-to-pose/samples/20261009-120353-728071/sample.json",
+      "blob_sha1": "c132affbfa41a81094b8f2f2495217f95cb34d34",
+      "expected": "c132affbfa41a81094b8f2f2495217f95cb34d34",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/xminus-160/samples/20261009-120620-418083/image.png",
+      "blob_sha1": "cd3836aff817ce68ccf802a3ebe1e500cc44f8de",
+      "expected": "cd3836aff817ce68ccf802a3ebe1e500cc44f8de",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/xminus-160/samples/20261009-120620-418083/cloud.npz",
+      "blob_sha1": "63d341712ed0b0a1493ad197c97af499101b4547",
+      "expected": "63d341712ed0b0a1493ad197c97af499101b4547",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/xminus-160/samples/20261009-120620-418083/robot_frames.json",
+      "blob_sha1": "169d4d29cfa6118945a6f2251efed3b913b5086c",
+      "expected": "169d4d29cfa6118945a6f2251efed3b913b5086c",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/xminus-160/samples/20261009-120620-418083/sample.json",
+      "blob_sha1": "0573f5d61c6fbf9a2a3b0f88bc77f56b8699cc3c",
+      "expected": "0573f5d61c6fbf9a2a3b0f88bc77f56b8699cc3c",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/xminus-160/samples/20261009-120626-354530/image.png",
+      "blob_sha1": "ef9e475a9bebd84d878fd15ded59e4f70ea16e77",
+      "expected": "ef9e475a9bebd84d878fd15ded59e4f70ea16e77",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/xminus-160/samples/20261009-120626-354530/cloud.npz",
+      "blob_sha1": "6567d5095c9fde1121df0ec14af677e6eb0ddaf2",
+      "expected": "6567d5095c9fde1121df0ec14af677e6eb0ddaf2",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/xminus-160/samples/20261009-120626-354530/robot_frames.json",
+      "blob_sha1": "645c39a739ee0f1790345af87932195919516667",
+      "expected": "645c39a739ee0f1790345af87932195919516667",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/xminus-160/samples/20261009-120626-354530/sample.json",
+      "blob_sha1": "fa188595e2b31e16e91e9e7495013fa24d569de8",
+      "expected": "fa188595e2b31e16e91e9e7495013fa24d569de8",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/xminus-160/samples/20261009-120632-566870/image.png",
+      "blob_sha1": "4b439b73ce3260da14a43c97e79ccfd3d2f5dc63",
+      "expected": "4b439b73ce3260da14a43c97e79ccfd3d2f5dc63",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/xminus-160/samples/20261009-120632-566870/cloud.npz",
+      "blob_sha1": "8bd331ef3daa2f422ce4a83d46b98a9d7f8712c5",
+      "expected": "8bd331ef3daa2f422ce4a83d46b98a9d7f8712c5",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/xminus-160/samples/20261009-120632-566870/robot_frames.json",
+      "blob_sha1": "e7d7900c1a9b8494b54533a9d6cfa867f41fdd7f",
+      "expected": "e7d7900c1a9b8494b54533a9d6cfa867f41fdd7f",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/xminus-160/samples/20261009-120632-566870/sample.json",
+      "blob_sha1": "ef477137f40d5774802abed5eabfd06084fa7451",
+      "expected": "ef477137f40d5774802abed5eabfd06084fa7451",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/x-return/samples/20261009-120725-044078/image.png",
+      "blob_sha1": "1106a544ccafa47b4eb245dbd71b5aaa570fdb58",
+      "expected": "1106a544ccafa47b4eb245dbd71b5aaa570fdb58",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/x-return/samples/20261009-120725-044078/cloud.npz",
+      "blob_sha1": "31b6023a78739b2bbbf2fb03a030f2483bfea348",
+      "expected": "31b6023a78739b2bbbf2fb03a030f2483bfea348",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/x-return/samples/20261009-120725-044078/robot_frames.json",
+      "blob_sha1": "bff8f1a594cc39adda38dd86d934ea7dea8ab75f",
+      "expected": "bff8f1a594cc39adda38dd86d934ea7dea8ab75f",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/x-return/samples/20261009-120725-044078/sample.json",
+      "blob_sha1": "209770b0f7fca942106214e9a148d28564bca4ff",
+      "expected": "209770b0f7fca942106214e9a148d28564bca4ff",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/x-return/samples/20261009-120732-400546/image.png",
+      "blob_sha1": "f16cb1d50ef10a4d6da88f95077107bd33cbc062",
+      "expected": "f16cb1d50ef10a4d6da88f95077107bd33cbc062",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/x-return/samples/20261009-120732-400546/cloud.npz",
+      "blob_sha1": "565513c213afb4ed4c3dd08dd2e9f6794bf18508",
+      "expected": "565513c213afb4ed4c3dd08dd2e9f6794bf18508",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/x-return/samples/20261009-120732-400546/robot_frames.json",
+      "blob_sha1": "85d2ef153c2322a91d3e8744c54585c579cac271",
+      "expected": "85d2ef153c2322a91d3e8744c54585c579cac271",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/x-return/samples/20261009-120732-400546/sample.json",
+      "blob_sha1": "46b6bcd97b19e04bc7125d976f1410ac85ed3dc5",
+      "expected": "46b6bcd97b19e04bc7125d976f1410ac85ed3dc5",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/x-return/samples/20261009-120738-229085/image.png",
+      "blob_sha1": "ea4cc00477f8be6568fe8709a757fcdac9847335",
+      "expected": "ea4cc00477f8be6568fe8709a757fcdac9847335",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/x-return/samples/20261009-120738-229085/cloud.npz",
+      "blob_sha1": "55842680f0c4c0d50bb7a20096d2f1eb06b02cb4",
+      "expected": "55842680f0c4c0d50bb7a20096d2f1eb06b02cb4",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/x-return/samples/20261009-120738-229085/robot_frames.json",
+      "blob_sha1": "56a944c43ff638b2a06b3cc3cc4fa9d6888c4556",
+      "expected": "56a944c43ff638b2a06b3cc3cc4fa9d6888c4556",
+      "passed": true
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/x-return/samples/20261009-120738-229085/sample.json",
+      "blob_sha1": "30de9f8eda045be11376e50f99b522c4f47b34c7",
+      "expected": "30de9f8eda045be11376e50f99b522c4f47b34c7",
+      "passed": true
+    }
+  ]
+}

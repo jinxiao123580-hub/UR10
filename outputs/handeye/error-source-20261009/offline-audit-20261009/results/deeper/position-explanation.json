@@ -1,0 +1,71 @@
+{
+  "warning": "Fit uses only the two outgoing translation pairs. It demonstrates explanatory ability, not identification of a true extrinsic error. Do not apply fitted values.",
+  "pairs": [
+    [
+      "pose-change",
+      "translation-only"
+    ],
+    [
+      "return-to-pose",
+      "xminus-160"
+    ]
+  ],
+  "results": {
+    "SB": {
+      "explanatory_rotation_vector_deg": [
+        0.45475333183588784,
+        0.009028851287075418,
+        -0.39559194332452163
+      ],
+      "angle_deg": 0.6028060207020802,
+      "remaining_translation_residual_mm": [
+        0.2505719146328498,
+        0.5916242656318237
+      ],
+      "remaining_xyz_mm": [
+        [
+          0.24898551359819887,
+          -0.028150839635282532,
+          -0.0001692596876545771
+        ],
+        [
+          -0.5400617340717839,
+          -0.2415626936700943,
+          -0.0002451583581697392
+        ]
+      ],
+      "camera_vs_reported_tcp_length_mismatch_mm": [
+        0.02480834668998,
+        -0.48740963265231585
+      ]
+    },
+    "classic_w7": {
+      "explanatory_rotation_vector_deg": [
+        0.5083774119854295,
+        0.1455272318095812,
+        -0.12812360254880856
+      ],
+      "angle_deg": 0.5440968900345304,
+      "remaining_translation_residual_mm": [
+        0.19977579077380672,
+        0.2608455040420801
+      ],
+      "remaining_xyz_mm": [
+        [
+          -0.020143839621400428,
+          -0.19875758164303314,
+          -0.00012666499166202883
+        ],
+        [
+          -0.2601180200731412,
+          0.01946761453941459,
+          -6.779631633868632e-05
+        ]
+      ],
+      "camera_vs_reported_tcp_length_mismatch_mm": [
+        0.19526300336471536,
+        -0.20750130774217723
+      ]
+    }
+  }
+}

@@ -1,0 +1,25 @@
+﻿pair,method,translation_mm,rotation_deg
+pose-change -> translation-only,SB,1.4236588123928644,0.39546463471193344
+pose-change -> translation-only,classic_w3,0.7925272575806896,0.41958302001587366
+pose-change -> translation-only,classic_w5,1.35613679097231,0.2232956258816761
+pose-change -> translation-only,classic_w7,1.48325953949982,0.21078768074136348
+pose-change -> translation-only,classic_w9,1.5383823322780883,0.2141639083144182
+pose-change -> translation-only,SB_subpix7,1.4832760014803137,0.21077076919245552
+pose-change -> return-to-pose,SB,0.5443271784909353,0.08712441013307545
+pose-change -> return-to-pose,classic_w3,0.6228227438461855,0.324905279591001
+pose-change -> return-to-pose,classic_w5,0.5035139856524509,0.0553827890029428
+pose-change -> return-to-pose,classic_w7,0.4766005201346462,0.06180605422244377
+pose-change -> return-to-pose,classic_w9,0.4712819520274504,0.04596241205483676
+pose-change -> return-to-pose,SB_subpix7,0.4766071356646623,0.061815877385151756
+return-to-pose -> xminus-160,SB,1.2587958089354987,0.48640507190825644
+return-to-pose -> xminus-160,classic_w3,1.874130877086967,0.1184826195964046
+return-to-pose -> xminus-160,classic_w5,0.5958139545682571,0.05845951958650168
+return-to-pose -> xminus-160,classic_w7,0.5091358296017016,0.06253664150836277
+return-to-pose -> xminus-160,classic_w9,0.5259047537006573,0.08125916679312477
+return-to-pose -> xminus-160,SB_subpix7,0.5091317079691513,0.06253341444156028
+return-to-pose -> x-return,SB,0.1658884548277473,0.03777904357332294
+return-to-pose -> x-return,classic_w3,0.5323713520912912,0.05845986629282176
+return-to-pose -> x-return,classic_w5,0.18836604870306994,0.023889061401356767
+return-to-pose -> x-return,classic_w7,0.16758888505012332,0.01188463354619832
+return-to-pose -> x-return,classic_w9,0.15662280979360335,0.011000227759776009
+return-to-pose -> x-return,SB_subpix7,0.16759269507928454,0.011886070057920625

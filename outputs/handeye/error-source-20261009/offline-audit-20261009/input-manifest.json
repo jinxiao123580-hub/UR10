@@ -1,0 +1,460 @@
+{
+  "commit": "0489e5d505f3924ae5eb9cd39b791f70de69646e",
+  "files": [
+    {
+      "path": "config/handeye_eye_in_hand_20260921.yaml",
+      "bytes": 1794,
+      "sha256": "7fbd513c5f5b3cf2a9014a16ce5fda77543e12c889420abad3ae864e7665f153"
+    },
+    {
+      "path": "scripts/analyze_handeye_closure.py",
+      "bytes": 24982,
+      "sha256": "1e2931d6b21bec56da301cfe41b9454b9b2f0c3fdb316f1b83e421d79419c957"
+    },
+    {
+      "path": "scripts/collect_handeye_sample.py",
+      "bytes": 17147,
+      "sha256": "efe99f857b14645e2dc3857754f579e6a171e1d31e0d04f98dce12e8ce1b7332"
+    },
+    {
+      "path": "scripts/check_handeye_checkerboard.py",
+      "bytes": 13162,
+      "sha256": "1edc8e40ebb7d3acf9528f114c6d11019454deddabf07b98cb671aa2a0df5246"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/README.md",
+      "bytes": 3611,
+      "sha256": "05e5cc207ed119a777bc9f22a719c2639dea8d78e56af5a8a581126e7025ff8d"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/dataset.json",
+      "bytes": 42059,
+      "sha256": "0d331aa474eb9b2525c96ebde778bc1999a026d4d0833396f028084de9c1a858"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/pose-change/dataset.json",
+      "bytes": 25372,
+      "sha256": "1ae519826c0c910decdc7f0df37794f09aa88760dd993e2a1ff7db676abe414c"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/translation-only/dataset.json",
+      "bytes": 25530,
+      "sha256": "5456e873cccf5f4f13e761120736673a1c847144ac6e8e0acbc2c2aa24507801"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/return-to-pose/dataset.json",
+      "bytes": 25390,
+      "sha256": "1414dd9c64412025ca6adfbb2e2a3410f684c86d1a66b0e219c0b7e5530c01aa"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/xminus-160/dataset.json",
+      "bytes": 25458,
+      "sha256": "f67e1855ca5a0567788a4e43134c94baec4e22086427b5d47592c84d401a5efb"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/x-return/dataset.json",
+      "bytes": 25376,
+      "sha256": "f8eff553d4eb4597b70ddb9d48efabc8c57f32ad3379f21b4642f97e0eeaedb8"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/samples/20261009-114728-288650/image.png",
+      "bytes": 1433670,
+      "sha256": "281c8d6c205605598cc6a54e708457f58e71c7763cb9515708012401a8b77315"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/samples/20261009-114728-288650/cloud.npz",
+      "bytes": 9152492,
+      "sha256": "7bd98426b8962bfc0fee98042b4dee2a4caefe160c12ec6ab6fc16fe3faf777b"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/samples/20261009-114728-288650/robot_frames.json",
+      "bytes": 215933,
+      "sha256": "3b38eda533496b976f5427183a1d27cd341a2209d103e09cbcc84478bbd41b14"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/samples/20261009-114728-288650/sample.json",
+      "bytes": 6864,
+      "sha256": "db1c8f9e53128672af89d6ddbc3b928f7eaf06aa05304b621b17d42036fb7dc2"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/samples/20261009-114742-151970/image.png",
+      "bytes": 1434743,
+      "sha256": "f199cba5c5b23c5faf5d2177444b0a053c9ce1e7f2b58622f2ac8eeb62279727"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/samples/20261009-114742-151970/cloud.npz",
+      "bytes": 9141211,
+      "sha256": "474d2a11ede9a540e8ee5e6c76eca67e810b2be30e37f63b69b6d1f0a35c1a64"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/samples/20261009-114742-151970/robot_frames.json",
+      "bytes": 274802,
+      "sha256": "51389248c1cc836ffba2658b6e96fcd8c30abbf4219ce251d34eed9400fa2f7b"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/samples/20261009-114742-151970/sample.json",
+      "bytes": 6858,
+      "sha256": "a560f72636a0121254e02dbb381c929e28512b5d8f3a3e7955053f6ec2fd9a35"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/samples/20261009-114748-333909/image.png",
+      "bytes": 1433688,
+      "sha256": "be8dc1dc3d85294725aed636f9cdb4e875e3ea86c46de2811ce6c5d4825a43d3"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/samples/20261009-114748-333909/cloud.npz",
+      "bytes": 9150353,
+      "sha256": "43f442e05c078e96c1be9577c0e3e771af11ed525b62cbbd65c64c3a7b6a9da8"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/samples/20261009-114748-333909/robot_frames.json",
+      "bytes": 208189,
+      "sha256": "d4aed13247885e34a118d2cea9fac5c37e02e10cb545c08a4d0fcc728a44af93"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/samples/20261009-114748-333909/sample.json",
+      "bytes": 6866,
+      "sha256": "cf9130fbd5ab103b9d0fd259be3084a1c4eacd8b7f0fdc6c36554c943f8c3fb9"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/samples/20261009-114753-536503/image.png",
+      "bytes": 1435571,
+      "sha256": "598d452682cd743db420bef79ddab0bcfda04704d951466685483cd3754528dd"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/samples/20261009-114753-536503/cloud.npz",
+      "bytes": 9151938,
+      "sha256": "c1d59e9013bc134746a8bad706f12eb74a67714a52185bf6e1459e581467bfb9"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/samples/20261009-114753-536503/robot_frames.json",
+      "bytes": 227061,
+      "sha256": "9dc099e0c76bba2f04c5df76f3d80e0ec6e7e042861c59dfb232d9625baebab3"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/samples/20261009-114753-536503/sample.json",
+      "bytes": 6869,
+      "sha256": "5dee77869b65e2285056c4c419c7f663cb377f909036da4a9aaa1719ec4a9de1"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/samples/20261009-114758-726370/image.png",
+      "bytes": 1434648,
+      "sha256": "6aeb9d59f149722ed8f548cd0f7d88189cd43f4e466e657f0b56f84fb0594c74"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/samples/20261009-114758-726370/cloud.npz",
+      "bytes": 9158220,
+      "sha256": "c837554ccfd50146e52addd6a168a4d250c5d22c812a8fb8b633ca582335e81c"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/samples/20261009-114758-726370/robot_frames.json",
+      "bytes": 199768,
+      "sha256": "4a9f3781dd385f93c2eb706e73c05671f22a1825ef3d3cd616b6941dfca8a419"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/samples/20261009-114758-726370/sample.json",
+      "bytes": 6855,
+      "sha256": "abf29dca9e7873bfb89bade44da6d42f43a3f49f8b4013dfdc56b2d0c070e297"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/pose-change/samples/20261009-115100-833978/image.png",
+      "bytes": 1442396,
+      "sha256": "fcef205f525710c6919a00350bbf43bc77c70664c38a1a174bcfe51fc05fe3e2"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/pose-change/samples/20261009-115100-833978/cloud.npz",
+      "bytes": 8626944,
+      "sha256": "bff5d12186832d11241ae058467593a1057ec4e7364ed1b18693bc2d9b065951"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/pose-change/samples/20261009-115100-833978/robot_frames.json",
+      "bytes": 213619,
+      "sha256": "c1a2e2372ee41fffcec3c36993065f1b3ef2f62f502fcce5959d747e2f3f8346"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/pose-change/samples/20261009-115100-833978/sample.json",
+      "bytes": 6877,
+      "sha256": "d503a2fbde31517e8cad3df004d9c7556921cfa5f06aaa45b2335b8c7bcd41da"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/pose-change/samples/20261009-115114-976651/image.png",
+      "bytes": 1441214,
+      "sha256": "7b558cfabd2df3324e77eed315e4ee9d5c023ca2c9323405f2c32b2457af1cf8"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/pose-change/samples/20261009-115114-976651/cloud.npz",
+      "bytes": 8627794,
+      "sha256": "6aa86035f3f18c85765cb80d56be09882c77fbfae88340cd8fe67a683d2091ee"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/pose-change/samples/20261009-115114-976651/robot_frames.json",
+      "bytes": 521657,
+      "sha256": "78f06004610ee4022d2f6e216326dc85ea7ad0cd7e189f84ec4ea1b49ecff3b3"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/pose-change/samples/20261009-115114-976651/sample.json",
+      "bytes": 6891,
+      "sha256": "00bb0b9cda2219212f0afcaa61ab1dbd9c77982e36390f18aaf1f577c75d45fe"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/pose-change/samples/20261009-115124-489966/image.png",
+      "bytes": 1441156,
+      "sha256": "cd020ce58e77286ee88f587b151ecc3c6676630912752cc7f5521f50825ef828"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/pose-change/samples/20261009-115124-489966/cloud.npz",
+      "bytes": 8626924,
+      "sha256": "8c07f7f5593e9af96f335b8f8ed22bb87de8f3f263002772fe14f58fb76e6dde"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/pose-change/samples/20261009-115124-489966/robot_frames.json",
+      "bytes": 220841,
+      "sha256": "07d4db170a3c2688332ef700605ebfe3426e5f93fe08aa4a87d791ff945fee20"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/pose-change/samples/20261009-115124-489966/sample.json",
+      "bytes": 6867,
+      "sha256": "6e4c829ef977df0b63e9f0242d37fa448e839d5146fbb18d03a2d04fa1da6e56"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/translation-only/samples/20261009-115448-094561/image.png",
+      "bytes": 1462624,
+      "sha256": "58382b8859b5a49ec3e510b69e71287c4bcd742cb4d90c6077b32b64d2e579fe"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/translation-only/samples/20261009-115448-094561/cloud.npz",
+      "bytes": 8770449,
+      "sha256": "91347c5c01723010ea61b1c4eb2374693d1e27c64f4d88f20fcf94e2025e9ef0"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/translation-only/samples/20261009-115448-094561/robot_frames.json",
+      "bytes": 328646,
+      "sha256": "5f04bf9c105a456102ffe76a5aa5dd31fa2581652984bc17669e921463ad1e60"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/translation-only/samples/20261009-115448-094561/sample.json",
+      "bytes": 6934,
+      "sha256": "c6cf0063499449273a5d9d735ed9c8e9ba37ab04917d3603ada395bcd74ce6f6"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/translation-only/samples/20261009-115455-222814/image.png",
+      "bytes": 1463686,
+      "sha256": "369cee7501b4d02987ce6fcdbcd8a0133ea8d9e9e4ba2ed5282411f495cb9595"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/translation-only/samples/20261009-115455-222814/cloud.npz",
+      "bytes": 8775867,
+      "sha256": "a89bcaf7923d10d4956afea819330fbd394915b284390ae4ffd36290c73d6ae6"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/translation-only/samples/20261009-115455-222814/robot_frames.json",
+      "bytes": 264354,
+      "sha256": "d87d727de48bf960eaf7c99184546ead42b40a0a4319d60383a81face4d00868"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/translation-only/samples/20261009-115455-222814/sample.json",
+      "bytes": 6925,
+      "sha256": "24709293826be4382e68167b65316fc50d7960d6b240484b93f2df17330cb107"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/translation-only/samples/20261009-115501-085801/image.png",
+      "bytes": 1463690,
+      "sha256": "d89d0736c71c3cc1b1e187fb0823e784a5485807beb225c3af984a653be3aef7"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/translation-only/samples/20261009-115501-085801/cloud.npz",
+      "bytes": 8770787,
+      "sha256": "3b5f55b4f2bba975a9c0edded7993ea0ca32eadd030f3f3d82585a421a2bc879"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/translation-only/samples/20261009-115501-085801/robot_frames.json",
+      "bytes": 241618,
+      "sha256": "34ba83389abf5f1ff7be01664afb3e6d858b0e9dbf081018d50cd95fee8063e0"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/translation-only/samples/20261009-115501-085801/sample.json",
+      "bytes": 6934,
+      "sha256": "a213363f3cf5a9878b9bb983eba68a0b8935037ebe821a519f552c8713d9831f"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/return-to-pose/samples/20261009-120336-017392/image.png",
+      "bytes": 1473756,
+      "sha256": "335cd563c7c8db249c49662764058b2abc1ed2d01e4dc24a460fc76c86f07e35"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/return-to-pose/samples/20261009-120336-017392/cloud.npz",
+      "bytes": 8625784,
+      "sha256": "1f983099e55d3f42d4d931df3c94f49134b809177cf0ae8558529ee60c4f4a91"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/return-to-pose/samples/20261009-120336-017392/robot_frames.json",
+      "bytes": 424791,
+      "sha256": "7de3165fe2b2272e9a390512ae0f8198804d180a7bb8a9e8394f069f35ac3516"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/return-to-pose/samples/20261009-120336-017392/sample.json",
+      "bytes": 6877,
+      "sha256": "3648f904d45a675e02e1df13641f990a7e4d77eebd906a33c8c5ec7d585e0f27"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/return-to-pose/samples/20261009-120348-130237/image.png",
+      "bytes": 1473698,
+      "sha256": "da695b4206effddf89d9c656d34e08a154bba5294a38ba95968564027862e9e4"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/return-to-pose/samples/20261009-120348-130237/cloud.npz",
+      "bytes": 8629806,
+      "sha256": "de8cc9ef362b25e5f68a2c6e5c71ac091a5f1ffc470916e5e6c6aa05b4299692"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/return-to-pose/samples/20261009-120348-130237/robot_frames.json",
+      "bytes": 208740,
+      "sha256": "84154aa464ad9688bfe46a080c625021ecf505eaff488e9bc0e0a59afb34b23d"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/return-to-pose/samples/20261009-120348-130237/sample.json",
+      "bytes": 6892,
+      "sha256": "eae022e128d1391bbd2f89f079d3f8e093811a6f8c140a53dd0abeeaf53c8ec5"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/return-to-pose/samples/20261009-120353-728071/image.png",
+      "bytes": 1474158,
+      "sha256": "29789d0858b78b2bc744042a77aabde36c4bcf19b59230a29d038aa321a3775a"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/return-to-pose/samples/20261009-120353-728071/cloud.npz",
+      "bytes": 8623743,
+      "sha256": "fe9e7417bcecd2d4caec71df62540c6ad0d9de9f3c85f914de7b2327fa13880a"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/return-to-pose/samples/20261009-120353-728071/robot_frames.json",
+      "bytes": 210975,
+      "sha256": "98e2e7e5bb30dcedb726775fd08810fec681cbd1c2816b9352a6261ecc357652"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/return-to-pose/samples/20261009-120353-728071/sample.json",
+      "bytes": 6884,
+      "sha256": "7a5a81e30c5cdd530065e5ca6b2efbd04b7b8cfd3b5e75753d004e6cb650a934"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/xminus-160/samples/20261009-120620-418083/image.png",
+      "bytes": 1385213,
+      "sha256": "91dac33a78a4167cb8f96246d4436ec897ed2921be1b2e5c9817c08dd42402e0"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/xminus-160/samples/20261009-120620-418083/cloud.npz",
+      "bytes": 8553678,
+      "sha256": "63d876718614e515041390448bcdb8de5c3646f0c8af3f81b3a640977c6c530f"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/xminus-160/samples/20261009-120620-418083/robot_frames.json",
+      "bytes": 213016,
+      "sha256": "a48af02645e259e57479425ba51debaee329348c9a53f43770a01d08e9f32a6a"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/xminus-160/samples/20261009-120620-418083/sample.json",
+      "bytes": 6895,
+      "sha256": "1212563309f1b02a1a2f3d13474df5de1f05d3f2dc02dfe559ceb4394ea31fde"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/xminus-160/samples/20261009-120626-354530/image.png",
+      "bytes": 1383546,
+      "sha256": "a2c0cee0c350666e89c3dc7ee31b3e74d2d9cff9134245606cf38afb0d8e7a9e"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/xminus-160/samples/20261009-120626-354530/cloud.npz",
+      "bytes": 8552831,
+      "sha256": "9fa0eec64733b1b89064e4157d1b89bb701168e473faa48b4c81d8ee56da3144"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/xminus-160/samples/20261009-120626-354530/robot_frames.json",
+      "bytes": 214623,
+      "sha256": "0bde4e5a9e8a15d6449ff11062067dd67d5cdfefc2450bb718f0b1eb82b680da"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/xminus-160/samples/20261009-120626-354530/sample.json",
+      "bytes": 6912,
+      "sha256": "d9c0dc30e815b2f83bc8ac571c07566b243ca1173b4abca39c4a732cf0b1424f"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/xminus-160/samples/20261009-120632-566870/image.png",
+      "bytes": 1384958,
+      "sha256": "34eba3bc32e7badfab2d38e8a84907fa5baf8c40e844790a96cfb48e121d3eea"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/xminus-160/samples/20261009-120632-566870/cloud.npz",
+      "bytes": 8553142,
+      "sha256": "4117e93a990b6797519de18ceece5fdb20c33a6b7fbb960dc7906899cf6f51c9"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/xminus-160/samples/20261009-120632-566870/robot_frames.json",
+      "bytes": 199126,
+      "sha256": "0addf937cdf82d3534361c48c511a5388a2320ba62c96e5efab0a91a86d4443a"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/xminus-160/samples/20261009-120632-566870/sample.json",
+      "bytes": 6914,
+      "sha256": "d547028f6b2bd0285fb696bd68cfd7a9c6ba340e9bb3a8bd8815cbbd4fb60a1f"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/x-return/samples/20261009-120725-044078/image.png",
+      "bytes": 1551052,
+      "sha256": "784c9dad4c7c25d5330ed00a8055a33661f24159c249400b13eb558cbc594afd"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/x-return/samples/20261009-120725-044078/cloud.npz",
+      "bytes": 8629107,
+      "sha256": "8f6e868c20f99543f26d18d65af50be35c0345a81bd120d1b4eb2e0779e0fc5e"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/x-return/samples/20261009-120725-044078/robot_frames.json",
+      "bytes": 308197,
+      "sha256": "2c7f8064019e035474379a6e266e70a84fbca7204a5e5017a9026cd3810c98ec"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/x-return/samples/20261009-120725-044078/sample.json",
+      "bytes": 6874,
+      "sha256": "fc9db3d8cd52d388270638759be7a2ffa4958594a969fdf3ad5a37995866059b"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/x-return/samples/20261009-120732-400546/image.png",
+      "bytes": 1549007,
+      "sha256": "52f06eac10b336583c6be5e054a0821fb6e5532f8615adaeee0cd0a0bbd4e6e8"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/x-return/samples/20261009-120732-400546/cloud.npz",
+      "bytes": 8630890,
+      "sha256": "4df37a5fe15959c33e682a66198f15155981bb0938430a8f5d963a7b6526a8f5"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/x-return/samples/20261009-120732-400546/robot_frames.json",
+      "bytes": 191795,
+      "sha256": "b20bc8df7bf9df9a839a9980f0651bc31fa562661b90147c6b11f9ec05124e87"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/x-return/samples/20261009-120732-400546/sample.json",
+      "bytes": 6888,
+      "sha256": "7b6215bd096336ce5b98f3e82f1a586429acc810996e195f2f7dea96840c784c"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/x-return/samples/20261009-120738-229085/image.png",
+      "bytes": 1550790,
+      "sha256": "3f3df09808beba8293758d6c37f154b01cda803b26ca5561794f60deaaee529b"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/x-return/samples/20261009-120738-229085/cloud.npz",
+      "bytes": 8631283,
+      "sha256": "d464c99f99ad8b705bdbe188692620a3b960558b537e57b00239038fa5a62330"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/x-return/samples/20261009-120738-229085/robot_frames.json",
+      "bytes": 400259,
+      "sha256": "05638ff64f07b694a0396e1fba5e16541c3615e11ed4047fff0798e7769d92fe"
+    },
+    {
+      "path": "outputs/handeye/error-source-20261009/x-return/samples/20261009-120738-229085/sample.json",
+      "bytes": 6877,
+      "sha256": "89c907c4a65747f862815e77c8c1c07545d845d08888e620993c4ee24031b18f"
+    }
+  ]
+}

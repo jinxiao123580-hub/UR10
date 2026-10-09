@@ -1,0 +1,34 @@
+{
+  "group_means_used": [
+    "initial",
+    "pose-change",
+    "translation-only",
+    "return-to-pose",
+    "xminus-160",
+    "x-return"
+  ],
+  "handeye_translation_design_singular_values": [
+    0.5758743209461165,
+    0.5758742660793534,
+    0.00038468761262070393
+  ],
+  "condition_number": 1496.9921100992656,
+  "relative_tool_rotation_deg_all_pairs": [
+    14.794510125940466,
+    14.794790847627553,
+    14.797086084370141,
+    14.799797540331719,
+    14.798673731426078,
+    0.005792787235457192,
+    0.009071649156237767,
+    0.006565991593085765,
+    0.0068343463593038,
+    0.004921030068268369,
+    0.007829923477461724,
+    0.009266999742114965,
+    0.0072503002549024875,
+    0.008759845368381093,
+    0.002650186199102181
+  ],
+  "interpretation": "Only one substantial orientation change; other moves nearly preserve tool orientation. Full hand-eye translation calibration is poorly excited; repeated captures add repeatability, not new pose excitation."
+}
