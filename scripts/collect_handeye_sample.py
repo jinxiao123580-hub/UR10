@@ -2,7 +2,7 @@
 """Append one synchronized, stationary eye-in-hand calibration sample.
 
 The script triggers one Mech-Eye 2D capture while continuously reading the
-UR controller's actual state on port 30003.  It never sends a robot command.
+UR controller's actual state on port 30013 by default.  It never sends a robot command.
 The sample is accepted only when the full checkerboard is detected and the
 robot remains stationary throughout the camera acquisition.
 """
@@ -41,12 +41,13 @@ def rt(rotation_vector, translation):
 def build_cloud_payload(sample_id, camera_xyz, cloud_resolution, cloud_frame_id,
                         image_frame_id, cloud_is_dense, k, d, base_from_tool0,
                         target_to_camera=None, corners_px=None,
-                        inner_corners=(9, 6), square_size_m=0.006):
+                        inner_corners=(9, 6), square_size_m=0.006,
+                        ur_port=30013):
     """Assemble the offline-audit payload for one sample's raw organized cloud.
 
     Everything needed to re-derive the sample without the camera or the robot:
     the raw camera-frame xyz, the intrinsics, the FK transform of the mean
-    30003 pose, and (when the board was detected) the PnP pose plus the corner
+    UR state pose, and (when the board was detected) the PnP pose plus the corner
     pixels.  Kept separate from the capture path so the offline self-test can
     build and round-trip the exact same schema without hardware.
     """
@@ -64,7 +65,7 @@ def build_cloud_payload(sample_id, camera_xyz, cloud_resolution, cloud_frame_id,
         "inner_corners": np.asarray(inner_corners, dtype=np.int64),
         "square_size_m": np.asarray(float(square_size_m), dtype=np.float64),
         "transforms_note": np.asarray(
-            "base_from_tool0 = FK of the mean 30003 TCP pose (read-only, no command); "
+            "base_from_tool0 = FK of the mean %d TCP pose (read-only, no command); " % ur_port +
             "camera_from_target = solvePnP pose target->camera; "
             "camera_xyz_m = raw organized cloud in the camera frame, metres"),
     }
@@ -92,8 +93,8 @@ def rotation_distance_deg(a, b):
 
 
 class URSampler:
-    def __init__(self, host):
-        self.reader = RealtimeReader(host)
+    def __init__(self, host, port):
+        self.reader = RealtimeReader(host, port=port)
         self.rows = []
         self.stop_event = threading.Event()
         self.error = None
@@ -160,6 +161,8 @@ def robot_summary(rows):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--host", default="192.168.1.3")
+    parser.add_argument("--ur-port", type=int, choices=(30003, 30013), default=30013,
+                        help="UR real-time state port; this CB3 currently uses 30013")
     parser.add_argument("--squares-x", type=int, default=10)
     parser.add_argument("--squares-y", type=int, default=7)
     parser.add_argument("--square-size-m", type=float, default=0.006)
@@ -174,7 +177,7 @@ def main():
                              "sample cannot be re-checked offline (the 2026-09-17 gap)")
     parser.add_argument("--cloud-timeout", type=float, default=20.0)
     parser.add_argument("--no-robot-frames", action="store_true",
-                        help="skip robot_frames.json (the full 30003 frame log); the default "
+                        help="skip robot_frames.json (the full UR state frame log); the default "
                              "is to write it so the sample stays auditable offline")
     args = parser.parse_args()
     pattern = (args.squares_x - 1, args.squares_y - 1)
@@ -189,7 +192,7 @@ def main():
     sample_dir = os.path.join(os.path.dirname(dataset_path), "samples", stamp)
     os.makedirs(sample_dir, exist_ok=False)
 
-    sampler = URSampler(args.host)
+    sampler = URSampler(args.host, args.ur_port)
     rclpy.init()
     if args.save_cloud:
         from validate_checkerboard_pointcloud import BoardCloudCapture
@@ -215,8 +218,9 @@ def main():
         frames_path = os.path.join(sample_dir, "robot_frames.json")
         atomic_json(frames_path, {
             "schema_version": 1,
-            "source": "UR realtime client 30003 (read-only, no command sent)",
+            "source": "UR realtime client %d (read-only, no command sent)" % args.ur_port,
             "host": args.host,
+            "port": args.ur_port,
             "frame_count": len(sampler.rows),
             "capture_duration_s": summary["duration_s"],
             "first_monotonic_s": (sampler.rows[0]["monotonic_s"]
@@ -247,6 +251,7 @@ def main():
         "detected": found,
         "detected_corner_count": 0 if corners is None else int(len(corners)),
         "robot": summary,
+        "robot_state_port": args.ur_port,
         "motion_limits": {"position_mm": args.max_motion_mm,
                           "rotation_deg": args.max_motion_deg},
         "camera_info": {"width": info_msg.width, "height": info_msg.height,
@@ -317,7 +322,8 @@ def main():
             cloud_is_dense=bool(cloud_msg.is_dense),
             k=k, d=d, base_from_tool0=base_from_tool0,
             target_to_camera=target_to_camera, corners_px=corners_px,
-            inner_corners=pattern, square_size_m=args.square_size_m)
+            inner_corners=pattern, square_size_m=args.square_size_m,
+            ur_port=args.ur_port)
         result["files"]["cloud"] = cloud_path
         result["cloud"] = {
             "resolution": [cloud_msg.width, cloud_msg.height],

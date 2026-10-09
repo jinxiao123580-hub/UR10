@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "kind": "fixed_board_translation_only_diagnostic",
+  "board_stationary": "user confirmed",
+  "motion_sent_by_diagnostic": false,
+  "before_dataset": "outputs/handeye/error-source-20261009/pose-change/dataset.json",
+  "after_dataset": "outputs/handeye/error-source-20261009/translation-only/dataset.json",
+  "accepted_samples_per_group": [3, 3],
+  "controller_tool_translation_base_mm": [-0.040, 155.187, 0.048],
+  "controller_tool_translation_norm_mm": 155.187,
+  "controller_tool_orientation_change_deg": 0.0059,
+  "camera_board_distance_mm_first_sample_per_group": [580.02, 512.53],
+  "fixed_board_closure_delta_base_mm": [-0.448, -0.021, 1.347],
+  "fixed_board_closure_position_norm_mm": 1.420,
+  "fixed_board_closure_orientation_deg": 0.3918,
+  "static_board_origin_rms_mm_per_group": [0.031738582281379726, 0.0076471167921543385],
+  "depth_corner_rigid_fit": {
+    "method": "median finite xyz in a 7x7 pixel patch around each of 54 color corners; rigid Kabsch fit to 6 mm checkerboard geometry",
+    "fit_rms_mm_per_group": [[0.2784, 0.2777, 0.2811], [0.1554, 0.1527, 0.1558]],
+    "static_position_rms_mm_per_group": [0.0307, 0.0126],
+    "static_orientation_rms_deg_per_group": [0.0654, 0.0225],
+    "between_group_board_position_norm_mm": 1.6715,
+    "between_group_board_orientation_deg": 0.0780
+  },
+  "interpretation": "A constant hand-eye translation offset cancels for constant tool orientation, so it cannot by itself explain this pose-dependent closure. Color PnP gives a 0.392 deg board-orientation change whereas raw-depth corner fitting gives 0.078 deg, near its within-group angular scatter; this suggests view-dependent color PnP orientation bias but is not an independent metrology verdict. Both color and depth show about 1.4-1.7 mm board-position closure error. Remaining possibilities include hand-eye rotation, camera intrinsics/depth scale or registration, robot physical kinematics, and mounting flex. Do not change factory DH from this test."
+}

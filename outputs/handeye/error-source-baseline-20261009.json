@@ -1,0 +1,766 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-10-09T11:44:13.579577+08:00",
+  "kind": "independent_closure_analysis",
+  "dataset": "outputs/handeye/manual-eye-in-hand-20260921-r2.json",
+  "calibration": "config/handeye_eye_in_hand_20260921.yaml",
+  "calibration_valid_flag": true,
+  "calibration_method": "OpenCV_CALIB_HAND_EYE_PARK",
+  "board": {
+    "inner_corners": [
+      9,
+      6
+    ],
+    "square_size_m": 0.006
+  },
+  "sample_gates": {
+    "accepted": 35,
+    "rejected": 0,
+    "rejected_ids": [],
+    "reprojection_rms_px": {
+      "count": 35,
+      "max": 0.43076498534889485,
+      "mean": 0.22100468434453158,
+      "over_gate": []
+    },
+    "motion_position_mm_max": 0.09963306933728519,
+    "motion_rotation_deg_max": 0.01000837125846189,
+    "corner_count_min": 54,
+    "passed": true
+  },
+  "board_geometry": {
+    "sample_count": 35,
+    "board_origin_mm": {
+      "rms": 1.7573034692190226,
+      "max": 3.226373226244808,
+      "per_sample": [
+        1.048183488065826,
+        1.6326371292355735,
+        1.3996357944731221,
+        2.2583031879493634,
+        0.8421237393555399,
+        1.3965735204497702,
+        1.2308602026122448,
+        1.7635057996528865,
+        2.54757146633614,
+        2.2651965439331567,
+        1.4487084331135205,
+        1.8570772112194198,
+        1.1721230852829976,
+        1.1591444956934556,
+        1.0793155163182082,
+        1.0677813185147031,
+        0.5411404004782269,
+        1.4047490614037463,
+        0.5390946640977969,
+        0.9554881675300859,
+        1.0775029386547184,
+        1.1473866773900108,
+        0.6472738764724733,
+        1.9504766627883312,
+        3.0810000737717207,
+        1.6855548849641715,
+        3.226373226244808,
+        3.070450772498128,
+        3.1664616333696682,
+        2.3142054330283623,
+        1.776481358406927,
+        1.6521748723606027,
+        1.6050485417390616,
+        1.1286628777409748,
+        0.5710101225300114
+      ],
+      "xy_span_mm": [
+        2.5069527337946056,
+        4.965012513490159
+      ],
+      "std_mm": [
+        0.6180352021709055,
+        1.1758754822024804,
+        1.1504194114156212
+      ]
+    },
+    "board_orientation_deg": {
+      "rms": 0.47676420662036023,
+      "max": 1.6865422163096881,
+      "normal_rms": 0.45997776927522444,
+      "normal_max": 1.678804196496322,
+      "per_sample": [
+        0.09124568222952809,
+        0.1667149834290991,
+        0.24609056427743373,
+        0.2700684107328174,
+        0.34147543841279254,
+        0.5354431118283015,
+        0.24394613882560037,
+        0.46361469169326347,
+        0.3098795851141559,
+        0.5877569174299854,
+        0.17947182003643566,
+        0.5024991439781212,
+        0.09577553215126045,
+        0.17713437325533524,
+        0.27968276747012005,
+        0.28323142637234544,
+        0.09295599987244793,
+        0.30900569599334965,
+        0.14460167346438496,
+        0.20245186917517938,
+        0.11964249695063298,
+        0.3071287844437204,
+        0.07241897462387274,
+        1.6865422163096881,
+        1.4348384525850089,
+        0.2194028469130564,
+        0.4971893734104997,
+        0.49121967238742814,
+        0.1890078196529921,
+        0.41344163474622064,
+        0.25158496767339944,
+        0.25847579274486393,
+        0.1509802965497509,
+        0.19278347706460075,
+        0.25813346518624175
+      ]
+    },
+    "corner_world_scatter_mm": {
+      "corner_count": 54,
+      "rms": 1.7335244197358615,
+      "p95": 3.0977354440747757,
+      "max": 3.601813171665188,
+      "per_corner_max": [
+        3.226373226244777,
+        3.2729428773905087,
+        3.319624192390452,
+        3.3664125259921907,
+        3.413303477281361,
+        3.4602928744970636,
+        3.5073767609111774,
+        3.554551381690085,
+        3.601813171665188,
+        3.2180144372786508,
+        3.2645079141192683,
+        3.311115482820127,
+        3.357832392512428,
+        3.4046541422369083,
+        3.451576465429465,
+        3.4985953154905647,
+        3.5457068523566653,
+        3.5929074299981907,
+        3.209733243054093,
+        3.256149046582665,
+        3.3026814184789766,
+        3.349325500273505,
+        3.3960766890647287,
+        3.442930621671856,
+        3.4898831598913325,
+        3.536930376774629,
+        3.5840685438506292,
+        3.2015302456992503,
+        3.2478668623118327,
+        3.2943225726831704,
+        3.3408924087565173,
+        3.387571663787315,
+        3.434355876159783,
+        3.4812408143278546,
+        3.5282224627964047,
+        3.575297009065248,
+        3.193406047814071,
+        3.239661949428239,
+        3.28603951944301,
+        3.3325336782273802,
+        3.3791396132904308,
+        3.425852762759736,
+        3.4726688000036368,
+        3.5195836193134014,
+        3.566593322565709,
+        3.1853612523278856,
+        3.2315348965113957,
+        3.277832833339805,
+        3.3242498696217795,
+        3.370781085216091,
+        3.4174218161695618,
+        3.46416763901855,
+        3.5110143561690443,
+        3.557957982275476
+      ]
+    },
+    "reference_base_from_target": {
+      "matrix_4x4": [
+        [
+          -0.9973624494504391,
+          -0.0725422696648557,
+          -0.0024007369892273082,
+          0.6624350224557598
+        ],
+        [
+          -0.07254152049125177,
+          0.9973653139972787,
+          -0.00039779382504244454,
+          0.019323295917041423
+        ],
+        [
+          0.0024232686680128075,
+          -0.00022259151222243923,
+          -0.9999970391066072,
+          -0.011011079025201811
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    }
+  },
+  "observability_of_accepted": {
+    "pairs": 595,
+    "rotation_design": {
+      "shape": [
+        5355,
+        9
+      ],
+      "singular_values": [
+        34.773013807776636,
+        34.69793807540401,
+        33.88901786784407,
+        33.86560601722802,
+        33.6338950262202,
+        33.445000426686654,
+        25.78998406426956,
+        17.135016608582887,
+        0.23729615828456369
+      ],
+      "largest": 34.773013807776636,
+      "smallest": 0.23729615828456369,
+      "smallest_over_largest": 0.006824147012287292,
+      "null_space_at_numerical_floor": false,
+      "null_space_gap": 72.20941431354616,
+      "condition_number": 146.53846088008348,
+      "rank_at_1e-9_relative": 9,
+      "note": "homogeneous system: rank 8 is the well-posed case. null_space_gap = sigma_8 / sigma_9 (larger is better); it is reported as null when sigma_9 has reached the double-precision floor, which means the null space is exact numerically (typical of noise-free synthetic data) rather than badly conditioned."
+    },
+    "translation_design": {
+      "shape": [
+        1785,
+        3
+      ],
+      "singular_values": [
+        33.89109430905605,
+        33.635775699478366,
+        17.184875867035036
+      ],
+      "condition_number": 1.9721465881559141
+    },
+    "relative_rotation_deg": {
+      "count": 595,
+      "min": 7.567055664229126,
+      "median": 94.33464072729498,
+      "max": 179.94108837071542
+    },
+    "relative_rotation_axis_isotropy": {
+      "eigenvalues": [
+        386.6324225999226,
+        107.02997302014604,
+        101.33760437993193
+      ],
+      "min_over_max": 0.262103223776433,
+      "note": "1.0 = relative rotations spread over all three axes, ~0 = all relative rotations share one axis (degenerate)"
+    }
+  },
+  "cloud_corner_check": {
+    "summary": {
+      "samples_checked": 35,
+      "samples_without_cloud": 0,
+      "corner_xyz_rms_mm_mean": 1.0366888445140867,
+      "corner_xyz_rms_mm_max": 5.25075732887814,
+      "worst_sample": {
+        "count": 45,
+        "rms": 5.25075732887814,
+        "median": 5.045495443411671,
+        "p95": 5.459246235038232,
+        "max": 9.917265019406926
+      },
+      "over_2mm": [
+        "20260921-094001-405584",
+        "20260921-094101-903517",
+        "20260921-094200-594245",
+        "20260921-100013-547435",
+        "20260921-100037-682441",
+        "20260921-100114-703787"
+      ]
+    },
+    "per_sample": {
+      "20260921-094001-405584": {
+        "status": "checked",
+        "radius_px": 3,
+        "corners": 54,
+        "missing_neighborhoods": 0,
+        "corner_xyz_error_mm": {
+          "count": 54,
+          "rms": 1.9861244821903015,
+          "median": 1.9964218971069978,
+          "p95": 2.1647582021955323,
+          "max": 2.280912282433618
+        }
+      },
+      "20260921-094101-903517": {
+        "status": "checked",
+        "radius_px": 3,
+        "corners": 54,
+        "missing_neighborhoods": 0,
+        "corner_xyz_error_mm": {
+          "count": 54,
+          "rms": 2.0579379780545874,
+          "median": 2.0995807456326556,
+          "p95": 2.2938323821470075,
+          "max": 2.4476091060004594
+        }
+      },
+      "20260921-094133-282561": {
+        "status": "checked",
+        "radius_px": 3,
+        "corners": 54,
+        "missing_neighborhoods": 0,
+        "corner_xyz_error_mm": {
+          "count": 54,
+          "rms": 1.591603355943389,
+          "median": 1.6231137824307007,
+          "p95": 1.780286363318184,
+          "max": 1.8482110567888768
+        }
+      },
+      "20260921-094200-594245": {
+        "status": "checked",
+        "radius_px": 3,
+        "corners": 54,
+        "missing_neighborhoods": 0,
+        "corner_xyz_error_mm": {
+          "count": 54,
+          "rms": 1.6113093765228488,
+          "median": 1.5613817228755011,
+          "p95": 2.1741243399863106,
+          "max": 2.303359184087549
+        }
+      },
+      "20260921-094221-545984": {
+        "status": "checked",
+        "radius_px": 3,
+        "corners": 54,
+        "missing_neighborhoods": 0,
+        "corner_xyz_error_mm": {
+          "count": 54,
+          "rms": 1.5304086292694363,
+          "median": 1.5154717875152122,
+          "p95": 1.7438814514957601,
+          "max": 1.8983695121226296
+        }
+      },
+      "20260921-094630-903315": {
+        "status": "checked",
+        "radius_px": 3,
+        "corners": 54,
+        "missing_neighborhoods": 0,
+        "corner_xyz_error_mm": {
+          "count": 54,
+          "rms": 0.5390723673080381,
+          "median": 0.5207428962760796,
+          "p95": 0.7660398976664897,
+          "max": 0.9052003206193258
+        }
+      },
+      "20260921-094701-743654": {
+        "status": "checked",
+        "radius_px": 3,
+        "corners": 54,
+        "missing_neighborhoods": 0,
+        "corner_xyz_error_mm": {
+          "count": 54,
+          "rms": 0.7694753709708174,
+          "median": 0.7626440746285366,
+          "p95": 0.9991792295423244,
+          "max": 1.044138672475305
+        }
+      },
+      "20260921-094732-546765": {
+        "status": "checked",
+        "radius_px": 3,
+        "corners": 54,
+        "missing_neighborhoods": 0,
+        "corner_xyz_error_mm": {
+          "count": 54,
+          "rms": 0.4275150794967854,
+          "median": 0.32930355349910356,
+          "p95": 0.77426348798071,
+          "max": 0.9364566770150358
+        }
+      },
+      "20260921-094754-727260": {
+        "status": "checked",
+        "radius_px": 3,
+        "corners": 54,
+        "missing_neighborhoods": 0,
+        "corner_xyz_error_mm": {
+          "count": 54,
+          "rms": 0.2882270223617194,
+          "median": 0.2502776063007518,
+          "p95": 0.47712724052163225,
+          "max": 0.5675010011945546
+        }
+      },
+      "20260921-094829-338483": {
+        "status": "checked",
+        "radius_px": 3,
+        "corners": 54,
+        "missing_neighborhoods": 0,
+        "corner_xyz_error_mm": {
+          "count": 54,
+          "rms": 0.4177603520067439,
+          "median": 0.35799317573629186,
+          "p95": 0.6883534613071263,
+          "max": 0.927685388149234
+        }
+      },
+      "20260921-094917-636759": {
+        "status": "checked",
+        "radius_px": 3,
+        "corners": 54,
+        "missing_neighborhoods": 0,
+        "corner_xyz_error_mm": {
+          "count": 54,
+          "rms": 1.2046015398395407,
+          "median": 1.2029244071748877,
+          "p95": 1.45101540050153,
+          "max": 1.5950717143738369
+        }
+      },
+      "20260921-094959-421823": {
+        "status": "checked",
+        "radius_px": 3,
+        "corners": 54,
+        "missing_neighborhoods": 0,
+        "corner_xyz_error_mm": {
+          "count": 54,
+          "rms": 1.0031789967941007,
+          "median": 1.0080272828534884,
+          "p95": 1.207569015667067,
+          "max": 1.3303837085837171
+        }
+      },
+      "20260921-095031-242257": {
+        "status": "checked",
+        "radius_px": 3,
+        "corners": 54,
+        "missing_neighborhoods": 0,
+        "corner_xyz_error_mm": {
+          "count": 54,
+          "rms": 1.051920053323919,
+          "median": 1.044020593867526,
+          "p95": 1.2432721577317996,
+          "max": 1.2959760938102332
+        }
+      },
+      "20260921-095118-169242": {
+        "status": "checked",
+        "radius_px": 3,
+        "corners": 54,
+        "missing_neighborhoods": 0,
+        "corner_xyz_error_mm": {
+          "count": 54,
+          "rms": 0.7375922025385342,
+          "median": 0.7255216139462105,
+          "p95": 0.8219934106934279,
+          "max": 0.8823858083609586
+        }
+      },
+      "20260921-095349-889274": {
+        "status": "checked",
+        "radius_px": 3,
+        "corners": 54,
+        "missing_neighborhoods": 0,
+        "corner_xyz_error_mm": {
+          "count": 54,
+          "rms": 0.18333575925932014,
+          "median": 0.1362868146839955,
+          "p95": 0.30247192139970297,
+          "max": 0.5914888282722772
+        }
+      },
+      "20260921-095528-243614": {
+        "status": "checked",
+        "radius_px": 3,
+        "corners": 54,
+        "missing_neighborhoods": 0,
+        "corner_xyz_error_mm": {
+          "count": 54,
+          "rms": 0.15479427452576777,
+          "median": 0.13383574219899627,
+          "p95": 0.2507519663866297,
+          "max": 0.30597498227331227
+        }
+      },
+      "20260921-095556-973927": {
+        "status": "checked",
+        "radius_px": 3,
+        "corners": 54,
+        "missing_neighborhoods": 0,
+        "corner_xyz_error_mm": {
+          "count": 54,
+          "rms": 0.336534709997342,
+          "median": 0.3177242193263704,
+          "p95": 0.4847183028114403,
+          "max": 0.5863172005192107
+        }
+      },
+      "20260921-095622-354582": {
+        "status": "checked",
+        "radius_px": 3,
+        "corners": 54,
+        "missing_neighborhoods": 0,
+        "corner_xyz_error_mm": {
+          "count": 54,
+          "rms": 0.6757432330344987,
+          "median": 0.6709698640613626,
+          "p95": 0.8419957387061738,
+          "max": 0.9286885508300763
+        }
+      },
+      "20260921-095700-397600": {
+        "status": "checked",
+        "radius_px": 3,
+        "corners": 54,
+        "missing_neighborhoods": 0,
+        "corner_xyz_error_mm": {
+          "count": 54,
+          "rms": 0.3361689895199966,
+          "median": 0.33127391976137815,
+          "p95": 0.4496639079309996,
+          "max": 0.5813982588815743
+        }
+      },
+      "20260921-095726-539394": {
+        "status": "checked",
+        "radius_px": 3,
+        "corners": 54,
+        "missing_neighborhoods": 0,
+        "corner_xyz_error_mm": {
+          "count": 54,
+          "rms": 0.27501909084111864,
+          "median": 0.261946477201889,
+          "p95": 0.40086943197959496,
+          "max": 0.4554443828241971
+        }
+      },
+      "20260921-095745-967159": {
+        "status": "checked",
+        "radius_px": 3,
+        "corners": 54,
+        "missing_neighborhoods": 0,
+        "corner_xyz_error_mm": {
+          "count": 54,
+          "rms": 0.3179197469111209,
+          "median": 0.29573845215892014,
+          "p95": 0.4292219586115128,
+          "max": 0.4885040988019462
+        }
+      },
+      "20260921-095812-869366": {
+        "status": "checked",
+        "radius_px": 3,
+        "corners": 54,
+        "missing_neighborhoods": 0,
+        "corner_xyz_error_mm": {
+          "count": 54,
+          "rms": 1.0567313302772785,
+          "median": 1.0511191914389064,
+          "p95": 1.1820864469607797,
+          "max": 1.2968547928527385
+        }
+      },
+      "20260921-095849-690886": {
+        "status": "checked",
+        "radius_px": 3,
+        "corners": 54,
+        "missing_neighborhoods": 0,
+        "corner_xyz_error_mm": {
+          "count": 54,
+          "rms": 0.8462427741194344,
+          "median": 0.8563700208551293,
+          "p95": 1.0607724234536149,
+          "max": 1.1280649598714578
+        }
+      },
+      "20260921-095950-533217": {
+        "status": "checked",
+        "radius_px": 3,
+        "corners": 54,
+        "missing_neighborhoods": 0,
+        "corner_xyz_error_mm": {
+          "count": 54,
+          "rms": 1.3780147280544077,
+          "median": 1.3904472098241945,
+          "p95": 1.833152120669528,
+          "max": 1.9218883413945222
+        }
+      },
+      "20260921-100013-547435": {
+        "status": "checked",
+        "radius_px": 3,
+        "corners": 54,
+        "missing_neighborhoods": 0,
+        "corner_xyz_error_mm": {
+          "count": 54,
+          "rms": 3.5619943264068286,
+          "median": 3.545785662798764,
+          "p95": 4.1474352579395095,
+          "max": 4.332533336516809
+        }
+      },
+      "20260921-100037-682441": {
+        "status": "checked",
+        "radius_px": 3,
+        "corners": 54,
+        "missing_neighborhoods": 0,
+        "corner_xyz_error_mm": {
+          "count": 54,
+          "rms": 2.860734590067704,
+          "median": 2.8599497695309273,
+          "p95": 3.0401589550001407,
+          "max": 3.077932051198005
+        }
+      },
+      "20260921-100114-703787": {
+        "status": "checked",
+        "radius_px": 3,
+        "corners": 54,
+        "missing_neighborhoods": 9,
+        "corner_xyz_error_mm": {
+          "count": 45,
+          "rms": 5.25075732887814,
+          "median": 5.045495443411671,
+          "p95": 5.459246235038232,
+          "max": 9.917265019406926
+        }
+      },
+      "20260921-100754-986276": {
+        "status": "checked",
+        "radius_px": 3,
+        "corners": 54,
+        "missing_neighborhoods": 0,
+        "corner_xyz_error_mm": {
+          "count": 54,
+          "rms": 0.4970763609864174,
+          "median": 0.4318212269065579,
+          "p95": 0.7327750138537761,
+          "max": 0.7947455879146571
+        }
+      },
+      "20260921-100900-556236": {
+        "status": "checked",
+        "radius_px": 3,
+        "corners": 54,
+        "missing_neighborhoods": 0,
+        "corner_xyz_error_mm": {
+          "count": 54,
+          "rms": 0.608030380498889,
+          "median": 0.5790446065048173,
+          "p95": 0.8754710425952048,
+          "max": 0.9521416486674493
+        }
+      },
+      "20260921-101011-770289": {
+        "status": "checked",
+        "radius_px": 3,
+        "corners": 54,
+        "missing_neighborhoods": 0,
+        "corner_xyz_error_mm": {
+          "count": 54,
+          "rms": 0.6846753199491555,
+          "median": 0.6674471644580375,
+          "p95": 0.8768475477194113,
+          "max": 0.9436271084088413
+        }
+      },
+      "20260921-101054-017028": {
+        "status": "checked",
+        "radius_px": 3,
+        "corners": 54,
+        "missing_neighborhoods": 0,
+        "corner_xyz_error_mm": {
+          "count": 54,
+          "rms": 0.22809423070466767,
+          "median": 0.18537509891206339,
+          "p95": 0.4083851891034228,
+          "max": 0.4705256540840326
+        }
+      },
+      "20260921-101121-627146": {
+        "status": "checked",
+        "radius_px": 3,
+        "corners": 54,
+        "missing_neighborhoods": 0,
+        "corner_xyz_error_mm": {
+          "count": 54,
+          "rms": 0.23308616651444378,
+          "median": 0.2235748161238491,
+          "p95": 0.35515299229716657,
+          "max": 0.4122055116664819
+        }
+      },
+      "20260921-101201-528625": {
+        "status": "checked",
+        "radius_px": 3,
+        "corners": 54,
+        "missing_neighborhoods": 0,
+        "corner_xyz_error_mm": {
+          "count": 54,
+          "rms": 0.4910100063982068,
+          "median": 0.4926556281141084,
+          "p95": 0.5779535437001178,
+          "max": 0.6120734823422412
+        }
+      },
+      "20260921-101310-122291": {
+        "status": "checked",
+        "radius_px": 3,
+        "corners": 54,
+        "missing_neighborhoods": 18,
+        "corner_xyz_error_mm": {
+          "count": 36,
+          "rms": 0.3974107150986079,
+          "median": 0.38127105174567455,
+          "p95": 0.5013828328016535,
+          "max": 0.609875907525382
+        }
+      },
+      "20260921-101339-727103": {
+        "status": "checked",
+        "radius_px": 3,
+        "corners": 54,
+        "missing_neighborhoods": 25,
+        "corner_xyz_error_mm": {
+          "count": 29,
+          "rms": 0.6940086893289265,
+          "median": 0.6375914992826893,
+          "p95": 0.9133819970713614,
+          "max": 1.152151180300374
+        }
+      }
+    },
+    "interpretation": "PnP-expected corner xyz vs raw organized cloud; independent of the hand-eye transform. Assumes depthToTexture = identity, as reported by this camera."
+  },
+  "gate_thresholds": {
+    "holdout_translation_rms_mm": 3.0,
+    "holdout_translation_max_mm": 5.0,
+    "holdout_rotation_rms_deg": 1.0,
+    "holdout_rotation_max_deg": 2.0,
+    "independent_translation_mm": 5.0,
+    "independent_rotation_deg": 2.0,
+    "cross_method_translation_mm": 1.0,
+    "cross_method_rotation_deg": 0.5,
+    "reprojection_rms_px": 0.5,
+    "motion_position_mm": 0.5,
+    "motion_rotation_deg": 0.2
+  }
+}

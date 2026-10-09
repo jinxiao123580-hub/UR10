@@ -1,0 +1,229 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-10-09T12:07:51.725733+08:00",
+  "kind": "independent_closure_analysis",
+  "dataset": "outputs/handeye/error-source-20261009/x-return/dataset.json",
+  "calibration": "config/handeye_eye_in_hand_20260921.yaml",
+  "calibration_valid_flag": true,
+  "calibration_method": "OpenCV_CALIB_HAND_EYE_PARK",
+  "board": {
+    "inner_corners": [
+      9,
+      6
+    ],
+    "square_size_m": 0.006
+  },
+  "sample_gates": {
+    "accepted": 3,
+    "rejected": 0,
+    "rejected_ids": [],
+    "reprojection_rms_px": {
+      "count": 3,
+      "max": 0.2973223456779381,
+      "mean": 0.29399313533523935,
+      "over_gate": []
+    },
+    "motion_position_mm_max": 0.06725796628540374,
+    "motion_rotation_deg_max": 0.008013515447899732,
+    "corner_count_min": 54,
+    "passed": true
+  },
+  "board_geometry": {
+    "sample_count": 3,
+    "board_origin_mm": {
+      "rms": 0.03234765159414892,
+      "max": 0.045608505396823734,
+      "per_sample": [
+        0.022722086693554053,
+        0.02329555113595407,
+        0.045608505396823734
+      ],
+      "xy_span_mm": [
+        0.03026170131084882,
+        0.005856220799238088
+      ],
+      "std_mm": [
+        0.013225692884356885,
+        0.0024287299135793707,
+        0.029420280120896227
+      ]
+    },
+    "board_orientation_deg": {
+      "rms": 0.026672968646452574,
+      "max": 0.034099763371383505,
+      "normal_rms": 0.025917782456382533,
+      "normal_max": 0.03383069412298208,
+      "per_sample": [
+        0.034099763371383505,
+        0.010361738320024575,
+        0.029396977501894853
+      ]
+    },
+    "corner_world_scatter_mm": {
+      "corner_count": 54,
+      "rms": 0.03566287720717007,
+      "p95": 0.05503508353361522,
+      "max": 0.058747055571745053,
+      "per_corner_max": [
+        0.0456085053968125,
+        0.04500835428275845,
+        0.04441459932614675,
+        0.043827500484432985,
+        0.043247328836295514,
+        0.04267436691489858,
+        0.04210890902230545,
+        0.04155126151954049,
+        0.04100174308529722,
+        0.04814643686081535,
+        0.047538356051135475,
+        0.046936123583498635,
+        0.04633996747302654,
+        0.04575012525783744,
+        0.045166844301583596,
+        0.04459038208591504,
+        0.04402100648925722,
+        0.043458996047281186,
+        0.050736173177565014,
+        0.05012160118448847,
+        0.04951241288045581,
+        0.04890880943698501,
+        0.04831100018826867,
+        0.047719202897654876,
+        0.047133644019287275,
+        0.046554558952256415,
+        0.04598219228453969,
+        0.053370173537897296,
+        0.05275026808465805,
+        0.05213534913946511,
+        0.051525595233198475,
+        0.050921191911857545,
+        0.050322331967681946,
+        0.049729215668053856,
+        0.04914205098085466,
+        0.04856105379413868,
+        0.05604219701869775,
+        0.05541789358288082,
+        0.05479823445145802,
+        0.054183378966075786,
+        0.05357349251927864,
+        0.05296874675313267,
+        0.052369319757208536,
+        0.05177539626518572,
+        0.05118716784853603,
+        0.058747055571745053,
+        0.05811911341181596,
+        0.05749551840404902,
+        0.05687641353561125,
+        0.05626194703484975,
+        0.055652272541032145,
+        0.05504754927478139,
+        0.054447942208009546,
+        0.053853622232573346
+      ]
+    },
+    "reference_base_from_target": {
+      "matrix_4x4": [
+        [
+          0.996921811620127,
+          0.07840176389957654,
+          0.00025482048379403544,
+          0.40976033898337616
+        ],
+        [
+          0.07839995995754526,
+          -0.9969127904340743,
+          0.004281885986669592,
+          -0.05859700462927633
+        ],
+        [
+          0.0005897412137306768,
+          -0.00424872761925596,
+          -0.9999908002171414,
+          -0.014139916757070362
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    }
+  },
+  "observability_of_accepted": {
+    "status": "not_applicable",
+    "reason": "static repeat captures do not excite hand-eye rotation",
+    "max_pairwise_robot_rotation_deg": 0.0005390929897774045
+  },
+  "cloud_corner_check": {
+    "summary": {
+      "samples_checked": 3,
+      "samples_without_cloud": 0,
+      "corner_xyz_rms_mm_mean": 0.9437131410410547,
+      "corner_xyz_rms_mm_max": 0.9650048540632435,
+      "worst_sample": {
+        "count": 54,
+        "rms": 0.9650048540632435,
+        "median": 0.891187861012326,
+        "p95": 1.3482818475318028,
+        "max": 1.5393275557006105
+      },
+      "over_2mm": []
+    },
+    "per_sample": {
+      "20261009-120725-044078": {
+        "status": "checked",
+        "radius_px": 3,
+        "corners": 54,
+        "missing_neighborhoods": 0,
+        "corner_xyz_error_mm": {
+          "count": 54,
+          "rms": 0.9299234563399333,
+          "median": 0.855354375175017,
+          "p95": 1.4006864057877682,
+          "max": 1.5089475361485691
+        }
+      },
+      "20261009-120732-400546": {
+        "status": "checked",
+        "radius_px": 3,
+        "corners": 54,
+        "missing_neighborhoods": 0,
+        "corner_xyz_error_mm": {
+          "count": 54,
+          "rms": 0.9362111127199876,
+          "median": 0.8624001856085284,
+          "p95": 1.3929057615975182,
+          "max": 1.4604764063093392
+        }
+      },
+      "20261009-120738-229085": {
+        "status": "checked",
+        "radius_px": 3,
+        "corners": 54,
+        "missing_neighborhoods": 0,
+        "corner_xyz_error_mm": {
+          "count": 54,
+          "rms": 0.9650048540632435,
+          "median": 0.891187861012326,
+          "p95": 1.3482818475318028,
+          "max": 1.5393275557006105
+        }
+      }
+    },
+    "interpretation": "PnP-expected corner xyz vs raw organized cloud; independent of the hand-eye transform. Assumes depthToTexture = identity, as reported by this camera."
+  },
+  "gate_thresholds": {
+    "holdout_translation_rms_mm": 3.0,
+    "holdout_translation_max_mm": 5.0,
+    "holdout_rotation_rms_deg": 1.0,
+    "holdout_rotation_max_deg": 2.0,
+    "independent_translation_mm": 5.0,
+    "independent_rotation_deg": 2.0,
+    "cross_method_translation_mm": 1.0,
+    "cross_method_rotation_deg": 0.5,
+    "reprojection_rms_px": 0.5,
+    "motion_position_mm": 0.5,
+    "motion_rotation_deg": 0.2
+  }
+}

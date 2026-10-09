@@ -155,6 +155,23 @@ def gate_report(samples):
     }
 
 
+def observability_if_excited(samples):
+    """Static repeat captures validate noise, not hand-eye observability."""
+    transforms = [sample_transforms(sample)[0] for sample in samples]
+    if len(transforms) < 2:
+        return {"status": "not_applicable", "reason": "fewer than two robot poses"}
+    max_rotation_deg = max(
+        rotation_angle_deg(left[:3, :3].T @ right[:3, :3])
+        for index, left in enumerate(transforms)
+        for right in transforms[index + 1:]
+    )
+    if max_rotation_deg < 1.0:
+        return {"status": "not_applicable",
+                "reason": "static repeat captures do not excite hand-eye rotation",
+                "max_pairwise_robot_rotation_deg": max_rotation_deg}
+    return observability(samples)
+
+
 def cloud_corner_check(path, radius_px=3):
     """Compare the PnP-expected corner xyz against the raw organized cloud.
 
@@ -474,7 +491,7 @@ def main():
         "board": {"inner_corners": list(pattern), "square_size_m": square_size},
         "sample_gates": gates,
         "board_geometry": geometry,
-        "observability_of_accepted": observability(accepted),
+        "observability_of_accepted": observability_if_excited(accepted),
         "cloud_corner_check": {
             "summary": cloud_summary,
             "per_sample": cloud_results,

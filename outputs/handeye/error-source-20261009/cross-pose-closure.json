@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "kind": "fixed_board_two_pose_diagnostic",
+  "board_stationary": "user explicitly confirmed after correcting an earlier mistaken reply",
+  "motion_sent_by_diagnostic": false,
+  "calibration": "config/handeye_eye_in_hand_20260921.yaml",
+  "groups": [
+    {
+      "dataset": "outputs/handeye/error-source-20261009/dataset.json",
+      "static_report": "outputs/handeye/error-source-20261009/static-closure.json",
+      "accepted_samples": 5,
+      "within_group_board_origin_rms_mm": 0.04926133128838021,
+      "mean_cloud_corner_rms_mm": 0.6399557935462005
+    },
+    {
+      "dataset": "outputs/handeye/error-source-20261009/pose-change/dataset.json",
+      "static_report": "outputs/handeye/error-source-20261009/pose-change/static-closure.json",
+      "accepted_samples": 3,
+      "within_group_board_origin_rms_mm": 0.031738582281379726,
+      "mean_cloud_corner_rms_mm": 1.2814056399773832
+    }
+  ],
+  "between_group_tool_translation_mm": [24.03, -10.38, -0.04],
+  "between_group_tool_rotation_deg": 14.795,
+  "first_sample_board_distance_camera_mm": [500.87, 580.02],
+  "between_group_board_origin_delta_base_mm": [-0.017, -2.052, -0.410],
+  "between_group_board_origin_distance_mm": 2.092,
+  "between_group_board_orientation_deg": 0.296,
+  "checkerboard_corner_order": "same; 180-degree flip candidate gave 57.568 mm and 179.982 deg, rejected",
+  "interpretation": "Pose-dependent closure error is much larger than within-pose repeatability. Because tool translation, tool rotation, and viewing distance all changed together, this pair alone cannot isolate hand-eye, camera PnP/intrinsics, robot kinematics, or mechanical flex. No DH update is justified."
+}
