@@ -1,0 +1,222 @@
+{
+  "updated_at": "2026-10-10T10:08:25.655914+08:00",
+  "state": "complete",
+  "started_at": "2026-10-10T09:53:17.331459+08:00",
+  "attempts_done": 30,
+  "attempts_planned": 30,
+  "accepted": 31,
+  "rejected": 0,
+  "analysis_exit_code": 0,
+  "results": [
+    {
+      "attempt": 1,
+      "began_at": "2026-10-10T09:53:47.362700+08:00",
+      "exit_code": 0,
+      "accepted_total": 2,
+      "rejected_total": 0
+    },
+    {
+      "attempt": 2,
+      "began_at": "2026-10-10T09:54:17.355125+08:00",
+      "exit_code": 0,
+      "accepted_total": 3,
+      "rejected_total": 0
+    },
+    {
+      "attempt": 3,
+      "began_at": "2026-10-10T09:54:47.355106+08:00",
+      "exit_code": 0,
+      "accepted_total": 4,
+      "rejected_total": 0
+    },
+    {
+      "attempt": 4,
+      "began_at": "2026-10-10T09:55:17.355102+08:00",
+      "exit_code": 0,
+      "accepted_total": 5,
+      "rejected_total": 0
+    },
+    {
+      "attempt": 5,
+      "began_at": "2026-10-10T09:55:47.352112+08:00",
+      "exit_code": 0,
+      "accepted_total": 6,
+      "rejected_total": 0
+    },
+    {
+      "attempt": 6,
+      "began_at": "2026-10-10T09:56:17.356417+08:00",
+      "exit_code": 0,
+      "accepted_total": 7,
+      "rejected_total": 0
+    },
+    {
+      "attempt": 7,
+      "began_at": "2026-10-10T09:56:47.355100+08:00",
+      "exit_code": 0,
+      "accepted_total": 8,
+      "rejected_total": 0
+    },
+    {
+      "attempt": 8,
+      "began_at": "2026-10-10T09:57:17.356100+08:00",
+      "exit_code": 0,
+      "accepted_total": 9,
+      "rejected_total": 0
+    },
+    {
+      "attempt": 9,
+      "began_at": "2026-10-10T09:57:47.352104+08:00",
+      "exit_code": 0,
+      "accepted_total": 10,
+      "rejected_total": 0
+    },
+    {
+      "attempt": 10,
+      "began_at": "2026-10-10T09:58:17.354104+08:00",
+      "exit_code": 0,
+      "accepted_total": 11,
+      "rejected_total": 0
+    },
+    {
+      "attempt": 11,
+      "began_at": "2026-10-10T09:58:47.354099+08:00",
+      "exit_code": 0,
+      "accepted_total": 12,
+      "rejected_total": 0
+    },
+    {
+      "attempt": 12,
+      "began_at": "2026-10-10T09:59:17.354103+08:00",
+      "exit_code": 0,
+      "accepted_total": 13,
+      "rejected_total": 0
+    },
+    {
+      "attempt": 13,
+      "began_at": "2026-10-10T09:59:47.355099+08:00",
+      "exit_code": 0,
+      "accepted_total": 14,
+      "rejected_total": 0
+    },
+    {
+      "attempt": 14,
+      "began_at": "2026-10-10T10:00:17.355106+08:00",
+      "exit_code": 0,
+      "accepted_total": 15,
+      "rejected_total": 0
+    },
+    {
+      "attempt": 15,
+      "began_at": "2026-10-10T10:00:47.355105+08:00",
+      "exit_code": 0,
+      "accepted_total": 16,
+      "rejected_total": 0
+    },
+    {
+      "attempt": 16,
+      "began_at": "2026-10-10T10:01:17.355105+08:00",
+      "exit_code": 0,
+      "accepted_total": 17,
+      "rejected_total": 0
+    },
+    {
+      "attempt": 17,
+      "began_at": "2026-10-10T10:01:47.355103+08:00",
+      "exit_code": 0,
+      "accepted_total": 18,
+      "rejected_total": 0
+    },
+    {
+      "attempt": 18,
+      "began_at": "2026-10-10T10:02:17.353106+08:00",
+      "exit_code": 0,
+      "accepted_total": 19,
+      "rejected_total": 0
+    },
+    {
+      "attempt": 19,
+      "began_at": "2026-10-10T10:02:47.355104+08:00",
+      "exit_code": 0,
+      "accepted_total": 20,
+      "rejected_total": 0
+    },
+    {
+      "attempt": 20,
+      "began_at": "2026-10-10T10:03:17.352100+08:00",
+      "exit_code": 0,
+      "accepted_total": 21,
+      "rejected_total": 0
+    },
+    {
+      "attempt": 21,
+      "began_at": "2026-10-10T10:03:47.355108+08:00",
+      "exit_code": 0,
+      "accepted_total": 22,
+      "rejected_total": 0
+    },
+    {
+      "attempt": 22,
+      "began_at": "2026-10-10T10:04:17.356101+08:00",
+      "exit_code": 0,
+      "accepted_total": 23,
+      "rejected_total": 0
+    },
+    {
+      "attempt": 23,
+      "began_at": "2026-10-10T10:04:47.355354+08:00",
+      "exit_code": 0,
+      "accepted_total": 24,
+      "rejected_total": 0
+    },
+    {
+      "attempt": 24,
+      "began_at": "2026-10-10T10:05:17.355105+08:00",
+      "exit_code": 0,
+      "accepted_total": 25,
+      "rejected_total": 0
+    },
+    {
+      "attempt": 25,
+      "began_at": "2026-10-10T10:05:47.353126+08:00",
+      "exit_code": 0,
+      "accepted_total": 26,
+      "rejected_total": 0
+    },
+    {
+      "attempt": 26,
+      "began_at": "2026-10-10T10:06:17.355103+08:00",
+      "exit_code": 0,
+      "accepted_total": 27,
+      "rejected_total": 0
+    },
+    {
+      "attempt": 27,
+      "began_at": "2026-10-10T10:06:47.355102+08:00",
+      "exit_code": 0,
+      "accepted_total": 28,
+      "rejected_total": 0
+    },
+    {
+      "attempt": 28,
+      "began_at": "2026-10-10T10:07:17.356108+08:00",
+      "exit_code": 0,
+      "accepted_total": 29,
+      "rejected_total": 0
+    },
+    {
+      "attempt": 29,
+      "began_at": "2026-10-10T10:07:47.352534+08:00",
+      "exit_code": 0,
+      "accepted_total": 30,
+      "rejected_total": 0
+    },
+    {
+      "attempt": 30,
+      "began_at": "2026-10-10T10:08:17.355100+08:00",
+      "exit_code": 0,
+      "accepted_total": 31,
+      "rejected_total": 0
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Read-only recorder for a UR teach-pendant trajectory.
 
-Records actual joint angles plus actual TCP pose/velocity from UR port 30003.
+Records actual joint angles plus actual TCP pose/velocity from a UR realtime port.
 It never opens port 30002 and never sends URScript, gripper, dashboard, or
 force-sensor commands.  The output is evidence for offline review only; it is
 not an approved trajectory executor.
@@ -149,7 +149,7 @@ def record(args):
         root, "outputs", "ur_trajectory", "teach-%s.json" % stamp))
     os.makedirs(os.path.dirname(csv_path), exist_ok=True)
     os.makedirs(os.path.dirname(json_path), exist_ok=True)
-    reader = RealtimeReader(args.host)
+    reader = RealtimeReader(args.host, port=args.port)
     started_wall = time.time()
     started_mono = time.monotonic()
     count = 0
@@ -183,8 +183,9 @@ def record(args):
     document = {
         "schema_version": 1,
         "recorded_at": dt.datetime.fromtimestamp(started_wall, dt.timezone.utc).isoformat(),
-        "source": "UR 30003 actual state, read-only",
+        "source": "UR %d actual state, read-only" % args.port,
         "host": args.host,
+        "port": args.port,
         "sample_count": count,
         "duration_s": elapsed,
         "average_rate_hz": count / elapsed if elapsed else 0.0,
@@ -218,6 +219,8 @@ def self_test():
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--host", default="192.168.1.3")
+    parser.add_argument("--port", type=int, default=30003,
+                        help="UR realtime port; this robot normally uses 30013")
     parser.add_argument("--duration", type=float, default=0.0,
                         help="记录秒数；0 表示直到 Ctrl-C")
     parser.add_argument("--csv-output")
