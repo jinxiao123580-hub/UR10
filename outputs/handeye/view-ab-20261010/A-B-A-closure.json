@@ -1,0 +1,74 @@
+{
+  "kind": "A_B_A_view_closure",
+  "sample_counts": [
+    1,
+    31,
+    31
+  ],
+  "a_to_return_a_first3": {
+    "pnp": {
+      "base_xyz_mm": [
+        0.06216909036538265,
+        -0.12137769013423338,
+        -0.07054849930837603
+      ],
+      "norm_mm": 0.15354032113371727,
+      "orientation_deg": 0.06111846377899885
+    },
+    "depth": {
+      "base_xyz_mm": [
+        0.06134704309451733,
+        -0.10465669224163365,
+        -0.06338716801992071
+      ],
+      "norm_mm": 0.13687372281408233,
+      "orientation_deg": 0.03287068149219143
+    },
+    "controller_tcp_xyz_mm": [
+      0.03043099086619261,
+      0.01725922556131132,
+      -0.015102683267653738
+    ],
+    "max_joint_difference_deg": 0.005662548371184423,
+    "board_corner_centroid_px": [
+      -0.14329547646604238,
+      -0.6921872739438668
+    ],
+    "outside_board_left_background": {
+      "count": 7,
+      "median_px": [
+        -0.4660186767578125,
+        -1.2647724151611328
+      ],
+      "mad_px": [
+        0.3098640441894531,
+        0.2415142059326172
+      ]
+    }
+  },
+  "return_a_first3_to_last3": {
+    "pnp": {
+      "base_xyz_mm": [
+        -0.01716136380275346,
+        0.1581703591885253,
+        0.13682876004683653
+      ],
+      "norm_mm": 0.2098439527585971,
+      "orientation_deg": 0.03877058736896357
+    },
+    "depth": {
+      "base_xyz_mm": [
+        -0.016123309810101016,
+        0.13946095620151477,
+        0.10820674673608054
+      ],
+      "norm_mm": 0.1772512890307983,
+      "orientation_deg": 0.03312047533613852
+    }
+  },
+  "notes": [
+    "Return closure includes elapsed-time drift; it is not a pure robot repeatability measure.",
+    "PnP and organized point cloud share the same camera, not independent external metrology.",
+    "Background optical flow may be biased by changing light/shadows."
+  ]
+}

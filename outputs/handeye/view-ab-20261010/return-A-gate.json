@@ -1,0 +1,66 @@
+{
+  "kind": "ab_reverse_offline_gate",
+  "passed": true,
+  "recorded_frames": 5158,
+  "selected_waypoints": 5,
+  "sampled_joint_states": 109,
+  "a_match_deg": 0.0020490385441348288,
+  "b_match_deg": 0.0027320674906972367,
+  "worst": {
+    "min_joint_margin_deg": 67.78694007607395,
+    "min_self_clearance_mm": 38.05934296516204,
+    "min_flange_z_m": 0.4447688789568268,
+    "max_outside_recorded_xyz_corridor_mm": 0.0
+  },
+  "reasons": [],
+  "waypoint_source_indices_a_to_b": [
+    0,
+    2192,
+    2488,
+    2784,
+    5157
+  ],
+  "waypoint_q_a_to_b_rad": [
+    [
+      -0.125128094,
+      -1.720979516,
+      -1.784282986,
+      -4.418387834,
+      4.827478409,
+      -4.798856203
+    ],
+    [
+      -0.07682306,
+      -1.707896535,
+      -1.808596436,
+      -4.397048656,
+      5.099108696,
+      -4.731267873
+    ],
+    [
+      -0.077338521,
+      -1.698479478,
+      -1.808584515,
+      -4.358607952,
+      5.09584856,
+      -4.732117597
+    ],
+    [
+      -0.076643292,
+      -1.710305039,
+      -1.808656518,
+      -4.407006208,
+      5.100080013,
+      -4.731064145
+    ],
+    [
+      0.002578106,
+      -1.68973333,
+      -1.839301888,
+      -4.428500358,
+      5.092947006,
+      -4.645988051
+    ]
+  ],
+  "note": "Offline self-collision/limit/recorded-corridor gate only. External objects and people are not sensed."
+}
