@@ -1,0 +1,18 @@
+# Named TCP profile; original calibration stays unchanged so its SHA256 and
+# existing paper registrations remain valid. This is NOT a controller write.
+name: hard_pen_tcp
+display_name: 硬笔 TCP
+parent_frame: controller_flange
+point: ballpoint_pen_tip
+translation_m: [0.000113897533500383, -0.0016613008294157905, 0.3290694905453543]
+translation_mm: [0.113897533500383, -1.6613008294157905, 329.0694905453543]
+orientation_calibrated: false
+controller_tcp_written: false
+calibration_source: outputs/tcp_calibration/ballpoint-pen-20261016.json
+validation:
+  passed: true
+  training_count: 9
+  holdout_count: 3
+  training_rms_mm: 0.3473535924436639
+  holdout_max_mm: 0.9912985894580881
+  meaning: fixed-point consistency, not independently measured absolute accuracy

@@ -1,0 +1,11 @@
+{
+  "kind": "read_only_first_step_stop_diagnostic",
+  "source_run": "outputs/paper_calibration/height-contact-20261016.json",
+  "motion_sent_by_diagnostic": false,
+  "actual_controller_tcp_m_rad": [0.5030997660998137, -0.13036576431274693, 0.4452641211756215, -3.107930326109706, 0.3639085325163124, -0.1633997204056597],
+  "relative_start_xyz_mm": [-0.023210771931236884, -0.015493845012815033, -0.11253956424572831],
+  "distance_to_first_target_mm": 0.03059476815401697,
+  "static_position_motion_mm": 0.027566770980324753,
+  "paper_contact_height_obtained": false,
+  "conclusion": "First finite descent completed. Old 0.02 mm settle gate was below measured controller-coordinate fluctuations; new gate averages nine fresh frames, uses 0.05 mm position tolerance, and retains low-velocity and force gates."
+}

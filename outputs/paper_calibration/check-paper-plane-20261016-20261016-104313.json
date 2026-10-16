@@ -1,0 +1,8 @@
+{
+  "kind": "paper_plane_read_only_preflight",
+  "motion_sent": false,
+  "source_session": "/home/jx/UR10/outputs/paper_calibration/paper-plane-20261016.json",
+  "status": "failed",
+  "script_revision": 2,
+  "error": "controller closed state connection"
+}

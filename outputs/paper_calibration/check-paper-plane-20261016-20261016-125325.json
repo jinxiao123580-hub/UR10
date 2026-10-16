@@ -1,0 +1,14 @@
+{
+  "kind": "paper_plane_read_only_preflight",
+  "motion_sent": false,
+  "source_session": "/home/jx/UR10/outputs/paper_calibration/paper-plane-20261016.json",
+  "status": "failed",
+  "script_revision": 6,
+  "pen_tip_base_m": [
+    0.5065562405555715,
+    -0.10687170414963605,
+    0.025622345322395268
+  ],
+  "estimated_gap_mm": 0.5966542669385635,
+  "error": "预检起点仍需离纸 2–100 mm"
+}

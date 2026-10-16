@@ -1,0 +1,62 @@
+{
+  "kind": "paper_plane_read_only_preflight",
+  "motion_sent": false,
+  "source_session": "/home/jx/UR10/outputs/paper_calibration/paper-plane-20261016.json",
+  "status": "passed",
+  "script_revision": 6,
+  "pen_tip_base_m": [
+    0.5066520286645392,
+    -0.10680646761415276,
+    0.04768948498126174
+  ],
+  "estimated_gap_mm": 22.663223661213927,
+  "controller": {
+    "robotmode": "Robotmode: RUNNING",
+    "safetystatus": "Safetystatus: NORMAL",
+    "programState": "STOPPED null",
+    "host": "192.168.1.3",
+    "model": "UR10",
+    "serial": "2022300602",
+    "base_frame": "base",
+    "factory_calibration_hash": "calib_15120592593058779304"
+  },
+  "force_baseline": {
+    "count": 400,
+    "median_n_nm": [
+      0.7544839999999999,
+      7.599632,
+      58.828147,
+      2.1651935,
+      2.1500015,
+      0.37281149999999996
+    ],
+    "std_n_nm": [
+      0.032783032726463844,
+      0.022336522600216315,
+      0.07847758310708476,
+      0.003454702307217479,
+      0.003666905501233287,
+      0.0036765221313899373
+    ],
+    "filtered_noise_p99_n": 0.09734708272387857,
+    "raw_noise_p99_n": 0.184455811624715,
+    "settle_attempts": []
+  },
+  "realtime_connection_count": 1,
+  "next_action": "horizontal_at_clearance",
+  "next_target_pen_tip_base_m": [
+    0.5006410242269473,
+    -0.10888307869826569,
+    0.04768948498126174
+  ],
+  "next_model_gate": {
+    "ik_position_m": 1.7074851121929644e-10,
+    "ik_rotation_rad": 2.141465904419249e-10,
+    "joint_margin_rad": 1.1709351659066984,
+    "min_singular": 0.28328406747215235,
+    "max_joint_step_rad": 0.00032990501581386944,
+    "min_flange_z_m": 0.37477423991929165,
+    "min_camera_clearance_m": 0.04401079724478036,
+    "worst_camera_pair": "camera_bracket vs wrist_1_link_0"
+  }
+}

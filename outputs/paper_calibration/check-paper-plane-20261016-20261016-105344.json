@@ -1,0 +1,56 @@
+{
+  "kind": "paper_plane_read_only_preflight",
+  "motion_sent": false,
+  "source_session": "/home/jx/UR10/outputs/paper_calibration/paper-plane-20261016.json",
+  "status": "passed",
+  "script_revision": 2,
+  "pen_tip_base_m": [
+    0.5748391665192599,
+    -0.1199331823903266,
+    0.04536590320430178
+  ],
+  "estimated_gap_mm": 20.20076104449432,
+  "controller": {
+    "robotmode": "Robotmode: RUNNING",
+    "safetystatus": "Safetystatus: NORMAL",
+    "programState": "STOPPED <未命名>"
+  },
+  "force_baseline": {
+    "count": 401,
+    "median_n_nm": [
+      1.356364,
+      7.61338,
+      55.219921,
+      2.19641,
+      2.152167,
+      0.42323
+    ],
+    "std_n_nm": [
+      0.048452340108170976,
+      0.043046694585204354,
+      0.07103759852173798,
+      0.004307151991157978,
+      0.003918776780421042,
+      0.002882652755484228
+    ],
+    "filtered_noise_p99_n": 0.07888811775964889,
+    "raw_noise_p99_n": 0.19630991914063087
+  },
+  "realtime_connection_count": 1,
+  "next_action": "horizontal_at_clearance",
+  "next_target_pen_tip_base_m": [
+    0.4314276672468834,
+    -0.3229055200679296,
+    0.04541512475536767
+  ],
+  "next_model_gate": {
+    "ik_position_m": 7.235238001376902e-10,
+    "ik_rotation_rad": 1.535433210218636e-09,
+    "joint_margin_rad": 1.2312857415739955,
+    "min_singular": 0.30042862300991713,
+    "max_joint_step_rad": 0.016853296334231382,
+    "min_flange_z_m": 0.3725011479163215,
+    "min_camera_clearance_m": 0.03804493570486026,
+    "worst_camera_pair": "camera_bracket vs wrist_1_link_0"
+  }
+}

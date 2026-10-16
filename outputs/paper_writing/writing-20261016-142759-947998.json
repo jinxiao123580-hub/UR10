@@ -1,0 +1,604 @@
+{
+  "plan": {
+    "kind": "fixed_height_ballpoint",
+    "user_plane_z_mm": 26.968,
+    "plane_is_unvalidated_horizontal_approximation": true,
+    "air_test": true,
+    "paper_size_mm": [
+      297,
+      210
+    ],
+    "corner_spans_m": [
+      0.28723900044562195,
+      0.20598412207983413
+    ],
+    "bounding_area_ratio": 0.22664742664742668,
+    "strokes_paper_xy_mm": [
+      [
+        [
+          107.348,
+          144.103
+        ],
+        [
+          116.255,
+          142.144
+        ],
+        [
+          123.916,
+          142.322
+        ],
+        [
+          145.828,
+          145.172
+        ],
+        [
+          181.101,
+          152.12
+        ],
+        [
+          191.612,
+          151.764
+        ]
+      ],
+      [
+        [
+          141.018,
+          139.293
+        ],
+        [
+          149.747,
+          133.236
+        ],
+        [
+          146.006,
+          73.735
+        ],
+        [
+          142.265,
+          70.35
+        ]
+      ],
+      [
+        [
+          73.5,
+          61.977
+        ],
+        [
+          80.091,
+          59.127
+        ],
+        [
+          87.217,
+          57.88
+        ],
+        [
+          130.151,
+          63.403
+        ],
+        [
+          206.932,
+          68.747
+        ],
+        [
+          223.5,
+          62.69
+        ]
+      ]
+    ],
+    "strokes_pen_tip_base_m": [
+      [
+        [
+          0.4691699270803501,
+          -0.20407744699360691,
+          0.031967999999999996
+        ],
+        [
+          0.471129423221636,
+          -0.19517055612909726,
+          0.031967999999999996
+        ],
+        [
+          0.47095184996062034,
+          -0.18750954622589439,
+          0.031967999999999996
+        ],
+        [
+          0.4681030705235296,
+          -0.16559738750707326,
+          0.031967999999999996
+        ],
+        [
+          0.4611570353371353,
+          -0.1303240005391427,
+          0.031967999999999996
+        ],
+        [
+          0.4615136208281066,
+          -0.11981302038562566,
+          0.031967999999999996
+        ]
+      ],
+      [
+        [
+          0.47398180258421874,
+          -0.1704077149760326,
+          0.031967999999999996
+        ],
+        [
+          0.4800392888040589,
+          -0.1616790523810844,
+          0.031967999999999996
+        ],
+        [
+          0.5395400803277905,
+          -0.16542336674414604,
+          0.031967999999999996
+        ],
+        [
+          0.5429248719385803,
+          -0.16916455529212474,
+          0.031967999999999996
+        ]
+      ],
+      [
+        [
+          0.5512940415265211,
+          -0.23793002158450355,
+          0.031967999999999996
+        ],
+        [
+          0.5541444086588736,
+          -0.23133918034754417,
+          0.031967999999999996
+        ],
+        [
+          0.5553918055946802,
+          -0.22421324981991897,
+          0.031967999999999996
+        ],
+        [
+          0.5498711971447834,
+          -0.18127894224028132,
+          0.031967999999999996
+        ],
+        [
+          0.5445314740653252,
+          -0.10449764468394473,
+          0.031967999999999996
+        ],
+        [
+          0.5505893969389616,
+          -0.08792998210115799,
+          0.031967999999999996
+        ]
+      ]
+    ],
+    "lift_mm": 5.0,
+    "overload_delta_n": 5.0,
+    "tcp_sha256": "8cd59db7f91bc6d5dbd80b8b812b7a05d05fd038c1043282fa631dc16185f564"
+  },
+  "registration": "/home/jx/UR10/outputs/paper_writing/a4-imported-20261016.json",
+  "status": "executing",
+  "baseline": {
+    "count": 400,
+    "median_n_nm": [
+      1.6664409999999998,
+      7.5978825,
+      60.4865595,
+      2.173181,
+      2.181063,
+      0.3281455
+    ],
+    "std_n_nm": [
+      0.02740390918908457,
+      0.02047886811634373,
+      0.07901797583202883,
+      0.003513094225309073,
+      0.003727346907265277,
+      0.0023983964200990117
+    ],
+    "filtered_noise_p99_n": 0.10885855138283862,
+    "raw_noise_p99_n": 0.23360168313119603,
+    "settle_attempts": [
+      {
+        "count": 401,
+        "median_n_nm": [
+          1.670862,
+          7.596969,
+          60.449065,
+          2.172781,
+          2.18146,
+          0.328251
+        ],
+        "std_n_nm": [
+          0.02724529951832354,
+          0.02176879414159413,
+          0.1576070509914719,
+          0.0033745867719018954,
+          0.003597599374498936,
+          0.003954348057521163
+        ],
+        "filtered_noise_p99_n": 0.22086244814870487,
+        "raw_noise_p99_n": 0.32533221197569323
+      }
+    ]
+  },
+  "legs": [
+    {
+      "leg": 0,
+      "on_paper": false,
+      "target_pen_tip_base_m": [
+        0.4698215832112865,
+        -0.1786730207800203,
+        0.036968
+      ],
+      "gate": {
+        "ik_position_m": 1.8316798049849044e-10,
+        "ik_rotation_rad": 2.1760879909118712e-10,
+        "joint_margin_rad": 1.139624783389825,
+        "min_singular": 0.2785576383560152,
+        "max_joint_step_rad": 0.0003224785396476193,
+        "min_flange_z_m": 0.35904438331134986,
+        "min_camera_clearance_m": 0.04140153998349656,
+        "worst_camera_pair": "camera_bracket vs wrist_1_link_0"
+      },
+      "completed": true,
+      "speed_mm_s": 10.0,
+      "acceleration_mm_s2": 20.0,
+      "realtime_recoveries": [
+        {
+          "stopped_before_reconnect": true,
+          "command_reissued": true,
+          "remaining_distance_mm": 1.661255250495849,
+          "step": 1
+        }
+      ],
+      "completed_steps": 3
+    },
+    {
+      "leg": 1,
+      "on_paper": false,
+      "target_pen_tip_base_m": [
+        0.4691699270803501,
+        -0.20407744699360691,
+        0.036968
+      ],
+      "gate": {
+        "ik_position_m": 1.8246597063969597e-10,
+        "ik_rotation_rad": 2.1658001515272518e-10,
+        "joint_margin_rad": 1.145010344492403,
+        "min_singular": 0.2785703919686767,
+        "max_joint_step_rad": 0.001972345767074432,
+        "min_flange_z_m": 0.36405617843117494,
+        "min_camera_clearance_m": 0.04063775127563463,
+        "worst_camera_pair": "camera_bracket vs wrist_1_link_0"
+      },
+      "completed": true,
+      "speed_mm_s": 10.0,
+      "acceleration_mm_s2": 20.0,
+      "completed_steps": 13
+    },
+    {
+      "leg": 2,
+      "on_paper": false,
+      "target_pen_tip_base_m": [
+        0.4691699270803501,
+        -0.20407744699360691,
+        0.031967999999999996
+      ],
+      "gate": {
+        "ik_position_m": 1.7373071844001758e-10,
+        "ik_rotation_rad": 2.1295119888362763e-10,
+        "joint_margin_rad": 1.1578065056658644,
+        "min_singular": 0.28417670090830316,
+        "max_joint_step_rad": 0.00032103125870808213,
+        "min_flange_z_m": 0.3590561784437275,
+        "min_camera_clearance_m": 0.04063558684571321,
+        "worst_camera_pair": "camera_bracket vs wrist_1_link_0"
+      },
+      "completed": true,
+      "speed_mm_s": 10.0,
+      "acceleration_mm_s2": 20.0,
+      "completed_steps": 3
+    },
+    {
+      "leg": 3,
+      "on_paper": false,
+      "target_pen_tip_base_m": [
+        0.471129423221636,
+        -0.19517055612909726,
+        0.031967999999999996
+      ],
+      "gate": {
+        "ik_position_m": 1.7438327968031351e-10,
+        "ik_rotation_rad": 2.139461917599578e-10,
+        "joint_margin_rad": 1.1540999100472678,
+        "min_singular": 0.2830759501124124,
+        "max_joint_step_rad": 0.0006866731067037696,
+        "min_flange_z_m": 0.35905617843513765,
+        "min_camera_clearance_m": 0.040638595634577425,
+        "worst_camera_pair": "camera_bracket vs wrist_1_link_0"
+      },
+      "completed": true,
+      "speed_mm_s": 10.0,
+      "acceleration_mm_s2": 20.0,
+      "completed_steps": 5
+    },
+    {
+      "leg": 4,
+      "on_paper": false,
+      "target_pen_tip_base_m": [
+        0.47095184996062034,
+        -0.18750954622589439,
+        0.031967999999999996
+      ],
+      "gate": {
+        "ik_position_m": 1.7618673434661897e-10,
+        "ik_rotation_rad": 2.1480652225808937e-10,
+        "joint_margin_rad": 1.148025461607267,
+        "min_singular": 0.28120080203213427,
+        "max_joint_step_rad": 0.000588734311639881,
+        "min_flange_z_m": 0.35904876631292804,
+        "min_camera_clearance_m": 0.040892779577121806,
+        "worst_camera_pair": "camera_bracket vs wrist_1_link_0"
+      },
+      "completed": true,
+      "speed_mm_s": 10.0,
+      "acceleration_mm_s2": 20.0,
+      "completed_steps": 4
+    },
+    {
+      "leg": 5,
+      "on_paper": false,
+      "target_pen_tip_base_m": [
+        0.4681030705235296,
+        -0.16559738750707326,
+        0.031967999999999996
+      ],
+      "gate": {
+        "ik_position_m": 1.790418185464593e-10,
+        "ik_rotation_rad": 2.159338248722476e-10,
+        "joint_margin_rad": 1.127803819043482,
+        "min_singular": 0.2747444745784617,
+        "max_joint_step_rad": 0.001728493515403291,
+        "min_flange_z_m": 0.35903857015354956,
+        "min_camera_clearance_m": 0.041121138263537756,
+        "worst_camera_pair": "camera_bracket vs wrist_1_link_0"
+      },
+      "completed": true,
+      "speed_mm_s": 10.0,
+      "acceleration_mm_s2": 20.0,
+      "completed_steps": 12
+    },
+    {
+      "leg": 6,
+      "on_paper": false,
+      "target_pen_tip_base_m": [
+        0.4611570353371353,
+        -0.1303240005391427,
+        0.031967999999999996
+      ],
+      "gate": {
+        "ik_position_m": 1.891558525603001e-10,
+        "ik_rotation_rad": 2.8160489635946956e-10,
+        "joint_margin_rad": 1.094676583954191,
+        "min_singular": 0.26354612768090735,
+        "max_joint_step_rad": 0.0029534349696413997,
+        "min_flange_z_m": 0.3590458201874233,
+        "min_camera_clearance_m": 0.041853850828648564,
+        "worst_camera_pair": "camera_bracket vs wrist_1_link_0"
+      },
+      "completed": true,
+      "speed_mm_s": 10.0,
+      "acceleration_mm_s2": 20.0,
+      "completed_steps": 18
+    },
+    {
+      "leg": 7,
+      "on_paper": false,
+      "target_pen_tip_base_m": [
+        0.4615136208281066,
+        -0.11981302038562566,
+        0.031967999999999996
+      ],
+      "gate": {
+        "ik_position_m": 2.078443420180164e-10,
+        "ik_rotation_rad": 2.2957429006978661e-10,
+        "joint_margin_rad": 1.0898260801388147,
+        "min_singular": 0.2618580170178396,
+        "max_joint_step_rad": 0.0008700450115016745,
+        "min_flange_z_m": 0.3590472018712243,
+        "min_camera_clearance_m": 0.043300646189463395,
+        "worst_camera_pair": "camera_bracket vs wrist_1_link_0"
+      },
+      "completed": true,
+      "speed_mm_s": 10.0,
+      "acceleration_mm_s2": 20.0,
+      "completed_steps": 6
+    },
+    {
+      "leg": 8,
+      "on_paper": false,
+      "target_pen_tip_base_m": [
+        0.4615136208281066,
+        -0.11981302038562566,
+        0.036968
+      ],
+      "gate": {
+        "ik_position_m": 2.1094682409190918e-10,
+        "ik_rotation_rad": 2.3154123140118865e-10,
+        "joint_margin_rad": 1.0898307766497397,
+        "min_singular": 0.26185759464232305,
+        "max_joint_step_rad": 0.0003298256616446338,
+        "min_flange_z_m": 0.3590413310332522,
+        "min_camera_clearance_m": 0.043782410692700925,
+        "worst_camera_pair": "camera_bracket vs wrist_1_link_0"
+      },
+      "completed": true,
+      "speed_mm_s": 10.0,
+      "acceleration_mm_s2": 20.0,
+      "completed_steps": 3
+    },
+    {
+      "leg": 9,
+      "on_paper": false,
+      "target_pen_tip_base_m": [
+        0.47398180258421874,
+        -0.1704077149760326,
+        0.036968
+      ],
+      "gate": {
+        "ik_position_m": 2.403702282216489e-10,
+        "ik_rotation_rad": 4.108839621325513e-10,
+        "joint_margin_rad": 1.0952186847450474,
+        "min_singular": 0.26185331943932616,
+        "max_joint_step_rad": 0.004298507981319574,
+        "min_flange_z_m": 0.36404396372765707,
+        "min_camera_clearance_m": 0.041684903810538874,
+        "worst_camera_pair": "camera_bracket vs wrist_1_link_0"
+      },
+      "completed": true,
+      "speed_mm_s": 10.0,
+      "acceleration_mm_s2": 20.0,
+      "completed_steps": 27
+    },
+    {
+      "leg": 10,
+      "on_paper": false,
+      "target_pen_tip_base_m": [
+        0.47398180258421874,
+        -0.1704077149760326,
+        0.031967999999999996
+      ],
+      "gate": {
+        "ik_position_m": 1.819636534052717e-10,
+        "ik_rotation_rad": 2.1682805435962602e-10,
+        "joint_margin_rad": 1.141026858329818,
+        "min_singular": 0.27902359587615855,
+        "max_joint_step_rad": 0.00031847035916587885,
+        "min_flange_z_m": 0.3590561784437818,
+        "min_camera_clearance_m": 0.04168386404923699,
+        "worst_camera_pair": "camera_bracket vs wrist_1_link_0"
+      },
+      "completed": true,
+      "speed_mm_s": 10.0,
+      "acceleration_mm_s2": 20.0,
+      "completed_steps": 3
+    },
+    {
+      "leg": 11,
+      "on_paper": false,
+      "target_pen_tip_base_m": [
+        0.4800392888040589,
+        -0.1616790523810844,
+        0.031967999999999996
+      ],
+      "gate": {
+        "ik_position_m": 1.8262290308367864e-10,
+        "ik_rotation_rad": 2.1785215134763977e-10,
+        "joint_margin_rad": 1.1410747885693384,
+        "min_singular": 0.2790337513337199,
+        "max_joint_step_rad": 0.0006829055035006623,
+        "min_flange_z_m": 0.3590421897304641,
+        "min_camera_clearance_m": 0.04168391121402087,
+        "worst_camera_pair": "camera_bracket vs wrist_1_link_0"
+      },
+      "completed": true,
+      "speed_mm_s": 10.0,
+      "acceleration_mm_s2": 20.0,
+      "completed_steps": 6
+    },
+    {
+      "leg": 12,
+      "on_paper": false,
+      "target_pen_tip_base_m": [
+        0.5395400803277905,
+        -0.16542336674414604,
+        0.031967999999999996
+      ],
+      "gate": {
+        "ik_position_m": 1.8056868680022673e-10,
+        "ik_rotation_rad": 2.175893285002128e-10,
+        "joint_margin_rad": 1.145677909447041,
+        "min_singular": 0.2805339571939404,
+        "max_joint_step_rad": 0.0036978742747262316,
+        "min_flange_z_m": 0.3590561784107939,
+        "min_camera_clearance_m": 0.04186581967909524,
+        "worst_camera_pair": "camera_bracket vs wrist_1_link_0"
+      },
+      "completed": true,
+      "speed_mm_s": 10.0,
+      "acceleration_mm_s2": 20.0,
+      "completed_steps": 30
+    },
+    {
+      "leg": 13,
+      "on_paper": false,
+      "target_pen_tip_base_m": [
+        0.5429248719385803,
+        -0.16916455529212474,
+        0.031967999999999996
+      ],
+      "gate": {
+        "ik_position_m": 1.3961861173491175e-10,
+        "ik_rotation_rad": 2.1316292304160745e-10,
+        "joint_margin_rad": 1.2536145705063197,
+        "min_singular": 0.3098608887642645,
+        "max_joint_step_rad": 0.00028244960183232415,
+        "min_flange_z_m": 0.35905605528063234,
+        "min_camera_clearance_m": 0.04175165795846521,
+        "worst_camera_pair": "camera_bracket vs wrist_1_link_0"
+      },
+      "completed": true,
+      "speed_mm_s": 10.0,
+      "acceleration_mm_s2": 20.0,
+      "completed_steps": 3
+    },
+    {
+      "leg": 14,
+      "on_paper": false,
+      "target_pen_tip_base_m": [
+        0.5429248719385803,
+        -0.16916455529212474,
+        0.036968
+      ],
+      "gate": {
+        "ik_position_m": 1.3703734249624478e-10,
+        "ik_rotation_rad": 2.133644966016137e-10,
+        "joint_margin_rad": 1.2620047110079926,
+        "min_singular": 0.311561452610024,
+        "max_joint_step_rad": 0.0002979925857742316,
+        "min_flange_z_m": 0.3590682618210989,
+        "min_camera_clearance_m": 0.04175165795780394,
+        "worst_camera_pair": "camera_bracket vs wrist_1_link_0"
+      },
+      "completed": true,
+      "speed_mm_s": 10.0,
+      "acceleration_mm_s2": 20.0,
+      "completed_steps": 3
+    },
+    {
+      "leg": 15,
+      "on_paper": false,
+      "target_pen_tip_base_m": [
+        0.5512940415265211,
+        -0.23793002158450355,
+        0.036968
+      ],
+      "gate": {
+        "ik_position_m": 2.1306952909853533e-10,
+        "ik_rotation_rad": 4.2452185282125584e-10,
+        "joint_margin_rad": 1.2671319993829842,
+        "min_singular": 0.3115677728296396,
+        "max_joint_step_rad": 0.004587821590057247,
+        "min_flange_z_m": 0.36405141556182585,
+        "min_camera_clearance_m": 0.04008880591455748,
+        "worst_camera_pair": "camera_bracket vs wrist_1_link_0"
+      },
+      "completed": false,
+      "speed_mm_s": 10.0,
+      "acceleration_mm_s2": 20.0,
+      "completed_steps": 20
+    }
+  ]
+}

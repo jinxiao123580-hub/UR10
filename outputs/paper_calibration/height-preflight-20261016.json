@@ -1,0 +1,15 @@
+{
+  "kind": "force_triggered_pen_paper_height",
+  "created_at": "2026-10-16T10:04:51.534238+08:00",
+  "tcp_calibration": "/home/jx/UR10/outputs/tcp_calibration/ballpoint-pen-20261016.json",
+  "status": "stopped_on_error",
+  "motion_sent": false,
+  "contact_threshold_n": 1.0,
+  "overload_delta_n": 2.0,
+  "force_is_baseline_relative_sensor_vector": true,
+  "step_mm": 0.1,
+  "speed_m_s": 0.0003,
+  "max_descent_mm": 6,
+  "steps": [],
+  "error": "UR 30013 did not provide a state frame within 0.5 s"
+}

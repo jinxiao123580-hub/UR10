@@ -1,0 +1,213 @@
+{
+  "kind": "partial_paper_plane_height_analysis",
+  "status": "fit_only_without_independent_validation",
+  "created_at": "2026-10-16T06:02:07.126746+00:00",
+  "source_session": "/home/jx/UR10/outputs/paper_calibration/paper-plane-20261016.json",
+  "source_session_sha256": "9a0ced6cb978b634e946ed95962310e5910d7b5da67d2dd7dfa3810f9e0d99ed",
+  "analysis_script_sha256": "fd2cf5c1ea0bbf7f2db1b1b75204f41e27cd7aa4d3d4c29b0861d8d9d1610c2f",
+  "source_points": [
+    {
+      "index": 1,
+      "role": "training",
+      "pen_tip_base_m": [
+        0.569763805581763,
+        -0.10887035474050126,
+        0.027653835872481713
+      ],
+      "measurement": "/home/jx/UR10/outputs/paper_calibration/paper-plane-20261016-points/point-01-20261016-111320-198491.json"
+    },
+    {
+      "index": 2,
+      "role": "training",
+      "pen_tip_base_m": [
+        0.5005382659660657,
+        -0.10889343276398927,
+        0.026651912646057485
+      ],
+      "measurement": "/home/jx/UR10/outputs/paper_calibration/paper-plane-20261016-points/point-02-20261016-130355-566014.json"
+    },
+    {
+      "index": 3,
+      "role": "training",
+      "pen_tip_base_m": [
+        0.5006644622778668,
+        -0.2158873953073605,
+        0.026840460925294185
+      ],
+      "measurement": "/home/jx/UR10/outputs/paper_calibration/paper-plane-20261016-points/point-03-20261016-131004-521172.json"
+    },
+    {
+      "index": 4,
+      "role": "training",
+      "pen_tip_base_m": [
+        0.43144428238426413,
+        -0.1088913035212676,
+        0.026843187161107118
+      ],
+      "measurement": "/home/jx/UR10/outputs/paper_calibration/paper-plane-20261016-points/point-04-20261016-131443-266240.json"
+    },
+    {
+      "index": 5,
+      "role": "training",
+      "pen_tip_base_m": [
+        0.4314629759178553,
+        -0.21588607902191675,
+        0.026848244613444316
+      ],
+      "measurement": "/home/jx/UR10/outputs/paper_calibration/paper-plane-20261016-points/point-05-20261016-132756-038711.json"
+    }
+  ],
+  "tcp_calibration_sha256": "8cd59db7f91bc6d5dbd80b8b812b7a05d05fd038c1043282fa631dc16185f564",
+  "robot_identity": {
+    "robotmode": "Robotmode: RUNNING",
+    "safetystatus": "Safetystatus: NORMAL",
+    "programState": "STOPPED null",
+    "host": "192.168.1.3",
+    "model": "UR10",
+    "serial": "2022300602",
+    "base_frame": "base",
+    "factory_calibration_hash": "calib_15120592593058779304"
+  },
+  "paper_moved_after_measurements": true,
+  "current_paper_placement_validated": false,
+  "formal_12_point_calibration_complete": false,
+  "controller_commands_sent": false,
+  "fit": {
+    "equation_mm": "z_base_mm = a*x_base_mm + b*y_base_mm + c_mm",
+    "a": 0.00466685806812971,
+    "b": 0.0004135838138673836,
+    "c_mm": 24.75855429067784,
+    "c_m": 0.024758554290677838,
+    "normal_base": [
+      -0.004666806848768709,
+      -0.0004135792747324116,
+      0.9999890248727832
+    ],
+    "tilt_deg": 0.268437267248536,
+    "point_count": 5,
+    "rank": 3,
+    "reference_xy_mm": [
+      486.77475842556294,
+      -151.68571307100706
+    ],
+    "height_at_reference_mm": 26.967528243676966,
+    "xy_bounds_mm": [
+      [
+        431.4442823842641,
+        -215.88739530736052
+      ],
+      [
+        569.763805581763,
+        -108.87035474050126
+      ]
+    ],
+    "xy_convex_hull_mm": [
+      [
+        569.763805581763,
+        -108.87035474050126
+      ],
+      [
+        431.4442823842641,
+        -108.89130352126759
+      ],
+      [
+        431.4629759178553,
+        -215.88607902191674
+      ],
+      [
+        500.6644622778668,
+        -215.88739530736052
+      ]
+    ],
+    "xy_coverage_area_mm2": 11102.647975508013,
+    "height_range_at_sampled_xy_mm": [
+      26.682843773016575,
+      27.372534087154705
+    ],
+    "rms_height_residual_mm": 0.24712936854356332,
+    "max_abs_height_residual_mm": 0.39754612832409997,
+    "rms_perpendicular_residual_mm": 0.24712665626730457,
+    "max_abs_perpendicular_residual_mm": 0.3975417652047671,
+    "points": [
+      {
+        "index": 1,
+        "measured_xyz_mm": [
+          569.763805581763,
+          -108.87035474050126,
+          27.653835872481714
+        ],
+        "fitted_z_mm": 27.372534087154705,
+        "height_residual_mm": 0.28130178532700945,
+        "perpendicular_residual_mm": 0.28129869800412916
+      },
+      {
+        "index": 2,
+        "measured_xyz_mm": [
+          500.53826596606564,
+          -108.89343276398927,
+          26.651912646057486
+        ],
+        "fitted_z_mm": 27.049458774381584,
+        "height_residual_mm": -0.39754612832409997,
+        "perpendicular_residual_mm": -0.3975417652047671
+      },
+      {
+        "index": 3,
+        "measured_xyz_mm": [
+          500.6644622778668,
+          -215.88739530736052,
+          26.840460925294185
+        ],
+        "fitted_z_mm": 27.005796743568013,
+        "height_residual_mm": -0.16533581827382626,
+        "perpendicular_residual_mm": -0.1653340036921872
+      },
+      {
+        "index": 4,
+        "measured_xyz_mm": [
+          431.4442823842641,
+          -108.89130352126759,
+          26.843187161107117
+        ],
+        "fitted_z_mm": 26.727007840263955,
+        "height_residual_mm": 0.11617932084316204,
+        "perpendicular_residual_mm": 0.11617804576033583
+      },
+      {
+        "index": 5,
+        "measured_xyz_mm": [
+          431.4629759178553,
+          -215.88607902191674,
+          26.848244613444315
+        ],
+        "fitted_z_mm": 26.682843773016575,
+        "height_residual_mm": 0.16540084042774086,
+        "perpendicular_residual_mm": 0.1653990251324754
+      }
+    ],
+    "leave_one_out": [
+      {
+        "index": 1,
+        "height_error_mm": 1.0555679114957965
+      },
+      {
+        "index": 2,
+        "height_error_mm": -0.5962725262379196
+      },
+      {
+        "index": 3,
+        "height_error_mm": -0.41349400935965247
+      },
+      {
+        "index": 4,
+        "height_error_mm": 0.43513101095360635
+      },
+      {
+        "index": 5,
+        "height_error_mm": 0.4135653903880851
+      }
+    ],
+    "independent_validation_count": 0,
+    "meaning": "Least-squares loaded pen-tip contact plane, including TCP and pen compliance errors"
+  }
+}
