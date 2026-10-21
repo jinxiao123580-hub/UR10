@@ -1,0 +1,3 @@
+wall_s,monotonic_s,event,value
+1792547343.698753,435026.993216033,experiment_start,"[""/usr/bin/python3"", ""/home/jx/.dsh-analysis/repeat_local_gravity_20261021.py"", ""--execute"", ""--site-confirmed"", ""--repeats"", ""1"", ""--other20""]"
+1792547394.69583,435077.990292352,experiment_exit,1

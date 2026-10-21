@@ -79,6 +79,8 @@ function connect() {
   ws.onopen = () => {
     setWs(true);
     wsSend({ op: "subscribe", topic: "/ft_sensor/wrench_raw", kind: "wrench" });
+    wsSend({ op: "subscribe", topic: "/ft_sensor/wrench_compensated", kind: "wrench" });
+    wsSend({ op: "subscribe", topic: "/ft_sensor/wrench_compensated_filtered", kind: "wrench" });
     wsSend({ op: "subscribe", topic: "/mechmind/color_image", kind: "image" });
     wsSend({ op: "subscribe", topic: "/mechmind/depth_map", kind: "depth" });
     wsSend({ op: "subscribe", topic: "/mechmind/point_cloud", kind: "pcl_stats" });
@@ -102,6 +104,8 @@ function handleMessage(m) {
   if (m.op === "call_service") { handleServiceReply(m); return; }
   if (!m.topic) return;
   if (m.topic === "/ft_sensor/wrench_raw") onWrench(m.data, "raw");
+  else if (m.topic === "/ft_sensor/wrench_compensated") onWrench(m.data, "compensated");
+  else if (m.topic === "/ft_sensor/wrench_compensated_filtered") onWrench(m.data, "filtered");
   else if (m.topic === "/mechmind/color_image") onColorImage(m.data);
   else if (m.topic === "/mechmind/depth_map") onDepthImage(m.data);
   else if (m.topic === "/mechmind/point_cloud") onPclStats(m.data);
@@ -149,10 +153,13 @@ function onRobotState(d) {
 }
 
 // ---------------------------------------------------------------- 六轴力
-const wrenchBuffers = { raw: wrenchBuf };
-const wrenchStarts = { raw: null };
+const wrenchBuffers = { raw: wrenchBuf, compensated: [], filtered: [] };
+const wrenchStarts = { raw: null, compensated: null, filtered: null };
+const wrenchReceived = { raw: 0, compensated: 0, filtered: 0 };
+function selectedWrenchMode() { return $("wrench-mode").value; }
 
 function onWrench(d, mode) {
+  wrenchReceived[mode] = Date.now();
   lastRealWrench = Date.now();
   if (demoMode) setDemo(false);                    // 有真数据就退出演示
   const stamp = d.sec + d.nsec / 1e9;
@@ -161,6 +168,7 @@ function onWrench(d, mode) {
   const buffer = wrenchBuffers[mode];
   buffer.push({ t, fx: d.fx, fy: d.fy, fz: d.fz, tx: d.tx, ty: d.ty, tz: d.tz });
   while (buffer.length > WRENCH_MAX) buffer.shift();
+  if (mode !== selectedWrenchMode()) return;
   // 当前值
   $("v-fx").textContent = d.fx.toFixed(2);
   $("v-fy").textContent = d.fy.toFixed(2);
@@ -171,8 +179,15 @@ function onWrench(d, mode) {
 }
 
 function renderChart() {
-  const data = demoMode ? demoWrenchData() : wrenchBuffers.raw;
-  const topic = "/ft_sensor/wrench_raw";
+  const mode = selectedWrenchMode();
+  const data = demoMode && mode === "raw" ? demoWrenchData() : wrenchBuffers[mode];
+  const topic = {raw:"/ft_sensor/wrench_raw",compensated:"/ft_sensor/wrench_compensated",filtered:"/ft_sensor/wrench_compensated_filtered"}[mode];
+  if (Date.now() - wrenchReceived[mode] > 1500 && !(demoMode && mode === "raw")) {
+    ftStatusEl.textContent = `${topic} 无新鲜数据（非零力）；检查机械臂姿态流/补偿节点`;
+    for (const axis of AXES) $("v-" + axis.key).textContent = "--";
+    chart.setOption({series: AXES.map(a => ({name:a.label,data:[]}))});
+    return;
+  }
   if (!data.length) { ftStatusEl.textContent = `等待 ${topic} 数据…`; return; }
   // 只保留时间窗内
   const tEnd = data[data.length - 1].t, tStart = tEnd - WRENCH_WINDOW;
@@ -185,7 +200,7 @@ function renderChart() {
     series: series.map((s, i) => ({ name: AXES[i].label, data: s })),
   });
   const last = seg[seg.length - 1];
-  const label = "原始";
+  const label = mode === "raw" ? "原始" : mode === "filtered" ? "补偿 v2 + 5 Hz低通 · 仅显示" : "补偿 v2 · 仅静态预览";
   ftStatusEl.textContent = `${label} · F = (${last.fx.toFixed(1)}, ${last.fy.toFixed(1)}, ${last.fz.toFixed(1)}) N · T = (${last.tx.toFixed(2)}, ${last.ty.toFixed(2)}, ${last.tz.toFixed(2)}) N·m`;
   const duration = Math.max(0, tEnd - seg[0].t);
   ftRateEl.textContent = `${Math.round((seg.length / duration) || 0)} Hz · ${Math.round(duration)}s`;

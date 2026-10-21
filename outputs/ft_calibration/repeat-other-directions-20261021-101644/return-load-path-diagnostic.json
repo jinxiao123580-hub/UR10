@@ -1,0 +1,45 @@
+{
+  "kind": "exploratory_return_wrench_load_path",
+  "source": "/home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-101644/session.json",
+  "is_gravity_calibration": false,
+  "active": false,
+  "uses_rejected_trials_for_disturbance_analysis_only": true,
+  "equation": "delta_tau = effective_r cross delta_F; no fitted intercept",
+  "coordinates": "same sensor axes as recorded wrench; not robot-base coordinates",
+  "effective_lever_m": [
+    -0.13816048569197745,
+    0.0677954871616562,
+    -0.1629719814102041
+  ],
+  "rank": 3,
+  "condition": 6.305335645197223,
+  "train_count": 8,
+  "heldout_count": 4,
+  "train_torque_component_rms_nm": 0.006875906371544071,
+  "heldout_torque_component_rms_nm": 0.00538599053320423,
+  "heldout_raw_torque_component_rms_nm": 0.022705009742658055,
+  "heldout_max_residual_vector_nm": 0.009796682992143096,
+  "heldout_residuals_nm": [
+    [
+      -0.00671556627487329,
+      -0.007051729958281468,
+      0.0010720409748726702
+    ],
+    [
+      -0.005926134310976824,
+      -0.004515496095514376,
+      -0.005216266009209174
+    ],
+    [
+      0.005789899004761123,
+      0.007219730786631309,
+      0.00033240056174151014
+    ],
+    [
+      -0.004057632328988351,
+      -0.006209572825808888,
+      0.005350926896433967
+    ]
+  ],
+  "limitation": "An effective lever is not a uniquely identified physical cable anchor. Sensor cross-coupling, other loads and drift were not independently eliminated."
+}

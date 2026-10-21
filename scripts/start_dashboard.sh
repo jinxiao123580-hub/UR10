@@ -108,6 +108,8 @@ if [ "${1:-}" = "--stop" ]; then
     failed=0
     stop_pattern "ros_web_bridge.py" "ROS→Web 桥" || failed=1
     stop_pattern "ati_netft_node.py" "ATI 力传感器节点" || failed=1
+    stop_pattern "ft_gravity_compensator.py" "显示用重力补偿" || failed=1
+    stop_pattern "filter_wrench_display.py" "显示用低通滤波" || failed=1
     stop_pattern "fake_mecheye_publisher.py" "相机模拟器" || failed=1
     stop_pattern "mecheye_ros_interface" "Mech-Eye 相机节点" || failed=1
     stop_pattern "start_camera_ur10" "相机 launch 包装" || failed=1
@@ -161,6 +163,22 @@ else
     echo "==> 力传感器节点已在运行"
 fi
 
+# 显示专用候选，不影响原始力或任何运动控制程序。
+if [ -z "$(match_pids ft_gravity_compensator.py)" ]; then
+    PYTHONNOUSERSITE=1 FASTDDS_BUILTIN_TRANSPORTS=UDPv4 /usr/bin/python3 -u \
+      "$SCRIPT_DIR/ft_gravity_compensator.py" \
+      --calibration "$SCRIPT_DIR/../config/ft_gravity_cable_v2_preview.yaml" \
+      > "$LOG_DIR/gravity_preview.log" 2>&1 &
+    PIDS+=($!)
+fi
+
+if [ -z "$(match_pids filter_wrench_display.py)" ]; then
+    PYTHONNOUSERSITE=1 FASTDDS_BUILTIN_TRANSPORTS=UDPv4 /usr/bin/python3 -u \
+      "$SCRIPT_DIR/filter_wrench_display.py" --cutoff-hz 5 \
+      > "$LOG_DIR/wrench_filter.log" 2>&1 &
+    PIDS+=($!)
+fi
+
 # ---------- ③ 相机 ----------
 if [ "$NO_CAMERA" = "1" ]; then
     echo "==> 跳过相机"
@@ -201,7 +219,7 @@ echo
 echo "==========================================================="
 echo "  监控台地址: $URL   （已自检可访问）"
 echo "  原始力: /ft_sensor/wrench_raw（实时 200Hz，不受 Tare 影响）"
-echo "  重力补偿: 未启动（当前模型未独立验证）"
+echo "  重力补偿: v2 局部静态预览（仅显示，未完成独立验收；原始力不变）"
 echo "  相机  : Mech-Eye（需 SDK，服务触发式采集）"
 echo "  停止  : bash scripts/start_dashboard.sh --stop"
 echo "==========================================================="

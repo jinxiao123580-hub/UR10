@@ -1,0 +1,54 @@
+{
+  "status": "stopped_on_error",
+  "pairs": [
+    {
+      "repeat": 1,
+      "axis": "y",
+      "angle_deg": 20,
+      "status": "return_gate_failed",
+      "holdout": false,
+      "out": "/home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-094903/r1-y+20-out.json",
+      "back": "/home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-094903/r1-y+20-back.json",
+      "return_wrench_delta": [
+        0.17572783500000133,
+        -0.19027346499999975,
+        -0.18472268499996858,
+        -0.038812059999998816,
+        -0.02870582999999982,
+        0.013897685000000076
+      ],
+      "return_force_norm_n": 0.31813005804307687,
+      "return_torque_norm_nm": 0.05023491142414431,
+      "return_position_mm": 0.04055068133054821,
+      "return_rotation_deg": 0.006313356170632672,
+      "global_return_position_mm": 0.06438600150972698,
+      "global_return_rotation_deg": 0.007845172406840979
+    }
+  ],
+  "motion_compensation_enabled": false,
+  "angle_limit_deg": 20,
+  "repeats": 1,
+  "return_limits": {
+    "force_norm_n": 0.3,
+    "torque_norm_nm": 0.05,
+    "position_mm": 0.5,
+    "rotation_deg": 0.1
+  },
+  "mode": "other20_direction_diagnostic",
+  "home_tcp_m_rad": [
+    0.6471246931566663,
+    -0.12831734206131884,
+    0.5495665161000322,
+    2.3514479813402183,
+    -2.0728614326109134,
+    0.11812153028881883
+  ],
+  "controller": {
+    "robotmode": "Robotmode: RUNNING",
+    "safetystatus": "Safetystatus: NORMAL",
+    "programState": "STOPPED null"
+  },
+  "pending": "r1-y+20",
+  "absolute_return_reference": "/home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-094903/r1-y+20-out.json",
+  "error": "return reproducibility failed; all remaining trials cancelled"
+}

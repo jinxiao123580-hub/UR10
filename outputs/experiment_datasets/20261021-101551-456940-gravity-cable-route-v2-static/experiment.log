@@ -1,0 +1,5 @@
+window 1/4: static, F=[4.2309, 3.8896, 69.3812] N, TCP motion 0.024 mm / 0.0043 deg
+window 2/4: static, F=[4.234, 3.8885, 69.3438] N, TCP motion 0.035 mm / 0.0032 deg
+window 3/4: static, F=[4.2364, 3.88, 69.3347] N, TCP motion 0.017 mm / 0.0035 deg
+window 4/4: static, F=[4.2388, 3.8833, 69.373] N, TCP motion 0.009 mm / 0.0045 deg
+OUTPUT: /home/jx/UR10/outputs/ft_calibration/cable-route-v2-static-20261021.json STATUS: static_baseline_recorded

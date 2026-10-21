@@ -1,0 +1,31 @@
+{
+  "status": "stopped_on_error",
+  "pairs": [],
+  "motion_compensation_enabled": false,
+  "angle_limit_deg": 20,
+  "repeats": 1,
+  "return_limits": {
+    "force_norm_n": 0.3,
+    "torque_norm_nm": 0.05,
+    "position_mm": 0.5,
+    "rotation_deg": 0.1
+  },
+  "installation_label": "cable-route-v2-20261021",
+  "mode": "X_only_refill_train_holdout",
+  "post_return_dwell_seconds": 10,
+  "home_tcp_m_rad": [
+    0.6472410180480668,
+    -0.1283632618388581,
+    0.5493479734884876,
+    -2.2298622327059294,
+    1.9774611570711733,
+    -0.35890235300857193
+  ],
+  "controller": {
+    "robotmode": "Robotmode: RUNNING",
+    "safetystatus": "Safetystatus: NORMAL",
+    "programState": "STOPPED null"
+  },
+  "pending": "r1-x-15",
+  "error": "single motion/sample failed; no automatic return"
+}

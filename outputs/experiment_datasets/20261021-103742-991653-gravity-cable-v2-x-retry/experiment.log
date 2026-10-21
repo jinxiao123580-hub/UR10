@@ -1,0 +1,20 @@
+TRIAL r1-x-15 out
+Traceback (most recent call last):
+  File "/home/jx/.dsh-analysis/small_angle_ft_probe_20261012.py", line 279, in <module>
+    main()
+  File "/home/jx/.dsh-analysis/small_angle_ft_probe_20261012.py", line 178, in main
+    pre = sample_ft(sensor)
+  File "/home/jx/.dsh-analysis/small_angle_ft_probe_20261012.py", line 107, in sample_ft
+    return sensor.sample(duration)
+  File "/home/jx/.dsh-analysis/small_angle_ft_probe_20261012.py", line 86, in sample
+    raise RuntimeError('ROS raw-wrench rate too low: %d in %.1fs' % (len(rows), duration))
+RuntimeError: ROS raw-wrench rate too low: 0 in 1.0s
+REPORT /home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-103744/session.json STATUS stopped_on_error
+Traceback (most recent call last):
+  File "/home/jx/.dsh-analysis/repeat_local_gravity_20261021.py", line 180, in <module>
+    main()
+  File "/home/jx/.dsh-analysis/repeat_local_gravity_20261021.py", line 139, in main
+    child(command)
+  File "/home/jx/.dsh-analysis/repeat_local_gravity_20261021.py", line 25, in child
+    raise RuntimeError('single motion/sample failed; no automatic return')
+RuntimeError: single motion/sample failed; no automatic return

@@ -1,0 +1,25 @@
+TRIAL r1-y-20 out
+PROBE COMPLETE; no gravity model produced
+ATI delta N/Nm= [7.6201, 7.8419, -1.3623, -0.5749, 0.3657, -1.1983]
+REPORT: /home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-095209/r1-y-20-out.json
+TRIAL r1-y-20 back
+PROBE COMPLETE; no gravity model produced
+ATI delta N/Nm= [-7.6751, -7.7656, 1.2917, 0.5793, -0.3773, 1.2002]
+REPORT: /home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-095209/r1-y-20-back.json
+RESULT {"repeat": 1, "axis": "y", "angle_deg": -20, "status": "passed", "holdout": false, "out": "/home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-095209/r1-y-20-out.json", "back": "/home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-095209/r1-y-20-back.json", "return_wrench_delta": [-0.048121770000002506, 0.06906932500000096, -0.021248429999999985, 0.0053696349999987625, -0.010586580000000456, 0.0005813799999999786], "return_force_norm_n": 0.08682034428262651, "return_torque_norm_nm": 0.011884723759264299, "return_position_mm": 0.059673286794048916, "return_rotation_deg": 0.007276586925128615, "global_return_position_mm": 0.07399112502072888, "global_return_rotation_deg": 0.011062557583717927}
+TRIAL r1-x-20 out
+PROBE COMPLETE; no gravity model produced
+ATI delta N/Nm= [7.7357, -7.3, -1.1425, 0.439, 0.3827, -0.0646]
+REPORT: /home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-095209/r1-x-20-out.json
+TRIAL r1-x-20 back
+PROBE COMPLETE; no gravity model produced
+ATI delta N/Nm= [-7.6007, 7.0644, 0.8936, -0.5068, -0.434, 0.0952]
+REPORT: /home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-095209/r1-x-20-back.json
+RESULT {"repeat": 1, "axis": "x", "angle_deg": -20, "status": "return_gate_failed", "holdout": false, "out": "/home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-095209/r1-x-20-out.json", "back": "/home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-095209/r1-x-20-back.json", "return_wrench_delta": [0.13639809999999963, -0.24051842499999898, -0.2900110099999722, -0.07016175000000091, -0.05180522499999762, 0.032589684999999896], "return_force_norm_n": 0.4006993141612473, "return_torque_norm_nm": 0.09310499486473443, "return_position_mm": 0.03439726398389381, "return_rotation_deg": 0.003655781016593779, "global_return_position_mm": 0.06521261828354696, "global_return_rotation_deg": 0.010294868140104696}
+REPORT /home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-095209/session.json STATUS stopped_on_error
+Traceback (most recent call last):
+  File "/home/jx/.dsh-analysis/repeat_local_gravity_20261021.py", line 123, in <module>
+    main()
+  File "/home/jx/.dsh-analysis/repeat_local_gravity_20261021.py", line 112, in main
+    raise RuntimeError('return reproducibility failed; all remaining trials cancelled')
+RuntimeError: return reproducibility failed; all remaining trials cancelled

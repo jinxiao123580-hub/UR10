@@ -1,0 +1,29 @@
+{
+  "status": "partial",
+  "started_at": "2026-10-21T09:20:19.055554+08:00",
+  "collection": "/home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-091715/session.json",
+  "force_topic": "/ft_sensor/wrench_raw",
+  "units": {
+    "force": "N",
+    "torque": "Nm",
+    "position": "m",
+    "rotation": "rad",
+    "time": "s"
+  },
+  "force_frame": "taken from each ROS message frame_id; no implicit frame transform",
+  "ur_pose_frame": "controller base; TCP reflects current controller configuration",
+  "synchronization": "asynchronous streams; source clocks are NOT assumed synchronized",
+  "missing_earlier_raw_data": true,
+  "force_rows": 20915,
+  "ur_rows": 0,
+  "errors": [
+    {
+      "stream": "ur",
+      "error": "'RealtimeReader' object has no attribute 'read'",
+      "wall_s": 1792545619.2103505
+    }
+  ],
+  "hardware_commands_sent": false,
+  "upload": false,
+  "finished_at": "2026-10-21T09:22:03.780873+08:00"
+}

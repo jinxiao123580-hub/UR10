@@ -1,0 +1,58 @@
+{
+  "created_at": "2026-10-21T09:08:01.721714+08:00",
+  "status": "stopped_on_error",
+  "gravity_compensation_enabled": false,
+  "installation": "new cable routing; 2026-10-21",
+  "home_tcp_m_rad": [
+    0.646805095164826,
+    -0.1282883822547725,
+    0.5499171632387607,
+    2.350572677797621,
+    -2.0748350953143713,
+    0.11988080961446612
+  ],
+  "pairs": [
+    {
+      "axis": "x",
+      "angle_deg": 5,
+      "holdout": false,
+      "out": "/home/jx/UR10/outputs/ft_calibration/local-new-cable-20261021/x+5.0-out.json",
+      "back": "/home/jx/UR10/outputs/ft_calibration/local-new-cable-20261021/x+5.0-back.json",
+      "return_wrench_delta": [
+        0.022527737562187067,
+        -0.05727477136816317,
+        0.13571036624375665,
+        0.007126700547261944,
+        0.011067131492536575,
+        0.0026221105970149206
+      ],
+      "return_force_norm_n": 0.14901409967167772,
+      "return_torque_norm_nm": 0.013421874837235536,
+      "return_position_mm": 0.04988446594231455,
+      "return_rotation_deg": 0.0035056551172226807
+    },
+    {
+      "axis": "x",
+      "angle_deg": -5,
+      "holdout": false,
+      "out": "/home/jx/UR10/outputs/ft_calibration/local-new-cable-20261021/x-5.0-out.json",
+      "back": "/home/jx/UR10/outputs/ft_calibration/local-new-cable-20261021/x-5.0-back.json",
+      "return_wrench_delta": [
+        0.07941320999999979,
+        -0.13421849499999805,
+        -0.20440553500012015,
+        -0.06747475500000011,
+        -0.04476413499999854,
+        0.015927850000000014
+      ],
+      "return_force_norm_n": 0.2571044244295572,
+      "return_torque_norm_nm": 0.08252494622979548,
+      "return_position_mm": 0.053299540424971384,
+      "return_rotation_deg": 0.00870360077066725
+    }
+  ],
+  "force_return_limit_n": 0.3,
+  "torque_return_limit_nm": 0.05,
+  "scope": "single-axis local +/-10 deg only; candidate not active",
+  "error": "returned pose/baseline failed reproducibility gate; collection stopped"
+}

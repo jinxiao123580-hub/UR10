@@ -219,6 +219,7 @@ def ros_main(args):
                             counts_per_torque=self.get_parameter("counts_per_torque").value)
             self.ft.start()
             self._latest = None
+            self._latest_monotonic = 0.0
             self._latest_lock = threading.Lock()
             self._receive_stop = threading.Event()
             self._last_stream_request = time.monotonic()
@@ -285,22 +286,26 @@ def ros_main(args):
                     continue
                 with self._latest_lock:
                     self._latest = r
+                    self._latest_monotonic = time.monotonic()
 
         def _tick(self):
             with self._latest_lock:
                 r = self._latest
-            if not r:
+                latest_monotonic = self._latest_monotonic
+            # Never re-stamp and publish an old physical sample as fresh.
+            if not r or time.monotonic() - latest_monotonic > 0.1:
                 return
             w, status, rdt_seq, ft_seq = r
+            if status:
+                self.get_logger().warn("传感器状态: %s (0x%08X)" % (decode_status(status), status),
+                                       once=True)
+                return
             raw = [value + bias for value, bias in zip(w, self.ft.bias)]
             raw_msg = self._make_message(raw)
             adjusted_msg = self._make_message(w)
             adjusted_msg.header.stamp = raw_msg.header.stamp
             self.pub_raw.publish(raw_msg)
             self.pub.publish(adjusted_msg)
-            if status:
-                self.get_logger().warn("传感器状态: %s (0x%08X)" % (decode_status(status), status),
-                                       once=True)
 
     rclpy.init(args=args)
     node = NetFTNode()

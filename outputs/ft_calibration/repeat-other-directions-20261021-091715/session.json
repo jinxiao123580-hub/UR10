@@ -1,0 +1,200 @@
+{
+  "status": "completed_collection_not_calibrated",
+  "pairs": [
+    {
+      "repeat": 1,
+      "axis": "x",
+      "angle_deg": -10,
+      "status": "passed",
+      "out": "/home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-091715/r1-x-10-out.json",
+      "back": "/home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-091715/r1-x-10-back.json",
+      "return_wrench_delta": [
+        0.11718343499999806,
+        -0.039558690000002894,
+        -0.15114150000000848,
+        -0.030055739999999442,
+        -0.03194407499999974,
+        0.0008797449999999596
+      ],
+      "return_force_norm_n": 0.1952961863815258,
+      "return_torque_norm_nm": 0.04386964082162287,
+      "return_position_mm": 0.029913982414890416,
+      "return_rotation_deg": 0.0023373053011938277
+    },
+    {
+      "repeat": 1,
+      "axis": "y",
+      "angle_deg": 10,
+      "status": "passed",
+      "out": "/home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-091715/r1-y+10-out.json",
+      "back": "/home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-091715/r1-y+10-back.json",
+      "return_wrench_delta": [
+        0.009874218059699569,
+        -0.02182396465173886,
+        0.03243443626863041,
+        0.0038898494776109516,
+        0.010643281194028908,
+        0.0032658772636815978
+      ],
+      "return_force_norm_n": 0.04032094085552434,
+      "return_torque_norm_nm": 0.01179306227555303,
+      "return_position_mm": 0.053550945143853064,
+      "return_rotation_deg": 0.005412146740064072
+    },
+    {
+      "repeat": 1,
+      "axis": "y",
+      "angle_deg": -10,
+      "status": "passed",
+      "out": "/home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-091715/r1-y-10-out.json",
+      "back": "/home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-091715/r1-y-10-back.json",
+      "return_wrench_delta": [
+        -0.035108574999998865,
+        0.07237183500000066,
+        0.09599937999998076,
+        0.029649895000000814,
+        0.0029694199999998894,
+        -0.011095329999999973
+      ],
+      "return_force_norm_n": 0.12524446295217434,
+      "return_torque_norm_nm": 0.031796856392674606,
+      "return_position_mm": 0.04999213986928861,
+      "return_rotation_deg": 0.010416056324016121
+    },
+    {
+      "repeat": 2,
+      "axis": "x",
+      "angle_deg": -10,
+      "status": "passed",
+      "out": "/home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-091715/r2-x-10-out.json",
+      "back": "/home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-091715/r2-x-10-back.json",
+      "return_wrench_delta": [
+        0.0608452983582044,
+        -0.06926881793532713,
+        -0.1565272734576979,
+        -0.03614116636816034,
+        -0.020735376169154662,
+        0.005896252213930364
+      ],
+      "return_force_norm_n": 0.18166206760509293,
+      "return_torque_norm_nm": 0.04208212829097014,
+      "return_position_mm": 0.05663585858793768,
+      "return_rotation_deg": 0.011160786418166512
+    },
+    {
+      "repeat": 2,
+      "axis": "y",
+      "angle_deg": 10,
+      "status": "passed",
+      "out": "/home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-091715/r2-y+10-out.json",
+      "back": "/home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-091715/r2-y+10-back.json",
+      "return_wrench_delta": [
+        0.001214638383083333,
+        -0.007965193358209444,
+        -0.06144006875618402,
+        0.005810971517413055,
+        0.011623751268655003,
+        0.00028154557213930925
+      ],
+      "return_force_norm_n": 0.061966133495643755,
+      "return_torque_norm_nm": 0.012998394187011555,
+      "return_position_mm": 0.04476079745372174,
+      "return_rotation_deg": 0.00767317388004413
+    },
+    {
+      "repeat": 2,
+      "axis": "y",
+      "angle_deg": -10,
+      "status": "passed",
+      "out": "/home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-091715/r2-y-10-out.json",
+      "back": "/home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-091715/r2-y-10-back.json",
+      "return_wrench_delta": [
+        -0.0032114949999972886,
+        0.10663713000000197,
+        0.10225887000002842,
+        0.03294879499999892,
+        -0.00017052999999878082,
+        -0.013489689999999992
+      ],
+      "return_force_norm_n": 0.1477791179039009,
+      "return_torque_norm_nm": 0.0356037063903318,
+      "return_position_mm": 0.05752234445592647,
+      "return_rotation_deg": 0.013037281729709518
+    },
+    {
+      "repeat": 3,
+      "axis": "x",
+      "angle_deg": -10,
+      "status": "passed",
+      "out": "/home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-091715/r3-x-10-out.json",
+      "back": "/home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-091715/r3-x-10-back.json",
+      "return_wrench_delta": [
+        0.03412574500000076,
+        -0.09257486000000359,
+        -0.24665489999993895,
+        -0.041613845000000094,
+        -0.016823030000000738,
+        0.014989565000000059
+      ],
+      "return_force_norm_n": 0.2656563774310815,
+      "return_torque_norm_nm": 0.04732244174759143,
+      "return_position_mm": 0.08029587187039872,
+      "return_rotation_deg": 0.011461287238338216
+    },
+    {
+      "repeat": 3,
+      "axis": "y",
+      "angle_deg": 10,
+      "status": "passed",
+      "out": "/home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-091715/r3-y+10-out.json",
+      "back": "/home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-091715/r3-y+10-back.json",
+      "return_wrench_delta": [
+        0.01391640087064605,
+        -0.009850815547262304,
+        0.04932207997508442,
+        0.006324400074627423,
+        0.012672716243780524,
+        -0.0007675417164178938
+      ],
+      "return_force_norm_n": 0.05218594018705926,
+      "return_torque_norm_nm": 0.014183966073907815,
+      "return_position_mm": 0.04183842095624306,
+      "return_rotation_deg": 0.007211895953174836
+    },
+    {
+      "repeat": 3,
+      "axis": "y",
+      "angle_deg": -10,
+      "status": "passed",
+      "out": "/home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-091715/r3-y-10-out.json",
+      "back": "/home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-091715/r3-y-10-back.json",
+      "return_wrench_delta": [
+        -0.016394072512436964,
+        0.05562911194029585,
+        -0.020705303781056728,
+        0.02335924848258797,
+        0.0004030674129329448,
+        -0.006199104726368164
+      ],
+      "return_force_norm_n": 0.0615798125482276,
+      "return_torque_norm_nm": 0.024171178134694573,
+      "return_position_mm": 0.0464866882636455,
+      "return_rotation_deg": 0.00715733876807176
+    }
+  ],
+  "motion_compensation_enabled": false,
+  "angle_limit_deg": 10,
+  "repeats": 3,
+  "return_limits": {
+    "force_norm_n": 0.3,
+    "torque_norm_nm": 0.05,
+    "position_mm": 0.5,
+    "rotation_deg": 0.1
+  },
+  "controller": {
+    "robotmode": "Robotmode: RUNNING",
+    "safetystatus": "Safetystatus: NORMAL",
+    "programState": "STOPPED null"
+  },
+  "pending": "r3-y-10"
+}

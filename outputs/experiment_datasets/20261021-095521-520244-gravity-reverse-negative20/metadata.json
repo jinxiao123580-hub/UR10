@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "status": "recorded",
+  "name": "gravity-reverse-negative20",
+  "host": "192.168.1.3",
+  "port": 30013,
+  "topic": "/ft_sensor/wrench_raw",
+  "started_at": "2026-10-21T09:55:21.520333+08:00",
+  "experiment_argv": [
+    "/usr/bin/python3",
+    "/home/jx/.dsh-analysis/repeat_local_gravity_20261021.py",
+    "--execute",
+    "--site-confirmed",
+    "--repeats",
+    "1",
+    "--reverse-negative20"
+  ],
+  "cwd": "/home/jx",
+  "local_only": true,
+  "source_clocks_synchronized": false,
+  "timestamps": "receipt wall/monotonic; ROS header source; UR controller uptime preserved separately",
+  "frames": "force frame_id from ROS; UR TCP in controller base, active TCP not removed",
+  "units": {
+    "force": "N",
+    "torque": "Nm",
+    "joint": "rad",
+    "position": "m",
+    "rotvec": "rad",
+    "time": "s"
+  },
+  "force_rows": 20276,
+  "ur_rows": 12674,
+  "ur_connections": 1,
+  "errors": [],
+  "coverage": "begins at recorder start; no reconstruction of earlier data",
+  "storage": "gzip CSV streams",
+  "motion_triggered": false,
+  "recording_active": true,
+  "idle_pause_seconds": 30,
+  "pretrigger_seconds": 2,
+  "raw_binary_enabled": false,
+  "pauses": 0,
+  "preview": "50 Hz receipt-clock bins; force components averaged; UR is last sample per bin, NOT anti-aliased simulation input",
+  "force_received": 20276,
+  "ur_received": 12674,
+  "experiment_pid": 349216,
+  "experiment_exit_code": 0,
+  "finished_at": "2026-10-21T09:57:03.128181+08:00",
+  "last_received_monotonic_s": {
+    "force": 435506.415061637,
+    "ur": 435506.420651057
+  }
+}

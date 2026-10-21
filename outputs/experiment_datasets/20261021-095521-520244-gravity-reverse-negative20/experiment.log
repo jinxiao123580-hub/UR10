@@ -1,0 +1,19 @@
+TRIAL r1-x-20 out
+PROBE COMPLETE; no gravity model produced
+ATI delta N/Nm= [7.5849, -7.1001, -0.9666, 0.4677, 0.3957, -0.0687]
+REPORT: /home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-095522/r1-x-20-out.json
+TRIAL r1-x-20 back
+PROBE COMPLETE; no gravity model produced
+ATI delta N/Nm= [-7.5737, 7.1441, 0.9679, -0.4708, -0.4218, 0.0667]
+REPORT: /home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-095522/r1-x-20-back.json
+RESULT {"repeat": 1, "axis": "x", "angle_deg": -20, "status": "passed", "holdout": false, "out": "/home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-095522/r1-x-20-out.json", "back": "/home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-095522/r1-x-20-back.json", "return_wrench_delta": [0.01776493203980012, 0.03331704283582093, 0.005978171616902728, -0.004698365248754666, -0.02752754746268682, -0.0032187993283581823], "return_force_norm_n": 0.03822769532137381, "return_torque_norm_nm": 0.02811051714994621, "return_position_mm": 0.050966564913360365, "return_rotation_deg": 0.00434791468578165, "global_return_position_mm": 0.07201106832726376, "global_return_rotation_deg": 0.00632759704359892}
+TRIAL r1-y-20 out
+PROBE COMPLETE; no gravity model produced
+ATI delta N/Nm= [7.5688, 7.997, -1.1226, -0.5267, 0.3942, -1.2066]
+REPORT: /home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-095522/r1-y-20-out.json
+TRIAL r1-y-20 back
+PROBE COMPLETE; no gravity model produced
+ATI delta N/Nm= [-7.579, -7.9462, 1.159, 0.5382, -0.3903, 1.2078]
+REPORT: /home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-095522/r1-y-20-back.json
+RESULT {"repeat": 1, "axis": "y", "angle_deg": -20, "status": "passed", "holdout": false, "out": "/home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-095522/r1-y-20-out.json", "back": "/home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-095522/r1-y-20-back.json", "return_wrench_delta": [-0.012138928955220507, 0.048764044129356865, 0.019593049104472016, 0.011889580820894086, 0.003909823432836301, 0.001177977462686608], "return_force_norm_n": 0.05393675156366025, "return_torque_norm_nm": 0.012571256193202249, "return_position_mm": 0.009409878007708868, "return_rotation_deg": 0.004899329760067945, "global_return_position_mm": 0.08782587830263035, "global_return_rotation_deg": 0.005107920987326059}
+REPORT /home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-095522/session.json STATUS completed_collection_not_calibrated

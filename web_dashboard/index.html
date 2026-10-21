@@ -65,6 +65,11 @@
         <label class="chk"><input type="checkbox" id="auto-scale" checked> 自动量程</label>
       </div>
     </div>
+    <div style="padding:8px 16px;color:#d6a34a">
+      <select id="wrench-mode"><option value="filtered">补偿 + 5 Hz 低通（显示）</option><option value="compensated">重力补偿 v2（未滤波）</option><option value="raw">原始六轴力</option></select>
+      滤波时间常数约 32 ms，有延迟，不用于保护。
+      局部静态 ±20°；历史验证最大残差 0.459 N / 0.089 N·m；非动态精度保证，不用于控制。换走线需重标。
+    </div>
     <div class="ft-values" id="ft-values">
       <div class="fv"><span class="fv-axis">Fx</span><b id="v-fx">--</b><i>N</i></div>
       <div class="fv"><span class="fv-axis">Fy</span><b id="v-fy">--</b><i>N</i></div>

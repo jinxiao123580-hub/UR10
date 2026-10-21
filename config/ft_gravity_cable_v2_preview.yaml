@@ -1,0 +1,16 @@
+valid: true
+status: provisional_display_only
+installation_label: cable-route-v2-20261021
+scope: Local static X/Y single-axis +/-20 degrees; not independently accepted for dynamic/contact control. Recalibrate after installation or cable changes.
+evidence: outputs/ft_calibration/repeat-other-directions-20261021-101644/gravity-relaxed-offline-review.json
+observed_force_vector_max_n: 0.45930247002358054
+observed_torque_vector_max_nm: 0.08912486043955531
+calibration:
+  mass_kg: 3.1236934423061014
+  com_sensor_m: [-0.07684649086990773, 0.07741925859576106, 0.06708231075609519]
+  force_bias_n: [8.729681035475538, 2.5005978668264452, 39.00089566825519]
+  torque_bias_nm: [-0.04372279356636828, -0.0006672448569102485, -0.36377932084731684]
+  rotation_sensor_from_tool:
+    - [0.7000068947768536, -0.7104075885399882, -0.07287938947100012]
+    - [0.7140650568599288, 0.6977222081643594, 0.057400477401124916]
+    - [0.010071833819799314, -0.092221355330797, 0.9956875914585143]

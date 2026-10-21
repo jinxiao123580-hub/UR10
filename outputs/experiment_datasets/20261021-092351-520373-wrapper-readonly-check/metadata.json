@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "status": "recorded",
+  "name": "wrapper-readonly-check",
+  "host": "192.168.1.3",
+  "port": 30013,
+  "topic": "/ft_sensor/wrench_raw",
+  "started_at": "2026-10-21T09:23:51.520477+08:00",
+  "experiment_argv": [
+    "/usr/bin/python3",
+    "-c",
+    "print(12345)"
+  ],
+  "cwd": "/home/jx",
+  "local_only": true,
+  "source_clocks_synchronized": false,
+  "timestamps": "receipt wall/monotonic; ROS header source; UR controller uptime preserved separately",
+  "frames": "force frame_id from ROS; UR TCP in controller base, active TCP not removed",
+  "units": {
+    "force": "N",
+    "torque": "Nm",
+    "joint": "rad",
+    "position": "m",
+    "rotvec": "rad",
+    "time": "s"
+  },
+  "force_rows": 99,
+  "ur_rows": 27,
+  "ur_connections": 1,
+  "errors": [],
+  "coverage": "begins at recorder start; no reconstruction of earlier data",
+  "experiment_pid": 347041,
+  "experiment_exit_code": 0,
+  "finished_at": "2026-10-21T09:23:52.232001+08:00",
+  "last_received_monotonic_s": {
+    "force": 433515.525053642,
+    "ur": 433515.526308338
+  }
+}

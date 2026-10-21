@@ -37,9 +37,9 @@ class RealtimeReader:
         self.last_frame = None
         self.connect()
 
-    def connect(self):
+    def connect(self, timeout_seconds=3.0):
         self.close()
-        self.sock = socket.create_connection((self.host, self.port), timeout=3.0)
+        self.sock = socket.create_connection((self.host, self.port), timeout=timeout_seconds)
         self.sock.settimeout(1.0)
         self.buffer.clear()
         self.reconnects += 1
@@ -84,7 +84,14 @@ class RealtimeReader:
                     self.last_warning = now
                 while True:
                     try:
-                        self.connect()
+                        remaining = (deadline - time.monotonic()
+                                     if deadline is not None else None)
+                        if remaining is not None and remaining <= 0:
+                            raise TimeoutError(
+                                "UR %d reconnect timed out after %.1f s" %
+                                (self.port, max_wait_seconds)) from exc
+                        self.connect(timeout_seconds=min(3.0, remaining)
+                                     if remaining is not None else 3.0)
                         break
                     except OSError as connect_error:
                         if deadline is not None and time.monotonic() >= deadline:

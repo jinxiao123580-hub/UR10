@@ -1,0 +1,9 @@
+window 1/8: static, F=[3.3607, 4.0325, 70.1483] N, TCP motion 0.051 mm / 0.0030 deg
+window 2/8: static, F=[3.3632, 4.0347, 70.1876] N, TCP motion 0.008 mm / 0.0026 deg
+window 3/8: static, F=[3.3679, 4.0253, 70.144] N, TCP motion 0.012 mm / 0.0001 deg
+window 4/8: static, F=[3.3658, 4.0272, 70.1854] N, TCP motion 0.021 mm / 0.0042 deg
+window 5/8: static, F=[3.37, 4.0189, 70.1722] N, TCP motion 0.024 mm / 0.0022 deg
+window 6/8: static, F=[3.3723, 4.0212, 70.1848] N, TCP motion 0.028 mm / 0.0042 deg
+window 7/8: static, F=[3.3733, 4.0146, 70.1795] N, TCP motion 0.070 mm / 0.0030 deg
+window 8/8: static, F=[3.3746, 4.0157, 70.1786] N, TCP motion 0.022 mm / 0.0030 deg
+OUTPUT: /home/jx/UR10/outputs/ft_calibration/new-cable-x15-relaxation-20261021.json STATUS: static_baseline_recorded

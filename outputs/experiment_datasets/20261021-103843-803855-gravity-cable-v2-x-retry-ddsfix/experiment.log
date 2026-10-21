@@ -1,0 +1,55 @@
+TRIAL r1-x-15 out
+PROBE COMPLETE; no gravity model produced
+ATI delta N/Nm= [5.338, -5.3388, 1.7296, 0.501, 0.5506, -0.0043]
+REPORT: /home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-103844/r1-x-15-out.json
+TRIAL r1-x-15 back
+PROBE COMPLETE; no gravity model produced
+ATI delta N/Nm= [-5.3316, 5.3192, -1.8495, -0.5073, -0.5578, 0.0065]
+REPORT: /home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-103844/r1-x-15-back.json
+RESULT {"repeat": 1, "axis": "x", "angle_deg": -15, "status": "passed", "holdout": false, "out": "/home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-103844/r1-x-15-out.json", "back": "/home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-103844/r1-x-15-back.json", "return_wrench_delta": [0.01815974213930316, -0.023991490074616983, -0.1263882285821154, -0.0068887760447755575, -0.00950149982587023, 0.0027932039054726215], "return_force_norm_n": 0.12992056093895024, "return_torque_norm_nm": 0.012063818731796043, "return_position_mm": 0.0643276651995877, "return_rotation_deg": 0.004771780852304396, "global_return_position_mm": 0.07772076191977544, "global_return_rotation_deg": 0.006363995197064312, "pose_return_passed": true, "wrench_return_passed": true}
+TRIAL r1-x+15 out
+PROBE COMPLETE; no gravity model produced
+ATI delta N/Nm= [-5.009, 4.959, -3.6332, -0.6161, -0.6483, 0.0135]
+REPORT: /home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-103844/r1-x+15-out.json
+TRIAL r1-x+15 back
+PROBE COMPLETE; no gravity model produced
+ATI delta N/Nm= [4.9202, -4.8695, 3.9154, 0.6492, 0.7, -0.0167]
+REPORT: /home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-103844/r1-x+15-back.json
+RESULT {"repeat": 1, "axis": "x", "angle_deg": 15, "status": "return_gate_failed", "holdout": false, "out": "/home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-103844/r1-x+15-out.json", "back": "/home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-103844/r1-x+15-back.json", "return_wrench_delta": [-0.09754112000000037, 0.09661515499999673, 0.2858851350000009, 0.0348464950000007, 0.054192460000000775, -0.003483464999999998], "return_force_norm_n": 0.31714203234591376, "return_torque_norm_nm": 0.0645231389738827, "return_position_mm": 0.08018778213644161, "return_rotation_deg": 0.007964174032787942, "global_return_position_mm": 0.08351875832659325, "global_return_rotation_deg": 0.008426396974313214, "pose_return_passed": true, "wrench_return_passed": false}
+TRIAL r1-x-20 out
+PROBE COMPLETE; no gravity model produced
+ATI delta N/Nm= [7.3261, -7.26, 1.5317, 0.6004, 0.6466, -0.0006]
+REPORT: /home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-103844/r1-x-20-out.json
+TRIAL r1-x-20 back
+PROBE COMPLETE; no gravity model produced
+ATI delta N/Nm= [-7.1786, 7.1906, -1.8282, -0.637, -0.7015, 0.0001]
+REPORT: /home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-103844/r1-x-20-back.json
+RESULT {"repeat": 1, "axis": "x", "angle_deg": -20, "status": "return_gate_failed", "holdout": false, "out": "/home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-103844/r1-x-20-out.json", "back": "/home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-103844/r1-x-20-back.json", "return_wrench_delta": [0.14821339500000041, -0.07755043500000003, -0.3165514149999922, -0.03830933499999989, -0.05690793999999988, -0.00036754499999998996], "return_force_norm_n": 0.3580308349355019, "return_torque_norm_nm": 0.06860214189449793, "return_position_mm": 0.09991038573565762, "return_rotation_deg": 0.010630874695426201, "global_return_position_mm": 0.04458436072235102, "global_return_rotation_deg": 0.0025269111185249847, "pose_return_passed": true, "wrench_return_passed": false}
+TRIAL r1-x+20 out
+PROBE COMPLETE; no gravity model produced
+ATI delta N/Nm= [-6.4342, 6.4068, -5.3621, -0.8607, -0.9124, 0.019]
+REPORT: /home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-103844/r1-x+20-out.json
+TRIAL r1-x+20 back
+PROBE COMPLETE; no gravity model produced
+ATI delta N/Nm= [6.3419, -6.3173, 5.6229, 0.8956, 0.9646, -0.022]
+REPORT: /home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-103844/r1-x+20-back.json
+RESULT {"repeat": 1, "axis": "x", "angle_deg": 20, "status": "return_gate_failed", "holdout": false, "out": "/home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-103844/r1-x+20-out.json", "back": "/home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-103844/r1-x+20-back.json", "return_wrench_delta": [-0.11456119952736388, 0.103485183059699, 0.26979440694030643, 0.03784131480099484, 0.05618866181591953, -0.0031760998507462876], "return_force_norm_n": 0.31084155701308597, "return_torque_norm_nm": 0.06781753779660299, "return_position_mm": 0.08518267667341978, "return_rotation_deg": 0.009882660579901136, "global_return_position_mm": 0.09903153931721964, "global_return_rotation_deg": 0.00939698397846657, "pose_return_passed": true, "wrench_return_passed": false}
+TRIAL r1-x-12 out
+PROBE COMPLETE; no gravity model produced
+ATI delta N/Nm= [4.3043, -4.3534, 1.4406, 0.3978, 0.4321, 0.0029]
+REPORT: /home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-103844/r1-x-12-out.json
+TRIAL r1-x-12 back
+PROBE COMPLETE; no gravity model produced
+ATI delta N/Nm= [-4.2069, 4.2716, -1.6126, -0.4249, -0.4725, -0.0029]
+REPORT: /home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-103844/r1-x-12-back.json
+RESULT {"repeat": 1, "axis": "x", "angle_deg": -12, "status": "return_gate_failed", "holdout": true, "out": "/home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-103844/r1-x-12-out.json", "back": "/home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-103844/r1-x-12-back.json", "return_wrench_delta": [0.11479461500000021, -0.08199163000000187, -0.19939294999997514, -0.02859230999999851, -0.04280582500000252, 0.0008839399999999789], "return_force_norm_n": 0.24424983015909768, "return_torque_norm_nm": 0.05148436845286592, "return_position_mm": 0.09959774767293028, "return_rotation_deg": 0.008747394604162895, "global_return_position_mm": 0.059442363679434986, "global_return_rotation_deg": 0.003944200832805362, "pose_return_passed": true, "wrench_return_passed": false}
+TRIAL r1-x+12 out
+PROBE COMPLETE; no gravity model produced
+ATI delta N/Nm= [-4.0406, 4.0258, -2.7775, -0.4956, -0.528, 0.0103]
+REPORT: /home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-103844/r1-x+12-out.json
+TRIAL r1-x+12 back
+PROBE COMPLETE; no gravity model produced
+ATI delta N/Nm= [3.9691, -3.9732, 2.9396, 0.5187, 0.561, -0.0101]
+REPORT: /home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-103844/r1-x+12-back.json
+RESULT {"repeat": 1, "axis": "x", "angle_deg": 12, "status": "passed", "holdout": true, "out": "/home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-103844/r1-x+12-out.json", "back": "/home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-103844/r1-x+12-back.json", "return_wrench_delta": [-0.08171741499999963, 0.06459896000000587, 0.10135753000002978, 0.024996375000001736, 0.03542051500000043, 0.0015999500000000028], "return_force_norm_n": 0.1453413583088842, "return_torque_norm_nm": 0.043381925798752496, "return_position_mm": 0.08530441985088853, "return_rotation_deg": 0.007331114615215926, "global_return_position_mm": 0.11098053831100599, "global_return_rotation_deg": 0.010806948802081362, "pose_return_passed": true, "wrench_return_passed": true}
+REPORT /home/jx/UR10/outputs/ft_calibration/repeat-other-directions-20261021-103844/session.json STATUS completed_collection_not_calibrated
