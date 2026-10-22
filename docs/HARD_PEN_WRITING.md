@@ -1,89 +1,51 @@
-# Hard-pen TCP and writing prototype — 2026-10-16
+# 硬笔TCP与写字原型（2026-10-16）
 
-## Status and evidence
+## 状态和证据
 
-- Named profile: `config/hard_pen_tcp.yaml`. Flange-to-tip XYZ is
-  `[0.113898, -1.661301, 329.069491]` mm. Position only; no controller TCP write.
-- Original samples and validation: `outputs/tcp_calibration/ballpoint-pen-20261016.json`.
-  Nine fitting poses and three held-out poses; fitting RMS 0.347 mm, held-out
-  maximum 0.991 mm. These are fixed-point consistency errors, not external
-  absolute positioning accuracy.
-- Paper registration: `outputs/paper_writing/a4-imported-20261016.json`.
-  Three manually supplied corner XYs; their Zs do not define the writing plane.
-  Unordered-corner inference chooses the long edge toward base +X (or +Y
-  when vertical). Unmarked paper has a 180-degree ambiguity: check an air run.
-- Actual contact measurement:
-  `outputs/paper_writing/writing-20261016-143507-030047-contact.json`.
-  Contact at base Z 26.745 mm followed by 2 mm retraction was recorded.
-- Writing attempt: `outputs/paper_writing/writing-20261016-143507-030047.json`.
-  Motion reached the third stroke and stopped at the 5 N overload guard.
-  This is NOT proof of successful visible handwriting or complete delivery.
-- Later attempts and failures are retained in `outputs/paper_writing/`;
-  `writing-20261016-144931-263967.json` reports
-  `completed_fixed_height_motion`, with its sibling contact JSON reporting
-  successful contact/retraction. That establishes a completed motion sequence,
-  not yet visual handwriting-quality acceptance or validation of later changes.
-  12-point paper calibration history is in `outputs/paper_calibration/`.
-  A single contact height does not calibrate paper tilt. Check each saved
-  session's status and validation fields rather than assuming success.
+- `config/hard_pen_tcp.yaml`：法兰到笔尖`[0.113898,-1.661301,329.069491] mm`，仅位置标定，不写控制器TCP。
+- `outputs/tcp_calibration/ballpoint-pen-20261016.json`：9组训练、3组留出；训练RMS0.347mm、留出最大0.991mm，是固定点一致性，不是外部绝对定位精度。
+- `outputs/paper_writing/a4-imported-20261016.json`：三个无序角仅定义XY，Z不定义写字面。长边按基座+X（竖直时+Y）推断，纸无标记存在180°歧义，先空走核对。
+- `writing-20261016-143507-030047-contact.json`记录Z26.745mm触纸后抬2mm，同名前缀主JSON写至第三笔时5N保护停止，不证明完整字迹验收。
+- `writing-20261016-144931-263967.json`记录`completed_fixed_height_motion`及对应触纸成功，只证明运动序列完成，不是后续修改或字迹质量验收。12点采集历史在`outputs/paper_calibration/`，单点高度不能纠正倾斜。
 
-## Run from a clone
+## 环境与操作
 
-Use the existing ROS Humble, camera/force environment and installed robot
-model dependencies described by the repository setup documentation. Python
-needs system NumPy/SciPy; execution additionally needs rclpy, geometry_msgs
-and Pinocchio/robotpkg plus the existing UR10 model files. No hardware
-dependencies are installed automatically. These scripts no longer require
-`~/.dsh-analysis`; keep all sibling scripts and repository model assets.
+依赖ROS2 Humble、系统NumPy/SciPy；真机还需rclpy、geometry_msgs、Pinocchio和既有UR10模型。保留全部相邻脚本及模型，不再依赖私有分析脚本。硬件依赖不自动安装。
 
 ```bash
-cd /path/to/UR10
+cd ~/UR10
 source /opt/ros/humble/setup.bash
 source ~/colcon_ws/install/setup.bash
 bash scripts/start_dashboard.sh
 
-# Hardware-free tests
+# 无硬件测试
 PYTHONNOUSERSITE=1 python3 scripts/test_write_ballpoint.py
 PYTHONNOUSERSITE=1 python3 scripts/test_paper_plane_auto.py
 
-# New sheet: teach any three distinct corners, use a NEW registration name
+# 换纸示教任意三个不同角，使用新文件
 PYTHONNOUSERSITE=1 FASTDDS_BUILTIN_TRANSPORTS=UDPv4 \
 python3 scripts/write_ballpoint.py --teach \
 --registration outputs/paper_writing/a4-new.json
 
-# Offline plan only (no robot connection/motion)
+# 仅离线规划
 PYTHONNOUSERSITE=1 python3 scripts/write_ballpoint.py \
 --registration outputs/paper_writing/a4-new.json --paper-z-mm 26.968
 
-# Supervised air check, 5 mm above the assumed plane
+# 以下需单独现场确认；空走在估计面上方5mm
 PYTHONNOUSERSITE=1 FASTDDS_BUILTIN_TRANSPORTS=UDPv4 \
 python3 scripts/write_ballpoint.py --registration outputs/paper_writing/a4-new.json \
 --paper-z-mm 26.968 --air --execute
 
-# Supervised writing: re-probe at first stroke, then use measured contact Z
+# 实写：首笔起点重新触纸，随后使用实测高度
 PYTHONNOUSERSITE=1 FASTDDS_BUILTIN_TRANSPORTS=UDPv4 \
 python3 scripts/write_ballpoint.py --registration outputs/paper_writing/a4-new.json \
 --paper-z-mm 26.968 --execute
 ```
 
-Archived registrations are tied to the physical paper, TCP calibration hash,
-active controller TCP and recorded pen orientation. A clone on another PC
-does not establish that today's physical scene matches an archived scene.
-Re-teach if paper/tool mounting changes. Start with the pen raised 3–100 mm,
-ensure no other motion program is running, supervise and keep E-stop available.
+历史配准与纸、TCP哈希、控制器TCP及笔姿态绑定，克隆不代表现场仍匹配。换纸/安装重示教；起点离纸3–100mm，无其他运动程序，现场监看且急停可用。
 
-## Protection and remaining work
+## 保护与遗留
 
-Horizontal setpoint 30 mm/s; finite steps reduce average speed. Vertical
-contact motion remains slow. Raw baseline-relative force-vector delta >=5 N
-stops motion; contact probe uses a 1 N trigger and <=6 mm descent.
-Horizontal writing at >=2 N first stops and attempts upward-only 0.1 mm
-unloading, <=1 mm total. No downward pressure chasing or tare under contact.
-This is conservative unloading, NOT validated constant normal-force control.
-Loss of state during contact stops execution; idle/air reconnection is bounded.
-Joint-limit and model checks remain enabled. Unmodeled pen, cables and table
-still require on-site checking. Latest speed/unloading changes have offline
-coverage but are not certified by a complete successful hardware writing run.
+横向目标30mm/s，有限小段使平均速度更低；竖直保持慢速。相对原始基线力向量变化≥5N停；触纸阈值1N、最多下探6mm。横向≥2N先停，仅尝试每次向上0.1mm卸载，总量≤1mm，不向下追压、不接触清零。这不是已验证恒法向力控制。
 
-Next acceptance: verify fresh-state reliability, paper tilt, visible strokes,
-normal force across the sheet, and full start-to-finish run at the new speed.
+接触失联停止，空闲/空走重连有界；限位和模型检查保留。笔、线缆、台面未完整建模需现场检查。新速度/卸载只有离线覆盖，尚需新鲜状态、斜面、可见完整字迹、全纸面压力和从头到尾真机验证。

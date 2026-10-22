@@ -1,31 +1,17 @@
-# ATI gravity calibration data
+# 标定配置说明
 
-Calibration date: 2026-09-10 (Asia/Shanghai)
+文件名或`valid`不代表换安装后仍有效，必须结合日期、工具、走线、证据和独立验收判断。
 
-## Files
+## 当前显示预览
 
-- `ft_gravity_calibration.yaml`: accepted calibration generated from the last
-  10 consistent poses. This is the file consumers should load.
-- `ft_gravity_calibration.mixed-18.yaml`: all 18 persisted samples from both
-  acquisition batches. It is retained as raw evidence; its combined fit is
-  invalid because the first 8 samples are inconsistent with the later batch.
-- `ft_gravity_calibration.invalid-20deg.yaml`: earlier 12-pose, 20-degree
-  calibration result retained for comparison. It is invalid and must not be
-  used for compensation.
+`ft_gravity_cable_v2_preview.yaml`是2026-10-21新走线v2局部静态候选，仅供网页。既有验证最大向量残差0.459N/0.089Nm，不是动态力控保证。旧配置保留，详见`docs/GRAVITY_V2_20261021.md`。
 
-## Accepted result
+## 2026-09-10历史拟合
 
-- Downstream mass: `3.2170005989 kg`
-- Center of mass in `ft_sensor`: `[-0.0739583, 0.0746015, 0.0594935] m`
-- Force bias: `[5.7368001, 7.2738515, 32.9430006] N`
-- Torque bias: `[-0.2363989, -0.1070706, -0.2677242] N m`
-- Force RMS residual: `0.7986392 N`
-- Torque RMS residual: `0.0916483 N m`
-- Design condition number: `9.4482`
+- `ft_gravity_calibration.yaml`：当时最后10组一致姿态的结果，不能自动作为当前安装推荐。
+- `ft_gravity_calibration.mixed-18.yaml`：两批18组证据，前8组与后批不一致，混合拟合无效。
+- `ft_gravity_calibration.invalid-20deg.yaml`：早期12姿态/20°失败对照，不用于补偿。
 
-The ATI hardware bias must remain zero. Gravity compensation must use the
-software parameters above. The mass is the load below the sensing element;
-it is not the total robot payload including the Net F/T sensor body.
+历史数值：下游质量3.2170005989kg；传感器系质心`[-0.0739583,0.0746015,0.0594935] m`；力偏置`[5.7368001,7.2738515,32.9430006] N`；力矩偏置`[-0.2363989,-0.1070706,-0.2677242] Nm`；力/力矩拟合RMS0.7986392N/0.0916483Nm，条件数9.4482。只是历史拟合，不是当前独立验收。
 
-The accepted result is a fit result. Validate it on poses not used by the fit
-before enabling collision detection or force control.
+ATI硬件偏置应保持零；补偿用独立软件通道，不把等效质量当作含传感器本体的控制器负载。启用碰撞或力控前用新姿态验证，不能自动写入控制器参数。
