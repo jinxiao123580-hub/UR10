@@ -1,0 +1,58 @@
+{
+  "status": "nominal_CAD_assembly_only_not_handeye_calibration",
+  "camera_model": "Mech-Eye PRO XS",
+  "orientation_source": "operator photo bdec90dcd17b73f71f712a0edbcf25c6.jpg and correction on 2026-10-27",
+  "housing_size_cad_xyz_mm": [
+    49.99999895334239,
+    85.00000512594447,
+    130.0
+  ],
+  "size_source": "existing CAD cuboid; not independently measured product dimensions",
+  "source_triangle_count": 48,
+  "camera_triangle_count": 12,
+  "intermediate_bracket_removed": true,
+  "split_method": "recover eight existing housing corners; close shared CAD boolean-union mounting face",
+  "mounting_point_cad_mm": [
+    197.6123504638672,
+    153.23760986328125,
+    80.22116240859032
+  ],
+  "housing_centre_cad_mm": [
+    172.61235098719598,
+    133.237607300309,
+    80.22116240859032
+  ],
+  "camera_top_cad_y_mm": 175.73760986328125,
+  "connector_top_cad_y_mm": 175.73760986328125,
+  "excluded_sensor_seat_top_cad_y_mm": 188.73760986328125,
+  "top_flush_error_mm": 0.0,
+  "contact_face_size_mm": [
+    130.0,
+    85.0
+  ],
+  "contact_face_description": "broad 130 x 85 face against connector side; 50 mm thickness projects outward",
+  "long_edge_direction_cad": [
+    0,
+    0,
+    1
+  ],
+  "long_edge_direction_tool0": [
+    -1,
+    0,
+    0
+  ],
+  "optical_direction_cad": [
+    0,
+    -1,
+    0
+  ],
+  "optical_direction_tool0": [
+    0,
+    0,
+    1
+  ],
+  "orientation_scope": "long edge transverse to brush/tool0 +Z, horizontal in the illustrated writing posture; optical direction nominal only",
+  "mounting_assumption": "housing +X broad face (130 x 85 mm) flush against retained connector minimum-X side; camera top coplanar with connector camera-end top surface, not raised sensor seat; CAD Z centres aligned; 130-mm long edge horizontal; screw pattern not represented",
+  "handeye_updated": false,
+  "robot_motion_sent": false
+}

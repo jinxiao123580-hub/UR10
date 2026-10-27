@@ -1,0 +1,22 @@
+{
+  "status": "nominal_CAD_assembly_only_not_handeye_calibration",
+  "orientation_source": "operator photo bdec90dcd17b73f71f712a0edbcf25c6.jpg and correction on 2026-10-27",
+  "housing_size_cad_xyz_mm": [
+    49.99999895334239,
+    85.00000512594447,
+    130.0
+  ],
+  "camera_top_cad_y_mm": 175.73760986328125,
+  "connector_top_cad_y_mm": 175.73760986328125,
+  "top_flush_error_mm": 0.0,
+  "contact_face_description": "broad 130 x 85 face against connector side; 50 mm thickness projects outward",
+  "long_edge_direction_tool0": [
+    -1,
+    0,
+    0
+  ],
+  "handeye_updated": false,
+  "current_optical_calibration_validated": false,
+  "legacy_optical_frame": "mecheye_camera_optical_frame_legacy_20260921",
+  "robot_motion_sent": false
+}

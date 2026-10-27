@@ -2,6 +2,8 @@
 
 UR10 CB3、Robotiq 二指夹爪、ATI Net F/T 与 Mech-Eye PRO XS 的课程与实验仓库。
 
+2026-10-27 相机直装模型更新：长边水平、宽面贴支架、相机端顶部齐平。网格、网页/CAD 模型及 MU ROS 模型快照见 [安装模型说明](docs/camera_direct_mount_20261027.md)。本次为模型更新，未生成新的手眼标定。
+
 **唯一的接手入口是 [`HANDOVER.md`](HANDOVER.md) 顶部的 `0A. 最新接手状态`。** 它覆盖旧
 实验记录和历史文档中的结论。
 

@@ -1,5 +1,5 @@
 /* Live, browser-side UR10 view.  It renders the RViz URDF kinematic chain
- * from the read-only realtime joint stream and mounts the same four STL assets
+ * from the read-only realtime joint stream and mounts the retained CAD parts plus the separated camera STL
  * used by the preliminary CAD RViz model.  It sends no ROS/UR command. */
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
@@ -101,7 +101,7 @@ tool0.add(cadAssembly);
 
 const stlAssets = [
   ["末端执行器 - 2F85-CLOSED_20181108.step-1.STL", 0x27313a],
-  ["末端执行器 - 3D相机-1.STL", 0xd46a42],
+  ["camera_direct_mount_20261027.stl", 0x467c98],
   ["末端执行器 - 六轴力-1.STL", 0x205eb8],
   ["末端执行器 - 连接1-1.STL", 0xa2abb4],
 ];
@@ -170,7 +170,7 @@ function frameRobotOnce() {
 }
 Promise.all([...cadLoads, ...armLoads]).then(() => {
   meshesReady = true;
-  status.textContent = "完整 UR10 + SolidWorks STL 已加载 · 关节状态实时同步";
+  status.textContent = "UR10 · 相机直装 CAD（长边水平，非光学标定） · 关节状态实时同步";
   frameRobotOnce();
 }).catch(error => {
   console.error("SolidWorks STL load failed", error);

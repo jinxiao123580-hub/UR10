@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """Build a visual/collision URDF using the uploaded end-effector STL assets.
 
-This preserves the CAD meshes as a single rigid assembly, rather than replacing
-them with boxes.  The ATI high-Y mounting face is provisionally coincident with
+The default camera mount omits the intermediate bracket and places the original
+CAD cuboid directly against the connector, with its long edge horizontal.
+--camera-mount legacy restores the historical combined camera/bracket mesh.
+This is model geometry only and does not update hand-eye calibration.  The ATI high-Y mounting face is provisionally coincident with
 tool0; the physical chain runs along CAD -Y, which maps to tool0 +Z.  The clocking
 is an explicit configuration value and this generator is for offline visual/
 collision iteration only.
@@ -19,6 +21,7 @@ import yaml
 
 from self_collision import URDF_SOURCE
 from robot_attachments import load
+from camera_direct_mount import direct_camera, write_stl
 
 
 def binary_bounds(path):
@@ -94,6 +97,8 @@ def main():
                         help="validated fixed-point TCP JSON; adds a visual-only TCP marker")
     parser.add_argument("--grasp-tcp", default="config/gripper_grasp_center_20260922.yaml",
                         help="manual position-only gripper-centre TCP YAML")
+    parser.add_argument("--camera-mount", choices=["direct", "legacy"], default="direct",
+                        help="CAD geometry only; preserve hand-eye validation status")
     args = parser.parse_args()
     geometry = load(args.attachments, root=root)
     tcp_path = args.fingertip_calibration
@@ -156,9 +161,16 @@ def main():
         # non-ASCII filenames through file://.  Stage byte-identical assets at
         # stable ASCII paths beside the generated URDF.
         staged = os.path.join(asset_dir, "cad_attachment_%d.stl" % index)
-        shutil.copyfile(path, staged)
+        colour = colours[token]
+        if token == "3D" and args.camera_mount == "direct":
+            connector = next(p for p in full if "连接1" in os.path.basename(p))
+            triangles, _ = direct_camera(path, connector)
+            write_stl(staged, triangles)
+            colour = "0.27 0.49 0.60 1"
+        else:
+            shutil.copyfile(path, staged)
         parts.append(mesh_link("cad_attachment_%d" % index, "file://" + staged,
-                               translation, rpy(rotation), colours[token]))
+                               translation, rpy(rotation), colour))
     # The pivot calibration supplies position only.  Its frame axes deliberately
     # inherit tool0; do not treat them as a measured fingertip orientation.
     parts.append(fingertip_tcp_link(tcp_offset))
