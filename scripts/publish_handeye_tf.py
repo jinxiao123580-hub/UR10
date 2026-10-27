@@ -104,7 +104,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--host", default="192.168.1.3")
     parser.add_argument("--calibration",
-                        default="config/handeye_eye_in_hand_20260917.yaml")
+                        default="config/handeye_eye_in_hand_20261027.yaml")
     parser.add_argument("--identity-camera-frames", action="store_true",
                         help="publish color_map->depth/point-cloud identity aliases")
     args = parser.parse_args()

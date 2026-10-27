@@ -113,7 +113,7 @@ def main():
     parser.add_argument("--reference", required=True,
                         help="one accepted sample.json or dataset, for guidance geometry")
     parser.add_argument("--calibration",
-                        default="config/handeye_eye_in_hand_20260917.yaml")
+                        default="config/handeye_eye_in_hand_20261027.yaml")
     parser.add_argument("--historical-tcp-z-floor", type=float, default=0.202,
                         help="lowest flange height used by the 2026-09-17 set that "
                              "physically worked; a design that goes below it needs "

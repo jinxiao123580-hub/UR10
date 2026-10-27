@@ -51,11 +51,20 @@ from rclpy.node import Node
 from std_srvs.srv import Trigger
 from sensor_msgs.msg import Image, PointCloud2
 from geometry_msgs.msg import WrenchStamped
+from dashboard_kinematics import DashboardKinematics, LINK_NAMES
 
 try:
     import websockets
 except ImportError:
-    raise SystemExit("缺少 websockets，请先：python3 -m pip install --user websockets")
+    # Numeric/ROS modules above use system packages. Locate only the optional
+    # pure-Python websocket dependency after those modules have loaded.
+    import site
+    import sys
+    sys.path.append(site.getusersitepackages())
+    try:
+        import websockets
+    except ImportError:
+        raise SystemExit("缺少 websockets，请先：python3 -m pip install --user websockets")
 
 # 梅卡曼德的服务类型（可能没编译成功，导入失败时降级）
 try:
@@ -72,6 +81,28 @@ REPO_ROOT = os.path.abspath(os.path.join(WEB_ROOT, ".."))
 MODEL_WEB_ROOT = os.path.join(REPO_ROOT, "model")
 
 import cv2  # noqa: E402
+
+_kinematics = None
+_kinematics_lock = threading.Lock()
+_motion = None
+_motion_lock = threading.Lock()
+
+
+def kinematics():
+    global _kinematics
+    with _kinematics_lock:
+        if _kinematics is None:
+            _kinematics = DashboardKinematics()
+    return _kinematics
+
+
+def motion():
+    global _motion
+    with _motion_lock:
+        if _motion is None:
+            from dashboard_motion import MotionController
+            _motion = MotionController(model_check=lambda: kinematics().require_current())
+    return _motion
 
 
 class RosWebBridge(Node):
@@ -108,10 +139,9 @@ class RosWebBridge(Node):
     def _load_dashboard_fk():
         """Load the exact URDF chain used by the CAD RViz scene (read-only)."""
         import pinocchio as pin
-        urdf = os.path.join(REPO_ROOT, "outputs", "vision", "ur10_preliminary_cad_meshes.urdf")
+        urdf = os.path.join(REPO_ROOT, "outputs", "vision", "ur10_with_camera.urdf")
         model = pin.buildModelFromUrdf(urdf)
-        names = ("base_link", "shoulder_link", "upper_arm_link", "forearm_link",
-                 "wrist_1_link", "wrist_2_link", "wrist_3_link", "tool0")
+        names = LINK_NAMES
         frames = {name: model.getFrameId(name) for name in names}
         return model, model.createData(), frames
 
@@ -322,6 +352,73 @@ class RosWebBridge(Node):
 
 
 class _StaticHandler(http.server.SimpleHTTPRequestHandler):
+    def api_json(self, value, status=200):
+        payload = json.dumps(value, ensure_ascii=False, allow_nan=False).encode('utf-8')
+        self.send_response(status)
+        self.send_header('Content-Type', 'application/json; charset=utf-8')
+        self.send_header('Content-Length', str(len(payload)))
+        self.end_headers()
+        self.wfile.write(payload)
+
+    def do_GET(self):
+        parsed = urllib.parse.urlparse(self.path)
+        if parsed.path == '/api/motion/status':
+            return self.api_json(motion().status())
+        if not parsed.path.startswith('/api/kinematics/'):
+            return super().do_GET()
+        try:
+            if parsed.path == '/api/kinematics/status':
+                return self.api_json(kinematics().status())
+            if parsed.path == '/api/kinematics/cache':
+                mode = urllib.parse.parse_qs(parsed.query).get('mode', ['pose'])[0]
+                return self.api_json(kinematics().cache(mode))
+            if parsed.path == '/api/kinematics/calibration':
+                service = kinematics(); service.require_current()
+                data = service.calibration_path.read_bytes()
+                self.send_response(200)
+                self.send_header('Content-Type', 'application/yaml; charset=utf-8')
+                self.send_header('Content-Disposition', 'attachment; filename="handeye_20261027.yaml"')
+                self.send_header('Content-Length', str(len(data)))
+                self.end_headers(); self.wfile.write(data)
+                return
+            return self.api_json({'ok': False, 'error': '接口不存在'}, 404)
+        except ValueError as exc:
+            return self.api_json({'ok': False, 'error': str(exc)}, 400)
+        except Exception as exc:
+            return self.api_json({'ok': False, 'error': '模型或验证资料不可用：' + str(exc)}, 503)
+
+    def do_POST(self):
+        path = urllib.parse.urlparse(self.path).path
+        motion_path = path.startswith('/api/motion/')
+        if not motion_path and path not in ('/api/kinematics/fk', '/api/kinematics/solve'):
+            return self.api_json({'ok': False, 'error': '接口不存在'}, 404)
+        try:
+            if motion_path:
+                origin = urllib.parse.urlparse(self.headers.get('Origin', ''))
+                if origin.scheme not in ('http', 'https') or origin.netloc != self.headers.get('Host'):
+                    raise ValueError('点动请求须来自本控制台同源页面')
+            length = int(self.headers.get('Content-Length', '0'))
+            if not 0 < length <= 16384:
+                raise ValueError('请求长度无效')
+            request = json.loads(self.rfile.read(length))
+            if not isinstance(request, dict):
+                raise ValueError('请求须为JSON对象')
+            if motion_path:
+                service = motion(); action = path.rsplit('/', 1)[-1]
+                if action == 'arm': result = service.arm()
+                elif action == 'heartbeat': result = service.heartbeat(request.get('token'))
+                elif action == 'jog': result = service.jog(request)
+                elif action in ('stop', 'disarm'): result = service.stop(request.get('token'), disarm=action == 'disarm')
+                else: return self.api_json({'ok': False, 'error': '接口不存在'}, 404)
+                return self.api_json(result)
+            service = kinematics()
+            result = service.solve(request) if path.endswith('/solve') else service.fk(request)
+            return self.api_json(result)
+        except (ValueError, TypeError, KeyError) as exc:
+            return self.api_json({'ok': False, 'error': str(exc)}, 400)
+        except Exception as exc:
+            return self.api_json({'ok': False, 'error': '离线计算失败：' + str(exc)}, 503)
+
     def log_message(self, *a):
         pass
 
@@ -510,6 +607,8 @@ def install_signal_handlers(bridge):
         print("\n[桥] 收到信号 %d，退出" % signum, flush=True)
         bridge._ur_stop.set()
         try:
+            if _motion is not None:
+                _motion.shutdown()
             bridge.destroy_node()
             rclpy.try_shutdown()
         except Exception:                     # noqa: BLE001 - shutdown must never hang
@@ -550,6 +649,8 @@ def main():
         pass
     finally:
         bridge._ur_stop.set()
+        if _motion is not None:
+            _motion.shutdown()
         bridge.destroy_node()
         rclpy.shutdown()
         print("\n[桥] 已退出")

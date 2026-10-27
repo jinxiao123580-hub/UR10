@@ -29,6 +29,7 @@ import argparse
 import os
 import re
 import shutil
+import xml.etree.ElementTree as ET
 
 import numpy as np
 
@@ -113,12 +114,16 @@ def frame_for_segment(start, end):
 
 
 def triple(values):
-    return "%.6f %.6f %.6f" % tuple(float(v) for v in values)
+    return "%.17g %.17g %.17g" % tuple(float(v) for v in values)
 
 
 def build(geometry, uri_mode, stl_only, output_path):
     with open(URDF_SOURCE, encoding="utf-8") as stream:
         text = stream.read()
+    if ET.fromstring(text).tag != "robot" or "</robot>" not in text:
+        raise ValueError("expected a complete robot URDF")
+    # Append attachments inside the root, including when comments follow it.
+    text = text[:text.rfind("</robot>")]
     if stl_only:
         uri_mode = "local"
         text = text.replace("/visual/", "/collision/").replace(".dae", ".stl")
@@ -126,42 +131,49 @@ def build(geometry, uri_mode, stl_only, output_path):
         text = text.replace("package://ur_description/", MESH_PREFIX)
 
     parts = [text]
+    if stl_only:
+        # Keep fixed camera/attachment frames available for FK cross-checks.
+        parts.append('  <mujoco><compiler fusestatic="false"/></mujoco>\n')
     tool0_from_camera = np.asarray(geometry["tool0_from_camera"], dtype=float)
     camera_offset = tool0_from_camera[:3, 3]
     tool_axis = np.array([0.0, 0.0, 1.0])
 
     chain_parent = "tool0"
+    parent_centre = np.zeros(3)
     cursor = np.zeros(3)
     sensor = geometry["force_sensor"]
     if sensor["enabled"]:
         centre = cursor + tool_axis * (sensor["offset_m"] + sensor["height_m"] / 2.0)
         parts.append(cylinder_urdf("force_sensor", sensor["diameter_m"] / 2.0,
-                                   sensor["height_m"], triple(centre), "0 0 0",
+                                   sensor["height_m"], "0 0 0", "0 0 0",
                                    "0.55 0.55 0.60 1"))
         parts.append(fixed_joint("force_sensor_joint", chain_parent, "force_sensor",
                                  triple(centre), "0 0 0"))
-        cursor = cursor + tool_axis * (sensor["offset_m"] + sensor["height_m"])
+        cursor = tool_axis * (sensor["offset_m"] + sensor["height_m"])
         chain_parent = "force_sensor"
+        parent_centre = centre.copy()
 
     adapter = geometry["adapter"]
     if adapter["enabled"]:
         size = adapter["size_m"]
         centre = cursor + tool_axis * (size[2] / 2.0)
-        parts.append(box_urdf("adapter", triple(size), triple(centre), "0 0 0",
+        parts.append(box_urdf("adapter", triple(size), "0 0 0", "0 0 0",
                               "0.45 0.45 0.50 1"))
         parts.append(fixed_joint("adapter_joint", chain_parent, "adapter",
-                                 triple(centre), "0 0 0"))
+                                 triple(centre - parent_centre), "0 0 0"))
         cursor = cursor + tool_axis * size[2]
         chain_parent = "adapter"
+        parent_centre = centre.copy()
 
     gripper = geometry["gripper"]
     if gripper["enabled"]:
         size = gripper["size_m"]
-        centre = cursor + tool_axis * (gripper["offset_m"] + size[1] / 2.0)
-        parts.append(box_urdf("gripper", triple(size), triple(centre), "0 0 0",
+        # offset_m is measured from tool0, not from the previous link centre.
+        centre = tool_axis * (gripper["offset_m"] + size[1] / 2.0)
+        parts.append(box_urdf("gripper", triple(size), "0 0 0", "0 0 0",
                               "0.30 0.32 0.36 1"))
         parts.append(fixed_joint("gripper_joint", chain_parent, "gripper",
-                                 triple(centre), "0 0 0"))
+                                 triple(centre - parent_centre), "0 0 0"))
 
     bracket = geometry["camera_bracket"]
     centre, rotation, length = frame_for_segment(np.zeros(3), camera_offset)
@@ -169,7 +181,7 @@ def build(geometry, uri_mode, stl_only, output_path):
         length = float(bracket["length_m"])
     parts.append(box_urdf("camera_bracket",
                           triple([bracket["width_m"], bracket["width_m"], length]),
-                          triple(centre), triple(rpy_from_rotation(rotation)),
+                          "0 0 0", "0 0 0",
                           "0.85 0.40 0.25 1"))
     parts.append(fixed_joint("camera_bracket_joint", "tool0", "camera_bracket",
                              triple(centre), triple(rpy_from_rotation(rotation))))
@@ -184,8 +196,7 @@ def build(geometry, uri_mode, stl_only, output_path):
     relative = np.linalg.inv(bracket_transform) @ tool0_from_camera
     parts.append(box_urdf("camera_housing",
                           triple(geometry["camera_housing"]["size_m"]),
-                          triple(relative[:3, 3]),
-                          triple(rpy_from_rotation(relative[:3, :3])),
+                          "0 0 0", "0 0 0",
                           "0.95 0.45 0.20 1"))
     parts.append(fixed_joint("camera_housing_joint", "camera_bracket",
                              "camera_housing", triple(relative[:3, 3]),
@@ -193,6 +204,7 @@ def build(geometry, uri_mode, stl_only, output_path):
     parts.append("</robot>\n")
 
     text = "".join(parts)
+    ET.fromstring(text)
     if uri_mode == "local":
         # MuJoCo keeps only the basename of each asset and resolves it against the
         # model file's own directory, so the meshes must sit right beside it.

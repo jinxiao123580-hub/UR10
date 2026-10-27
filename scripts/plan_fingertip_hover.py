@@ -69,7 +69,7 @@ def main():
     parser.add_argument("--tcp", default="outputs/tcp_calibration/fingertip-20260921.json")
     parser.add_argument("--grasp-center", default=None,
                         help="manual position-only grasp-centre TCP YAML; when supplied, plan that frame")
-    parser.add_argument("--calibration", default="config/handeye_eye_in_hand_20260921.yaml")
+    parser.add_argument("--calibration", default="config/handeye_eye_in_hand_20261027.yaml")
     parser.add_argument("--standoff-mm", type=float, default=100.0)
     parser.add_argument("--vertical-down", action="store_true",
                         help="align tool0 +Z with the downward table normal for top-down grasping")

@@ -573,7 +573,7 @@ def main():
                         help="accepted sample.json or dataset used to place the board "
                              "in the base frame (guidance only)")
     parser.add_argument("--calibration",
-                        default="config/handeye_eye_in_hand_20260917.yaml",
+                        default="config/handeye_eye_in_hand_20261027.yaml",
                         help="guidance-only tool0_from_camera YAML")
     parser.add_argument("--coverage", default=None,
                         help="dataset to report achieved coverage for")

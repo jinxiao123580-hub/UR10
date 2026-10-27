@@ -9,7 +9,8 @@ import numpy as np
 import pinocchio as pin
 from scipy.optimize import least_squares
 
-URDF = os.path.expanduser("~/ur_learn/generated/ur10.urdf")
+URDF = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                            "outputs/ik/ur10_factory_20261027.urdf")
 LOWER = np.deg2rad([-360, -360, -180, -360, -360, -360])
 UPPER = -LOWER
 POSITION_TOLERANCE = 1e-4
@@ -20,6 +21,7 @@ MAX_SEED_DISTANCE = np.deg2rad(45.0)
 
 class UR10IK:
     def __init__(self, urdf=URDF, frame="tool0"):
+        self.urdf_path = os.path.realpath(urdf)
         self.model = pin.buildModelFromUrdf(urdf)
         self.data = self.model.createData()
         self.frame_id = self.model.getFrameId(frame)

@@ -374,7 +374,7 @@ def main():
                              "orientation whose whole waypoint chain passes. Needs "
                              "--calibration for the camera-to-tool0 transform")
     parser.add_argument("--calibration",
-                        default="config/handeye_eye_in_hand_20260917.yaml",
+                        default="config/handeye_eye_in_hand_20261027.yaml",
                         help="guidance tool0_from_camera, used only for --rescue-rolls")
     parser.add_argument("--assume-q", default=None,
                         help="6 joint angles (rad) to use instead of reading 30003. For "
@@ -438,10 +438,9 @@ def main():
         "slots_checked": [e["slot"] for e in entries],
         "clearance_z_m": args.clearance_z,
         "model": {
-            "urdf": os.path.expanduser("~/ur_learn/generated/ur10.urdf"),
-            "note": "nominal URDF kinematics; the controller uses factory "
-                    "calibration, so a small FK disagreement is expected and is "
-                    "gated below",
+            "urdf": ik.urdf_path,
+            "note": "saved factory-parameter URDF; FK agreement with the "
+                    "controller is still checked and gated below",
             "fk_position_agreement_m": fk_position,
             "fk_rotation_agreement_rad": fk_rotation,
             "fk_position_gate_m": FK_POSITION_GATE_M,

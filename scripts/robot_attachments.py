@@ -6,7 +6,7 @@ the URDF generator behind RViz/MuJoCo, and the self-collision gate.  Keeping one
 loader means the picture and the gate can never drift apart.
 
 Values come from ``config/robot_attachments.yaml`` (operator measurements, mm) and,
-for the camera placement, fall back to the 2026-09-17 hand-eye calibration
+for the camera placement, fall back to the 2026-10-27 hand-eye calibration
 ``tool0_from_camera``.
 """
 import os
@@ -20,7 +20,7 @@ DEFAULTS = {
     "gripper": {"enabled": True, "size_mm": [80.0, 150.0, 70.0], "offset_mm": 30.0},
     "camera_bracket": {"width_mm": 50.0, "length_mm": None},
     "camera_housing": {"size_mm": [200.0, 200.0, 150.0]},
-    "handeye_calibration": "config/handeye_eye_in_hand_20260917.yaml",
+    "handeye_calibration": "config/handeye_eye_in_hand_20261027.yaml",
     "camera_offset_tool0_m": None,
     "camera_rotation_source": "handeye",
     "self_collision_margin_mm": 40.0,

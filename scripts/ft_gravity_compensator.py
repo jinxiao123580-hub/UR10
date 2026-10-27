@@ -10,7 +10,8 @@ import numpy as np
 import yaml
 
 from calibrate_ft_gravity import GRAVITY, rotvec_to_matrix
-from ur_arm import read_packet
+from record_ur_trajectory import RealtimeReader
+from ur10_nullspace_ik import UR10NullspaceIK
 
 
 def load_calibration(path):
@@ -56,19 +57,33 @@ class GravityCompensator:
             (self.cal["mass"], args.input_topic, args.output_topic))
 
     def _poll_pose(self):
+        reader = None
+        ik = UR10NullspaceIK()
+        last_update = 0.0
         while not self._stop.is_set():
-            started = time.monotonic()
             try:
-                pose = read_packet(host=self.robot_ip, timeout=1.0)
-                if pose:
-                    rotation = rotvec_to_matrix(pose[3:])
+                if reader is None:
+                    reader = RealtimeReader(self.robot_ip, port=30013)
+                q, _, _ = reader.read(max_wait_seconds=1.0)
+                now = time.monotonic()
+                # Drain the continuous stream, rather than accumulating queued
+                # 125 Hz states while only computing the display rotation at 10 Hz.
+                if now - last_update >= self.pose_period:
+                    rotation = ik.fk_jacobian(q)[0][:3, :3]
                     with self._pose_lock:
                         self._rotation_base_tool = rotation
-                        self._pose_monotonic = time.monotonic()
-            except OSError as exc:
+                        self._pose_monotonic = now
+                    last_update = now
+            except (OSError, TimeoutError, ValueError) as exc:
+                with self._pose_lock:
+                    self._rotation_base_tool = None
+                    self._pose_monotonic = None
                 self.node.get_logger().warning("读取 UR TCP 失败: %s" % exc)
-            delay = self.pose_period - (time.monotonic() - started)
-            self._stop.wait(max(0.0, delay))
+                if reader is not None:
+                    reader.close(); reader = None
+                self._stop.wait(1.0)
+        if reader is not None:
+            reader.close()
 
     def _on_wrench(self, msg):
         with self._pose_lock:

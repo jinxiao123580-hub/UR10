@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>UR10 视觉 · 力觉 监控台</title>
 <link rel="stylesheet" href="style.css">
-<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
+<script src="wrench_chart.js"></script>
 <script type="importmap">
 {
   "imports": {
@@ -60,7 +60,7 @@
     <div class="panel-head">
       <h2>⚖️ ATI 六维力 / 力矩</h2>
       <div class="panel-actions">
-        <span class="badge badge-on">原始力</span>
+        <span id="ft-mode-badge" class="badge badge-off">等待六轴数据</span>
         <button id="btn-tare" title="软件去皮（不影响传感器）">去皮 Tare</button>
         <label class="chk"><input type="checkbox" id="auto-scale" checked> 自动量程</label>
       </div>
@@ -68,7 +68,7 @@
     <div style="padding:8px 16px;color:#d6a34a">
       <select id="wrench-mode"><option value="filtered">补偿 + 5 Hz 低通（显示）</option><option value="compensated">重力补偿 v2（未滤波）</option><option value="raw">原始六轴力</option></select>
       滤波时间常数约 32 ms，有延迟，不用于保护。
-      局部静态 ±20°；历史验证最大残差 0.459 N / 0.089 N·m；非动态精度保证，不用于控制。换走线需重标。
+      旧安装补偿参数，仅显示预览；相机重装后需重新标定质量/重心，原残差精度不再沿用，不用于运动保护。
     </div>
     <div class="ft-values" id="ft-values">
       <div class="fv"><span class="fv-axis">Fx</span><b id="v-fx">--</b><i>N</i></div>
@@ -109,10 +109,39 @@
           <div><span>Rz</span><b id="tcp-rz">--</b><i>rad</i></div>
         </div>
         <div id="robot-3d" class="robot-3d" aria-label="UR10 实时三维模型">
-          <div class="robot-3d-overlay"><b>实时 SolidWorks 末端模型</b><span id="robot-3d-status">正在加载 STL…</span></div>
+          <div class="robot-3d-overlay"><b>实时模型 · 橙色相机 / 紫色离线预览</b><span id="robot-3d-status">正在加载模型…</span></div>
           <div class="robot-3d-help">拖拽旋转 · 滚轮滚动页面 · 右键平移</div>
         </div>
       </div>
+    </div>
+  </section>
+  <section class="panel ik-panel" aria-labelledby="ik-title">
+    <div class="panel-head"><h2 id="ik-title">手眼标定与离线 IK</h2><div class="panel-actions"><span id="ik-health" class="badge">读取参数…</span><button id="ik-refresh">刷新状态</button><a href="/api/kinematics/calibration" download>下载标定</a></div></div>
+    <div class="ik-summary" id="ik-summary" aria-live="polite">正在读取新安装参数与验证记录…</div>
+    <div class="ik-workspace">
+      <form id="ik-form" class="ik-editor">
+        <div class="ik-toolbar"><label>目标坐标系 <select id="ik-frame"><option value="tool0">base → tool0</option><option value="camera">base → 相机</option></select></label><label>任务 <select id="ik-mode"><option value="pose">完整位姿</option><option value="axis">位置 + 工具 Z 轴</option></select></label></div>
+        <label class="ik-seed-label">种子关节角（rad，六个数）<input id="ik-seed" autocomplete="off" spellcheck="false" required aria-label="种子关节角"></label>
+        <div class="ik-toolbar"><button type="button" id="ik-live">读取当前关节</button><button type="button" id="ik-example">加载离线示例</button><span id="ik-seed-source" class="muted">请选择种子姿态</span></div>
+        <div class="ik-target" id="ik-target"></div>
+        <div class="ik-toolbar"><button type="submit" id="ik-solve">计算并预览 IK</button><button type="button" id="ik-clear">清除预览</button></div>
+        <p class="ik-note">位置单位 m；Rx / Ry / Rz 为轴角向量，单位 rad。相机目标使用完整手眼旋转与平移换算。</p>
+      </form>
+      <div class="ik-results"><div id="ik-result" role="status">等待计算。紫色模型只表示离线结果，实时关节与 TCP 仍显示真机回读。</div><div id="ik-caches" class="ik-caches"></div><div class="ik-toolbar"><button id="ik-pause" disabled>暂停预览</button><button id="ik-stop" disabled>结束预览</button><span id="ik-playback" class="muted"></span></div><p class="ik-note">本面板仅计算和预览，不发送运动指令。碰撞检查覆盖选定附件与机械臂；未完成全环境及真机运动验收。</p></div>
+    </div>
+  </section>
+  <section class="panel motion-panel" aria-labelledby="motion-title">
+    <div class="panel-head"><h2 id="motion-title">末端单步点动 · 真机</h2><span id="motion-badge" class="badge">未启用</span></div>
+    <div class="motion-content">
+      <p class="motion-note">按请求总量低速移动，较大平移分段执行。下方为真机控制，与上方紫色离线预览分开；已做软件与模拟测试，尚未完成本网页点动的真机运动验收。</p>
+      <label class="chk"><input type="checkbox" id="motion-arm"> 我在现场确认周边空间，启用点动</label>
+      <div class="ik-toolbar"><label>坐标系 <select id="motion-frame"><option value="base">机器人 base</option><option value="tcp">当前 TCP</option></select></label><label>平移量 <input id="motion-distance" type="number" min="0.5" max="50" step="any" value="10" inputmode="decimal" aria-label="平移总量（mm）"> mm <small>0.5–50</small></label><label>旋转量 <input id="motion-angle" type="number" min="0.5" max="2" step="any" value="0.5" inputmode="decimal" aria-label="单步旋转量（度）"> ° <small>0.5–2</small></label><button id="motion-stop" class="motion-stop" disabled>停止本次点动</button></div>
+      <div class="ik-toolbar" id="motion-presets">平移快选 <button type="button" data-mm="10">10 mm</button><button type="button" data-mm="25">25 mm</button><button type="button" data-mm="50">50 mm</button><span class="muted">只填入数值，点击方向后确认执行</span></div>
+      <div id="motion-confirm" hidden><p id="motion-confirm-text"></p><button type="button" id="motion-confirm-run">确认移动</button> <button type="button" id="motion-confirm-cancel">取消</button></div>
+      <div class="motion-feedback"><div><span>当前 TCP · base（mm）</span><b id="motion-live-tcp">等待真机回读…</b></div><div><span>本次请求</span><b id="motion-request">未提交</b></div><div><span>实际位移 / 转角</span><b id="motion-actual">等待本次点动结果</b></div></div>
+      <div class="motion-groups"><div><h3>位置</h3><div id="motion-translation" class="motion-buttons"></div></div><div><h3>姿态</h3><div id="motion-rotation" class="motion-buttons"></div></div></div>
+      <p id="motion-result" role="status" aria-live="polite">点动默认关闭。平移默认10 mm；超过5 mm须确认，整条路径先检查，每段最多5 mm，显示累计实际位移。</p>
+      <p class="ik-note">每步校验当前TCP偏移、工厂模型、限位、奇异性与选定附件碰撞对，拒绝排队；切走页面或心跳中断会停止本次点动。软件停止不替代示教器或硬件急停，旧重力补偿不用于运动保护。</p>
     </div>
   </section>
 </main>
@@ -127,5 +156,7 @@
 
 <script src="app.js"></script>
 <script type="module" src="robot_view.js"></script>
+<script src="kinematics.js"></script>
+<script src="motion.js"></script>
 </body>
 </html>

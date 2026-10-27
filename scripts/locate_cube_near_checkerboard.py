@@ -26,7 +26,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--timeout", type=float, default=20.0)
     parser.add_argument("--output", default="outputs/vision/cube-board-observation.json")
-    parser.add_argument("--calibration", default="config/handeye_eye_in_hand_20260921.yaml")
+    parser.add_argument("--calibration", default="config/handeye_eye_in_hand_20261027.yaml")
     parser.add_argument("--port", type=int, default=30013,
                         help="read-only UR realtime state port")
     parser.add_argument("--board-center-x-m", type=float, default=0.024,

@@ -25,7 +25,8 @@ import os
 import numpy as np
 import pinocchio as pin
 
-URDF_SOURCE = os.path.expanduser("~/ur_learn/generated/ur10.urdf")
+URDF_SOURCE = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                            "outputs/ik/ur10_factory_20261027.urdf")
 URDF_PATCHED = "/home/jx/UR10/outputs/vision/ur10_meshpath.urdf"
 MESH_PREFIX = "/home/jx/ros2_ws/install/ur_description/share/ur_description/"
 
@@ -196,7 +197,7 @@ def main():
     parser = argparse.ArgumentParser(description="Report camera-vs-arm clearances")
     parser.add_argument("--gate", default="outputs/vision/gate-half.json")
     parser.add_argument("--calibration",
-                        default="config/handeye_eye_in_hand_20260917.yaml")
+                        default="config/handeye_eye_in_hand_20261027.yaml")
     parser.add_argument("--attachments", default="config/robot_attachments.yaml",
                         help="attachment geometry YAML; use a preliminary CAD envelope "
                              "only for offline comparison, never as real-motion proof")

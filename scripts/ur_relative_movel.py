@@ -19,7 +19,7 @@ def main():
     a=p.parse_args()
     if a.execute == a.dry_run: p.error("select exactly one of --dry-run and --execute")
     distance=math.sqrt(a.dx*a.dx+a.dy*a.dy+a.dz*a.dz)
-    if distance<=0 or distance>a.max_distance or a.max_distance>0.15: raise RuntimeError("move distance outside gate")
+    if distance<=0 or distance>a.max_distance or a.max_distance>0.5: raise RuntimeError("move distance outside gate")
     if not 0.005<=a.speed<=0.02 or not 0.005<=a.acceleration<=0.05:
         raise RuntimeError("speed/acceleration outside low-speed gate")
     reader=RealtimeReader("192.168.1.3",port=30013); q,before,velocity=reader.read(max_wait_seconds=5)

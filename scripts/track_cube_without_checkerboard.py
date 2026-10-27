@@ -127,7 +127,7 @@ def one_observation(node, reader, tool_from_camera, anchor, args, index, stamp):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--anchor", required=True, help="previous verified cube measurement JSON")
-    parser.add_argument("--calibration", default="config/handeye_eye_in_hand_20260921.yaml")
+    parser.add_argument("--calibration", default="config/handeye_eye_in_hand_20261027.yaml")
     parser.add_argument("--port", type=int, default=30013)
     parser.add_argument("--captures", type=int, default=3)
     parser.add_argument("--timeout", type=float, default=20.0)

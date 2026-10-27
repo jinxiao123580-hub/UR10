@@ -55,7 +55,7 @@ def main():
     parser.add_argument("--margin-mm", type=float, default=20.0,
                         help="preliminary CAD camera/arm clearance gate")
     parser.add_argument("--attachments", default="config/robot_attachments.preliminary-cad-20260921.yaml")
-    parser.add_argument("--calibration", default="config/handeye_eye_in_hand_20260921.yaml")
+    parser.add_argument("--calibration", default="config/handeye_eye_in_hand_20261027.yaml")
     parser.add_argument("--output", default="outputs/vision/active-cube-view-gate.json")
     args = parser.parse_args()
     if args.joint6_range_deg is not None and args.joint6_range_deg[0] >= args.joint6_range_deg[1]:

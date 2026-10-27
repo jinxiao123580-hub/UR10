@@ -456,7 +456,7 @@ def main():
                         help="offline scene saved by --save-cloud (no camera needed)")
     parser.add_argument("--save-cloud", default=None,
                         help="save the target-frame cloud + transforms to this .npz")
-    parser.add_argument("--calibration", default="config/handeye_eye_in_hand_20260917.yaml")
+    parser.add_argument("--calibration", default="config/handeye_eye_in_hand_20261027.yaml")
     parser.add_argument("--timeout", type=float, default=20.0)
     parser.add_argument("--expect-edge", type=float, default=DEFAULTS["expect_edge_m"])
     parser.add_argument("--min-coverage", type=float, default=DEFAULTS["min_coverage"])

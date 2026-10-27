@@ -1,0 +1,66 @@
+schema_version: 1
+setup: eye_in_hand
+parent_frame: tool0
+child_frame: mechmind_camera/color_map
+transform_direction: tool0_from_camera
+method: OpenCV_CALIB_HAND_EYE_PARK
+target_pose_method: image_corner_rays_intersected_with_raw_depth_plane_then_3D_rigid_fit
+valid: true
+validated_at: '2026-10-27T09:51:18.538571+08:00'
+validation_scope: fixed_checkerboard_cross_pose_closure_15_training_and_5_fresh_independent_poses
+translation_m:
+- 0.04707493838088885
+- 0.15015738159018904
+- 0.16350798747456627
+rotation_matrix:
+- - -0.9999468780239723
+  - 0.00894532352590486
+  - -0.00512077309857878
+- - -0.008882899077318561
+  - -0.9998875041985456
+  - -0.012086068491636742
+- - -0.0052283108259184525
+  - -0.012039939145164207
+  - 0.9999138486046124
+rotation_vector_rad:
+- 0.008105423085727594
+- 0.01889553710206333
+- -3.1326107590035903
+training_samples: 15
+inspected_diagnostic_samples: 5
+fresh_independent_samples: 5
+cross_method_check:
+  compared_method: OpenCV_CALIB_HAND_EYE_HORAUD
+  translation_mm: 0.0013570726494004778
+  rotation_deg: 0.00047638733353236063
+postfit_independent_samples:
+  count: 5
+  board_origin_rms_mm: 0.35227053157544846
+  board_origin_max_mm: 0.40407051472360084
+  board_orientation_rms_deg: 0.06424233604553369
+  board_orientation_max_deg: 0.09471447798117805
+  passed_frozen_criteria: true
+optical_z_to_tool0_positive_z_deg: 0.7520936228953604
+source_dataset: outputs/handeye/recalibration-20261027/dataset.json
+solver_result: outputs/handeye/recalibration-20261027/depth-fusion-v2/solution-frozen.json
+solver_result_sha256: 87b85192362b5a6fe8428d7f5f05f47a1890f5d952b66eea60737e0f7483d084
+independent_dataset: outputs/handeye/recalibration-20261027/independent-v2/dataset.json
+independent_validation: /home/jx/.handoff/reports/20261027-handeye-remount/fresh-independent-v2-validation.json
+original_pnp_holdout_validation: /home/jx/.handoff/reports/20261027-handeye-remount/holdout-05-validation.json
+original_pnp_holdout_passed: false
+board:
+  squares:
+  - 10
+  - 7
+  inner_corners:
+  - 9
+  - 6
+  square_size_m: 0.006
+  scale_note: Operator confirmed existing 6mm board; scale not independently remeasured
+    in this session
+limitations:
+- Closure consistency is not independent absolute robot positioning accuracy.
+- Depth-to-image pixel registration and camera intrinsics are inherited from the installed
+  camera pipeline.
+- External scene collision, attachment envelope and robot motion are not validated
+  by this calibration.

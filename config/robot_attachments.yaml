@@ -52,9 +52,11 @@ camera_housing:
   size_mm: [200.0, 200.0, 150.0]   # ← [x, y, z]，相机自身坐标系的三个边长
 
 # ── 6. 相机中心相对 tool0 的位置 ────────────────────────────────────────
-# 默认（null）用 2026-09-17 手眼标定 config/handeye_eye_in_hand_20260917.yaml
-# 的 tool0_from_camera 平移 [0.046, 0.252, 0.202] m（含该标定 ~2.6 mm/1° 误差）。
+# 相机于2026-10-27重新安装；使用15组拟合、5组全新独立样本验收后的外参。
+# tool0_from_camera 平移约 [0.047075, 0.150157, 0.163508] m。
+# 本轮仅更新相机外参，外壳和支架包络仍为既有近似，运动前须现场复核。
 # 现场实测能填就填，会覆盖默认值 —— 两者之差本身就是有用的证据。
+handeye_calibration: config/handeye_eye_in_hand_20261027.yaml
 camera_offset_tool0_m: null      # 例如 [0.046, 0.252, 0.202]
 camera_rotation_source: handeye  # handeye | identity（identity = 相机与 tool0 同向）
 

@@ -17,7 +17,7 @@ const RENDER_HZ = 15;               // 折线图刷新帧率
 
 const $ = (id) => document.getElementById(id);
 
-const chart = echarts.init($("ft-chart"));
+const chart = window.createWrenchChart($("ft-chart"));
 const AXES = [
   { key: "fx", label: "Fx", color: "#e74c3c", unit: "N" },
   { key: "fy", label: "Fy", color: "#f39c12", unit: "N" },
@@ -180,6 +180,9 @@ function onWrench(d, mode) {
 
 function renderChart() {
   const mode = selectedWrenchMode();
+  const sourceFresh = Date.now() - wrenchReceived[mode] <= 1500;
+  $("ft-mode-badge").textContent = ({raw: "原始六轴", compensated: "补偿预览", filtered: "补偿 + 低通"})[mode] + (sourceFresh ? " · 在线" : " · 无新数据");
+  $("ft-mode-badge").className = "badge " + (sourceFresh ? "badge-on" : "badge-off");
   const data = demoMode && mode === "raw" ? demoWrenchData() : wrenchBuffers[mode];
   const topic = {raw:"/ft_sensor/wrench_raw",compensated:"/ft_sensor/wrench_compensated",filtered:"/ft_sensor/wrench_compensated_filtered"}[mode];
   if (Date.now() - wrenchReceived[mode] > 1500 && !(demoMode && mode === "raw")) {

@@ -61,7 +61,7 @@ def main():
     parser.add_argument("--joint6-range-deg", type=float, nargs=2, default=[-270.0, -180.0])
     parser.add_argument("--margin-mm", type=float, default=40.0)
     parser.add_argument("--attachments", default="config/robot_attachments.preliminary-cad-20260921.yaml")
-    parser.add_argument("--calibration", default="config/handeye_eye_in_hand_20260921.yaml")
+    parser.add_argument("--calibration", default="config/handeye_eye_in_hand_20261027.yaml")
     parser.add_argument("--output", required=True)
     args = parser.parse_args()
     if args.down_mm is not None and args.delta_z_mm is not None:

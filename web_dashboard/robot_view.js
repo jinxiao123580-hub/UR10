@@ -1,5 +1,6 @@
 /* Live, browser-side UR10 view.  It renders the RViz URDF kinematic chain
- * from the read-only realtime joint stream and mounts the retained CAD parts plus the separated camera STL
+ * from the read-only realtime joint stream and mounts the retained CAD parts
+ * plus the separated direct-mount camera mesh
  * used by the preliminary CAD RViz model.  It sends no ROS/UR command. */
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
@@ -55,7 +56,19 @@ const tool0 = new THREE.Group();
 const linkGroups = { base_link: baseLink, shoulder_link: shoulder, upper_arm_link: upperArm,
   forearm_link: forearm, wrist_1_link: wrist1, wrist_2_link: wrist2,
   wrist_3_link: wrist3, tool0 };
-Object.values(linkGroups).forEach(group => arm.add(group));
+Object.entries(linkGroups).forEach(([name, group]) => { group.name = "ik-link-" + name; arm.add(group); });
+
+const calibratedCamera = new THREE.Group();
+tool0.add(calibratedCamera);
+let ghost = null;
+function updateCalibration(data) {
+  calibratedCamera.clear();
+  // CAD-only direct mount: housing below is loaded from the separated mesh.
+  // Preserve calibration data elsewhere; do not draw its envelope as this mount.
+  if (ghost) { scene.remove(ghost); ghost = null; }
+}
+window.addEventListener("ur10-kinematics-config", event => updateCalibration(event.detail));
+if (window.ur10KinematicsConfig) updateCalibration(window.ur10KinematicsConfig);
 
 function translation(x, y, z) { return new THREE.Matrix4().makeTranslation(x, y, z); }
 function rpy(roll, pitch, yaw) {
@@ -101,9 +114,9 @@ tool0.add(cadAssembly);
 
 const stlAssets = [
   ["末端执行器 - 2F85-CLOSED_20181108.step-1.STL", 0x27313a],
-  ["camera_direct_mount_20261027.stl", 0x467c98],
   ["末端执行器 - 六轴力-1.STL", 0x205eb8],
   ["末端执行器 - 连接1-1.STL", 0xa2abb4],
+  ["camera_direct_mount_20261027.stl", 0x467c98],
 ];
 const loader = new STLLoader();
 // These are the actual DAE visual meshes from the URDF used by RViz.  The STL
@@ -170,8 +183,9 @@ function frameRobotOnce() {
 }
 Promise.all([...cadLoads, ...armLoads]).then(() => {
   meshesReady = true;
-  status.textContent = "UR10 · 相机直装 CAD（长边水平，非光学标定） · 关节状态实时同步";
+  status.textContent = "工厂参数 UR10 · 相机直装 CAD 模型（非标定） · 关节状态实时同步";
   frameRobotOnce();
+  if (window.latestIKPreview) updatePreview(window.latestIKPreview);
 }).catch(error => {
   console.error("SolidWorks STL load failed", error);
   status.textContent = "STL 加载失败（模型文件不可用）";
@@ -190,6 +204,34 @@ window.addEventListener("ur10-realtime-state", event => {
   frameRobotOnce();
 });
 if (window.latestRobotState) updateArm(window.latestRobotState.link_world_matrices);
+
+function updatePreview(matrices) {
+  if (!matrices) { if (ghost) ghost.visible = false; return; }
+  if (!meshesReady) return;
+  let created = false;
+  if (!ghost) {
+    ghost = arm.clone(true); created = true;
+    ghost.traverse(object => {
+      if (!object.material) return;
+      const tint = material => { const copy = material.clone(); if (copy.color) copy.color.setHex(0xb985ff); copy.transparent = true; copy.opacity = .4; copy.depthWrite = false; return copy; };
+      object.material = Array.isArray(object.material) ? object.material.map(tint) : tint(object.material);
+    });
+    scene.add(ghost);
+  }
+  ghost.visible = true;
+  Object.entries(matrices).forEach(([name, values]) => {
+    const group = ghost.getObjectByName("ik-link-" + name);
+    if (group && values.length === 16) applyFixed(group, new THREE.Matrix4().set(...values));
+  });
+  if (created) requestAnimationFrame(() => {
+    arm.updateMatrixWorld(true); ghost.updateMatrixWorld(true);
+    const box = new THREE.Box3().setFromObject(arm).union(new THREE.Box3().setFromObject(ghost));
+    const center = box.getCenter(new THREE.Vector3()), size = box.getSize(new THREE.Vector3());
+    const distance = Math.max(size.x, size.y, size.z) * .7 / Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
+    controls.target.copy(center); camera.position.copy(center).add(new THREE.Vector3(.95, -1.15, .78).normalize().multiplyScalar(distance)); controls.update();
+  });
+}
+window.addEventListener("ur10-ik-preview", event => { window.latestIKPreview = event.detail; updatePreview(event.detail); });
 
 function render() {
   controls.update();
