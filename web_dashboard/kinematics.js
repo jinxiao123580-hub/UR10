@@ -24,7 +24,7 @@
   function message(text, failed = false) { el("ik-result").className = failed ? "fail" : ""; el("ik-result").textContent = text; }
   function stop() {
     generation++;
-    cancelAnimationFrame(animation); playback = null; preview(null);
+    cancelAnimationFrame(animation); playback = null; preview(null); window.dispatchEvent(new CustomEvent("ur10-ik-trajectory", {detail: null}));
     el("ik-pause").disabled = true; el("ik-stop").disabled = true; el("ik-playback").textContent = "";
   }
   async function fill(q, source) {
@@ -56,14 +56,14 @@
       el("ik-caches").replaceChildren();
       data.caches.forEach(cache => {
         const row = document.createElement("div"); row.className = "ik-cache";
-        const button = document.createElement("button"); button.textContent = `预览 ${cache.mode} 轨迹 · ${cache.duration_s.toFixed(3)} s`; button.disabled = !data.integrity_ok;
+        const button = document.createElement("button"); button.textContent = `固定圆轨迹示例 ${cache.mode} · ${cache.duration_s.toFixed(3)} s`; button.disabled = !data.integrity_ok;
         button.disabled = !data.integrity_ok || Boolean(window.ur10MotionArmed);
         button.onclick = () => play(cache.mode, button);
-        const info = document.createElement("small"); info.textContent = `${cache.sample_count} 缓存点 · 最大位置插值误差 ${cache.max_position_error_mm.toFixed(3)} mm · 已查间隙 ${cache.minimum_checked_clearance_mm.toFixed(1)} mm`;
+        const info = document.createElement("small"); info.textContent = `${cache.sample_count} 缓存点 · 笔尖距tool0 ${(Math.hypot(...cache.tip_offset_m) * 1000).toFixed(1)} mm · 示例自身最大插值误差 ${cache.max_position_error_mm.toFixed(3)} mm · 已查间隙 ${cache.minimum_checked_clearance_mm.toFixed(1)} mm`;
         row.append(button, info); el("ik-caches").append(row);
       });
-      el("ik-solve").disabled = !data.integrity_ok || Boolean(window.ur10MotionArmed);
-      if (!el("ik-seed").value) await fill(data.example_seed_q_rad, "离线验证示例 · 不是当前真机姿态");
+      el("ik-solve").disabled = !data.integrity_ok || Boolean(window.ur10MotionArmed); el("ik-trajectory").disabled = el("ik-solve").disabled;
+      if (!el("ik-seed").value) { const live = window.latestRobotState; if (live?.connected && Date.now()/1000 - live.timestamp < 1) await fill(live.q, "真机关节快照 · 模型 FK"); else await fill(data.example_seed_q_rad, "离线验证示例 · 不是当前真机姿态"); }
     } catch (error) { el("ik-health").textContent = "参数服务不可用"; el("ik-health").className = "badge badge-off"; message(error.message, true); el("ik-solve").disabled = true; }
   }
   el("ik-live").onclick = async () => {
@@ -75,7 +75,7 @@
     try { await fill(seed(), "已按所选坐标系重算目标"); } catch (e) { message(e.message, true); }
   };
   el("ik-form").onsubmit = async event => {
-    event.preventDefault(); if (pending) return; if (window.ur10MotionArmed) return message("请先关闭真机点动，再使用离线预览"); pending = true; stop(); el("ik-solve").disabled = true;
+    event.preventDefault(); if (pending) return; if (window.ur10MotionArmed) return message("请先关闭真机点动，再使用离线预览"); pending = true; stop(); el("ik-solve").disabled = true; el("ik-trajectory").disabled = true;
     const token = generation;
     try {
       const target = keys.map((_, i) => el(`ik-pose-${i}`).value === "" ? NaN : Number(el(`ik-pose-${i}`).value));
@@ -88,34 +88,58 @@
       const info = document.createElement("p"); info.textContent = `工具任务误差 ${(r.position_error_m * 1000).toFixed(4)} mm / ${(r.orientation_error_rad * 180 / Math.PI).toFixed(4)}° · 已查间隙 ${r.minimum_checked_clearance_mm.toFixed(1)} mm · 种子最大变化 ${r.max_seed_step_deg.toFixed(3)}°`;
       const table = document.createElement("table"); const head = table.insertRow(); ["关节", "目标 rad", "目标 °"].forEach(t => { const th = document.createElement("th"); th.textContent = t; head.append(th); });
       r.q.forEach((v, i) => { const row = table.insertRow(); [`J${i + 1}`, v.toFixed(6), (v * 180 / Math.PI).toFixed(3)].forEach(text => { row.insertCell().textContent = text; }); });
-      el("ik-result").append(title, info, table); if (r.passes_offline_gates) preview(data.link_world_matrices);
+      el("ik-result").append(title, info, table); if (r.passes_offline_gates) { window.dispatchEvent(new CustomEvent("ur10-ik-trajectory", {detail: {source:"single_target", frame: el("ik-frame").value, mode: el("ik-mode").value, target_base_pose_m_rad: target, tip_offset_m: el("ik-frame").value === "camera" ? config.tool0_from_camera.slice(0,3).map(row => row[3]) : [0,0,0], frames: []}})); preview(data.link_world_matrices); }
     } catch (error) { message(error.message, true); }
-    finally { pending = false; el("ik-solve").disabled = !config?.integrity_ok || Boolean(window.ur10MotionArmed); }
+    finally { pending = false; el("ik-solve").disabled = !config?.integrity_ok || Boolean(window.ur10MotionArmed); el("ik-trajectory").disabled = el("ik-solve").disabled; }
   };
+  function beginPlayback(data) {
+    const token = generation;
+    window.dispatchEvent(new CustomEvent("ur10-ik-trajectory", {detail: data}));
+    playback = {data, started: performance.now(), paused: false, index: 0, elapsed: 0};
+    el("ik-pause").disabled = false; el("ik-stop").disabled = false; el("ik-pause").textContent = "暂停预览";
+    const name = data.source === "input_target" ? `${data.frame} 当前目标轨迹` : `${data.mode} 固定示例（缓存笔尖）`;
+    function tick(now) {
+      if (!playback || token !== generation) return;
+      const state = playback; const t = state.paused ? state.elapsed : Math.min(data.duration_s, (now - state.started) / 1000);
+      while (state.index + 1 < data.frames.length && data.frames[state.index + 1].t_s <= t) state.index++;
+      state.elapsed = t; preview(data.frames[state.index].link_world_matrices);
+      const actual = data.frames[state.index].task_pose_m_rad.slice(0,3).map(v => (v * 1000).toFixed(2)).join(" / ");
+      el("ik-playback").textContent = `${name} 紫色预览 ${t.toFixed(2)} / ${data.duration_s.toFixed(2)} s · 跟踪点base（mm）${actual}`;
+      if (t >= data.duration_s) { playback = null; el("ik-pause").disabled = true; return; }
+      animation = requestAnimationFrame(tick);
+    }
+    tick(playback.started);
+  }
   async function play(mode, button) {
-    if (window.ur10MotionArmed) return message("请先关闭真机点动，再使用离线预览");
+    if (window.ur10MotionArmed || pending) return message("请先关闭真机点动并等待当前计算完成");
     stop(); button.disabled = true;
     const token = generation;
     try {
       const data = await api("cache?mode=" + mode);
       if (token !== generation) return;
-      playback = {data, started: performance.now(), paused: false, index: 0};
-      el("ik-pause").disabled = false; el("ik-stop").disabled = false; el("ik-pause").textContent = "暂停预览";
-      function tick(now) {
-        if (!playback || token !== generation) return;
-        const state = playback; const t = state.paused ? state.elapsed : Math.min(data.duration_s, (now - state.started) / 1000);
-        while (state.index + 1 < data.frames.length && data.frames[state.index + 1].t_s <= t) state.index++;
-        preview(data.frames[state.index].link_world_matrices);
-        el("ik-playback").textContent = `${mode} 紫色预览 ${t.toFixed(2)} / ${data.duration_s.toFixed(2)} s`;
-        if (t >= data.duration_s) { playback = null; el("ik-pause").disabled = true; return; }
-        animation = requestAnimationFrame(tick);
-      }
-      animation = requestAnimationFrame(tick);
+      message(`固定离线圆轨迹示例：使用缓存种子和 ${(Math.hypot(...data.tip_offset_m)*1000).toFixed(1)} mm 笔尖偏移，与上方目标和当前真机姿态无关。`);
+      beginPlayback(data);
     } catch (error) { message(error.message, true); } finally { button.disabled = !config?.integrity_ok || Boolean(window.ur10MotionArmed); }
   }
-  el("ik-pause").onclick = () => { if (!playback) return; const now = performance.now(); if (playback.paused) playback.started = now - playback.elapsed * 1000; else playback.elapsed = (now - playback.started) / 1000; playback.paused = !playback.paused; el("ik-pause").textContent = playback.paused ? "继续预览" : "暂停预览"; };
+  el("ik-trajectory").onclick = async () => {
+    if (pending || window.ur10MotionArmed) return;
+    stop(); pending = true; el("ik-trajectory").disabled = true; el("ik-solve").disabled = true;
+    const token = generation;
+    try {
+      const target = keys.map((_, i) => el(`ik-pose-${i}`).value === "" ? NaN : Number(el(`ik-pose-${i}`).value));
+      if (!target.every(Number.isFinite)) throw new Error("目标位姿须为六个有限数值");
+      message("从输入种子生成到当前目标的离线轨迹，检查整条路径…");
+      const data = await api("trajectory", {seed_q_rad: seed(), target_base_pose_m_rad: target, frame: el("ik-frame").value, mode: el("ik-mode").value});
+      if (token !== generation) return;
+      message(`当前目标轨迹已生成 · ${data.frame} · 末端到输入目标差 ${data.endpoint_position_error_mm.toFixed(4)} mm / ${data.endpoint_orientation_error_deg.toFixed(4)}°${data.mode === 'axis' ? '（仅约束Z轴方向）' : ''} · 最大路径误差 ${data.max_position_error_mm.toFixed(4)} mm。仅离线预览。`);
+      beginPlayback(data);
+    } catch (e) { if (token === generation) message(e.message, true); }
+    finally { pending = false; el("ik-trajectory").disabled = !config?.integrity_ok || Boolean(window.ur10MotionArmed); el("ik-solve").disabled = el("ik-trajectory").disabled; }
+  };
+  ["ik-seed", "ik-mode", ...keys.map((_, i) => `ik-pose-${i}`)].forEach(id => el(id).addEventListener("input", () => { stop(); message("种子或目标已修改，请重新生成轨迹或计算 IK。"); }));
+  el("ik-pause").onclick = () => { if (!playback) return; const now = performance.now(); if (playback.paused) playback.started = now - playback.elapsed * 1000; else playback.elapsed = playback.elapsed || 0; playback.paused = !playback.paused; el("ik-pause").textContent = playback.paused ? "继续预览" : "暂停预览"; };
   el("ik-clear").onclick = stop; el("ik-stop").onclick = stop;
   el("ik-refresh").onclick = () => { if (!configRequest) configRequest = refresh().finally(() => { configRequest = null; }); };
-  window.addEventListener("ur10-motion-mode", event => { if (event.detail) stop(); el("ik-solve").disabled = event.detail || !config?.integrity_ok; document.querySelectorAll("#ik-caches button").forEach(button => { button.disabled = event.detail || !config?.integrity_ok; }); });
-  el("ik-solve").disabled = true; refresh();
+  window.addEventListener("ur10-motion-mode", event => { if (event.detail) stop(); el("ik-solve").disabled = event.detail || !config?.integrity_ok; document.querySelectorAll("#ik-caches button, #ik-trajectory").forEach(button => { button.disabled = event.detail || !config?.integrity_ok; }); });
+  el("ik-solve").disabled = true; el("ik-trajectory").disabled = true; refresh();
 })();

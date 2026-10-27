@@ -69,7 +69,7 @@ class DashboardKinematics:
                 'validation': {key: report[key] for key in ('passed', 'initial_ik_passed', 'tracking_ik_passed',
                     'camera_target_ik_passed', 'mujoco_trajectory_points', 'watchdog_passed')},
                 'caches': [{key: c[key] for key in ('mode', 'sample_count', 'duration_s', 'max_position_error_mm',
-                            'minimum_checked_clearance_mm')} for c in report['cache_cases']],
+                            'minimum_checked_clearance_mm', 'tip_offset_m')} for c in report['cache_cases']],
                 'example_seed_q_rad': report['cache_cases'][0]['start_q_rad']}
 
     def require_current(self):
@@ -115,6 +115,69 @@ class DashboardKinematics:
         return {'ok': True, 'execution_allowed': False, 'result': result,
                 'link_world_matrices': self.link_matrices(q)}
 
+    def preview_plan(self, plan, frame, source, requested=None):
+        from buffered_joint_replay import validate_cache
+        times, q = validate_cache(plan)
+        tip = np.asarray(plan.get('tip_offset_m', [0., 0., 0.]))
+        rotation = self.X[:3, :3] if frame == 'camera' else np.eye(3)
+        def task_pose(joints):
+            T = self.ik.fk_jacobian(joints)[0]
+            T[:3, 3] += T[:3, :3] @ tip
+            T[:3, :3] = T[:3, :3] @ rotation
+            return T
+        def row(T):
+            return np.r_[T[:3, 3], Rotation.from_matrix(T[:3, :3]).as_rotvec()].tolist()
+        first, last = task_pose(q[0]), task_pose(q[-1])
+        ids = np.unique(np.linspace(0, len(times) - 1, min(320, len(times))).astype(int))
+        frames = [{'t_s': float(times[i]), 'task_pose_m_rad': row(task_pose(q[i])),
+                   'link_world_matrices': self.link_matrices(q[i])} for i in ids]
+        result = {'ok': True, 'execution_allowed': False, 'mode': plan['mode'],
+            'source': source, 'frame': frame, 'coordinates': 'controller_base',
+            'sample_count': len(times), 'duration_s': plan['duration_s'],
+            'start_q_rad': q[0].tolist(), 'end_q_rad': q[-1].tolist(),
+            'tip_offset_m': tip.tolist(), 'start_base_pose_m_rad': row(first),
+            'target_base_pose_m_rad': row(last) if requested is None else requested,
+            'end_base_pose_m_rad': row(last), 'max_position_error_mm': plan['max_position_error_mm'],
+            'max_orientation_error_deg': plan['max_orientation_error_deg'], 'frames': frames}
+        if requested is not None:
+            target_rotation = Rotation.from_rotvec(requested[3:])
+            result['endpoint_position_error_mm'] = float(np.linalg.norm(last[:3, 3] - np.asarray(requested[:3])) * 1000)
+            if plan['mode'] == 'axis':
+                result['endpoint_orientation_error_deg'] = float(np.rad2deg(np.arccos(np.clip(last[:3, 2] @ target_rotation.as_matrix()[:, 2], -1, 1))))
+            else:
+                result['endpoint_orientation_error_deg'] = float(np.rad2deg((Rotation.from_matrix(last[:3, :3]).inv() * target_rotation).magnitude()))
+        return result
+
+    def trajectory(self, request):
+        """Plan from the explicit input seed to the explicit selected-frame goal."""
+        self.require_current()
+        seed = joints(request.get('seed_q_rad'))
+        target = joints(request.get('target_base_pose_m_rad'))
+        frame, mode = request.get('frame', 'tool0'), request.get('mode', 'pose')
+        if frame not in ('tool0', 'camera') or mode not in ('pose', 'axis') or frame == 'camera' and mode != 'pose':
+            raise ValueError('轨迹坐标系/模式不支持')
+        offset = self.X[:3, 3] if frame == 'camera' else np.zeros(3)
+        rotation = self.X[:3, :3] if frame == 'camera' else np.eye(3)
+        start = self.ik.fk_jacobian(seed)[0]
+        position = start[:3, 3] + start[:3, :3] @ offset
+        target_rotation = Rotation.from_rotvec(target[3:]).as_matrix() @ rotation.T
+        angle = (Rotation.from_matrix(start[:3, :3]).inv() * Rotation.from_matrix(target_rotation)).magnitude()
+        if np.linalg.norm(target[:3] - position) > .3 or angle > np.deg2rad(90):
+            raise ValueError('离线预览单次限300mm/90°；请核对种子与所选目标坐标系')
+        duration = float(request.get('requested_duration_s', 3.))
+        if not np.isfinite(duration) or not .5 <= duration <= 30:
+            raise ValueError('预览请求时长须为0.5–30秒')
+        document = {'seed_q_rad': seed.tolist(), 'mode': mode, 'tip_offset_m': offset.tolist(),
+            'targets_base_tcp_m_rad': [np.r_[position, Rotation.from_matrix(start[:3, :3]).as_rotvec()].tolist(),
+                                      np.r_[target[:3], Rotation.from_matrix(target_rotation).as_rotvec()].tolist()],
+            'requested_duration_s': duration}
+        from precompute_joint_trajectory import prepare
+        with self.lock:
+            if self.collision is None:
+                self.collision = SelfCollisionModel()
+            plan = prepare(document, lambda q: self.collision.min_clearance(q)[0])
+        return self.preview_plan(plan, frame, 'input_target', target.tolist())
+
     def cache(self, mode):
         self.require_current()
         if mode not in ('pose', 'axis'):
@@ -123,11 +186,8 @@ class DashboardKinematics:
         if digest(path) != self.report['cache_sha256'][mode]:
             raise ValueError('缓存文件哈希已变化，请重新验收')
         plan = json.loads(path.read_text())
-        from buffered_joint_replay import validate_cache
-        times, q = validate_cache(plan)
         if plan.get('model_urdf_sha256') != digest(self.ik.urdf_path):
             raise ValueError('缓存与当前机器人模型不一致')
-        ids = np.unique(np.linspace(0, len(times) - 1, min(320, len(times))).astype(int))
-        return {'ok': True, 'execution_allowed': False, 'mode': mode,
-                'sample_count': len(times), 'duration_s': plan['duration_s'],
-                'frames': [{'t_s': float(times[i]), 'link_world_matrices': self.link_matrices(q[i])} for i in ids]}
+        result = self.preview_plan(plan, 'cached_tip', 'fixed_example')
+        result['description'] = '固定离线圆轨迹示例；使用缓存自带种子及笔尖偏移，与输入框目标、当前真机姿态无关'
+        return result

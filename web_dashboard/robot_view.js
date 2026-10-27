@@ -205,6 +205,43 @@ window.addEventListener("ur10-realtime-state", event => {
 });
 if (window.latestRobotState) updateArm(window.latestRobotState.link_world_matrices);
 
+const taskOverlay = new THREE.Group(); scene.add(taskOverlay);
+let previewTask = null, trackingDot = null;
+function clearTaskOverlay() {
+  taskOverlay.traverse(object => { object.geometry?.dispose(); if (Array.isArray(object.material)) object.material.forEach(m => m.dispose()); else object.material?.dispose(); });
+  taskOverlay.clear(); trackingDot = null; previewTask = null; window.ur10PreviewDebug = null;
+}
+function updateTrackingPoint() {
+  if (!previewTask || !ghost || !trackingDot) return;
+  ghost.updateMatrixWorld(true);
+  const flange = ghost.getObjectByName("ik-link-tool0");
+  if (!flange) return;
+  const actual = new THREE.Vector3(...previewTask.tip_offset_m).applyMatrix4(flange.matrixWorld);
+  trackingDot.position.copy(actual);
+  window.ur10PreviewDebug = {ghost_task_world_xyz_m: actual.toArray(), target_base_xyz_m: previewTask.target_base_pose_m_rad.slice(0,3), frame: previewTask.frame};
+}
+window.addEventListener("ur10-ik-trajectory", event => {
+  clearTaskOverlay(); const data = event.detail; window.latestIKTrajectory = data;
+  if (!data) return;
+  previewTask = data;
+  const target = data.target_base_pose_m_rad;
+  const marker = new THREE.Mesh(new THREE.SphereGeometry(.006,16,12), new THREE.MeshBasicMaterial({color:0x66e6a3,wireframe:true,depthTest:false}));
+  marker.position.set(...target.slice(0,3)); taskOverlay.add(marker);
+  const axes = new THREE.AxesHelper(.045); axes.position.copy(marker.position);
+  const rotation = new THREE.Vector3(...target.slice(3)), angle = rotation.length();
+  if (angle > 1e-12) axes.quaternion.setFromAxisAngle(rotation.divideScalar(angle), angle);
+  taskOverlay.add(axes);
+  if (data.frames?.length > 1) {
+    const points = data.frames.map(frame => new THREE.Vector3(...frame.task_pose_m_rad.slice(0,3)));
+    taskOverlay.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(points), new THREE.LineBasicMaterial({color:0xb985ff,depthTest:false})));
+    if (data.source === "input_target") {
+      taskOverlay.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([points[0],marker.position.clone()]), new THREE.LineBasicMaterial({color:0x66e6a3,depthTest:false})));
+    }
+  }
+  trackingDot = new THREE.Mesh(new THREE.SphereGeometry(.003,12,8),new THREE.MeshBasicMaterial({color:0xffffff,depthTest:false}));
+  taskOverlay.add(trackingDot); updateTrackingPoint();
+});
+
 function updatePreview(matrices) {
   if (!matrices) { if (ghost) ghost.visible = false; return; }
   if (!meshesReady) return;
@@ -223,6 +260,7 @@ function updatePreview(matrices) {
     const group = ghost.getObjectByName("ik-link-" + name);
     if (group && values.length === 16) applyFixed(group, new THREE.Matrix4().set(...values));
   });
+  updateTrackingPoint();
   if (created) requestAnimationFrame(() => {
     arm.updateMatrixWorld(true); ghost.updateMatrixWorld(true);
     const box = new THREE.Box3().setFromObject(arm).union(new THREE.Box3().setFromObject(ghost));

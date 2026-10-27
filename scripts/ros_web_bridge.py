@@ -390,7 +390,7 @@ class _StaticHandler(http.server.SimpleHTTPRequestHandler):
     def do_POST(self):
         path = urllib.parse.urlparse(self.path).path
         motion_path = path.startswith('/api/motion/')
-        if not motion_path and path not in ('/api/kinematics/fk', '/api/kinematics/solve'):
+        if not motion_path and path not in ('/api/kinematics/fk', '/api/kinematics/solve', '/api/kinematics/trajectory'):
             return self.api_json({'ok': False, 'error': '接口不存在'}, 404)
         try:
             if motion_path:
@@ -412,7 +412,7 @@ class _StaticHandler(http.server.SimpleHTTPRequestHandler):
                 else: return self.api_json({'ok': False, 'error': '接口不存在'}, 404)
                 return self.api_json(result)
             service = kinematics()
-            result = service.solve(request) if path.endswith('/solve') else service.fk(request)
+            result = service.trajectory(request) if path.endswith('/trajectory') else service.solve(request) if path.endswith('/solve') else service.fk(request)
             return self.api_json(result)
         except (ValueError, TypeError, KeyError) as exc:
             return self.api_json({'ok': False, 'error': str(exc)}, 400)
