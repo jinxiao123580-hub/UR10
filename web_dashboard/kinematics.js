@@ -2,12 +2,38 @@
 (() => {
   "use strict";
   const el = id => document.getElementById(id);
-  const keys = ["X (m)", "Y (m)", "Z (m)", "Rx (rad)", "Ry (rad)", "Rz (rad)"];
+  const keys = ["X", "Y", "Z", "Rx", "Ry", "Rz"];
+  let positionUnit = "mm", angleUnit = "deg", seedPose = null, loadedSeed = null;
   keys.forEach((name, i) => {
-    const label = document.createElement("label"); label.textContent = name;
-    const input = document.createElement("input"); input.type = "number"; input.step = "any"; input.required = true; input.id = `ik-pose-${i}`;
-    label.append(input); el("ik-target").append(label);
+    const label = document.createElement("label"), title = document.createElement("span"); title.id = `ik-label-${i}`;
+    const input = document.createElement("input"); input.type = "number"; input.required = true; input.id = `ik-pose-${i}`;
+    label.append(title, input); el("ik-target").append(label);
   });
+  function scales() { return [positionUnit === "mm" ? .001 : 1, angleUnit === "deg" ? Math.PI / 180 : 1]; }
+  function readTarget() {
+    const scale = scales();
+    const values = keys.map((_, i) => el(`ik-pose-${i}`).value === "" ? NaN : Number(el(`ik-pose-${i}`).value) * scale[i < 3 ? 0 : 1]);
+    if (!values.every(Number.isFinite)) throw new Error("目标位姿须为六个有限数值");
+    return values;
+  }
+  function writeTarget(pose) {
+    const scale = scales();
+    pose.forEach((v, i) => { el(`ik-pose-${i}`).value = (v / scale[i < 3 ? 0 : 1]).toFixed(i < 3 ? positionUnit === "mm" ? 6 : 9 : angleUnit === "deg" ? 7 : 9); });
+  }
+  function unitLabels() {
+    keys.forEach((name, i) => {
+      el(`ik-label-${i}`).textContent = `${name} (${i < 3 ? positionUnit : angleUnit === "deg" ? "°" : "rad"})`;
+      el(`ik-pose-${i}`).step = i < 3 ? positionUnit === "mm" ? "1" : "0.001" : angleUnit === "deg" ? "0.5" : "0.01";
+    });
+  }
+  function deltaLabel() {
+    try {
+      if (!seedPose || loadedSeed !== el("ik-seed").value) { el("ik-delta").textContent = "种子已修改；计算时将重新核对目标改变量。"; return; }
+      const target = readTarget(), delta = target.slice(0,3).map((v,i)=>(v-seedPose[i])*1000);
+      el("ik-delta").textContent = `相对已加载种子：ΔX ${delta[0].toFixed(2)} / ΔY ${delta[1].toFixed(2)} / ΔZ ${delta[2].toFixed(2)} mm · 位置距离 ${Math.hypot(...delta).toFixed(2)} mm`;
+    } catch (_) { el("ik-delta").textContent = "请完整填写目标位姿。"; }
+  }
+  unitLabels();
   let config = null, playback = null, animation = null, pending = false, configRequest = null, generation = 0;
   async function api(path, body) {
     const response = await fetch(`/api/kinematics/${path}`, body ? {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(body)} : {cache: "no-store"});
@@ -32,7 +58,7 @@
     const token = generation;
     const data = await api("fk", {seed_q_rad: q, frame: el("ik-frame").value});
     if (token !== generation) return;
-    data.pose_m_rad.forEach((v, i) => { el(`ik-pose-${i}`).value = v.toFixed(9); });
+    seedPose = data.pose_m_rad; loadedSeed = el("ik-seed").value; writeTarget(seedPose); deltaLabel();
     el("ik-seed-source").textContent = source; message("已填入模型 FK 位姿，可修改目标后计算。");
   }
   function metric(title, value, detail) {
@@ -78,15 +104,15 @@
     event.preventDefault(); if (pending) return; if (window.ur10MotionArmed) return message("请先关闭真机点动，再使用离线预览"); pending = true; stop(); el("ik-solve").disabled = true; el("ik-trajectory").disabled = true;
     const token = generation;
     try {
-      const target = keys.map((_, i) => el(`ik-pose-${i}`).value === "" ? NaN : Number(el(`ik-pose-${i}`).value));
+      const target = readTarget();
       if (!target.every(Number.isFinite)) throw new Error("目标位姿须为六个有限数值");
       message("正在计算离线 IK 与选定碰撞对…");
-      const data = await api("solve", {seed_q_rad: seed(), target_base_pose_m_rad: target, frame: el("ik-frame").value, mode: el("ik-mode").value});
+      const data = await api("solve", {seed_q_rad: seed(), target_base_pose_m_rad: target, frame: el("ik-frame").value, mode: el("ik-mode").value, search: el("ik-search").value});
       if (token !== generation) return;
       const r = data.result; el("ik-result").replaceChildren(); el("ik-result").className = r.passes_offline_gates ? "pass" : "fail";
-      const title = document.createElement("strong"); title.textContent = !r.success ? "IK 未收敛" : r.passes_offline_gates ? "离线检查通过 · 已显示紫色预览" : "IK 收敛，碰撞门禁未通过";
-      const info = document.createElement("p"); info.textContent = `工具任务误差 ${(r.position_error_m * 1000).toFixed(4)} mm / ${(r.orientation_error_rad * 180 / Math.PI).toFixed(4)}° · 已查间隙 ${r.minimum_checked_clearance_mm.toFixed(1)} mm · 种子最大变化 ${r.max_seed_step_deg.toFixed(3)}°`;
-      const table = document.createElement("table"); const head = table.insertRow(); ["关节", "目标 rad", "目标 °"].forEach(t => { const th = document.createElement("th"); th.textContent = t; head.append(th); });
+      const title = document.createElement("strong"); title.textContent = !r.success ? "IK 未收敛 · " + r.failure_explanation : r.passes_offline_gates ? "离线检查通过 · 已显示紫色预览" : "IK 收敛，碰撞门禁未通过";
+      const info = document.createElement("p"); info.textContent = `目标相对种子 ${r.target_distance_from_seed_mm.toFixed(2)} mm · ${r.search_mode === "initial" ? "离线目标搜索45°" : "局部跟踪3°"} · 工具任务误差 ${(r.position_error_m * 1000).toFixed(4)} mm / ${(r.orientation_error_rad * 180 / Math.PI).toFixed(4)}° · 已查间隙 ${r.minimum_checked_clearance_mm.toFixed(1)} mm · 种子最大变化 ${r.max_seed_step_deg.toFixed(3)}°`;
+      const table = document.createElement("table"); const head = table.insertRow(); ["关节", r.success ? "解 rad" : "未收敛候选 rad", r.success ? "解 °" : "未收敛候选 °"].forEach(t => { const th = document.createElement("th"); th.textContent = t; head.append(th); });
       r.q.forEach((v, i) => { const row = table.insertRow(); [`J${i + 1}`, v.toFixed(6), (v * 180 / Math.PI).toFixed(3)].forEach(text => { row.insertCell().textContent = text; }); });
       el("ik-result").append(title, info, table); if (r.passes_offline_gates) { window.dispatchEvent(new CustomEvent("ur10-ik-trajectory", {detail: {source:"single_target", frame: el("ik-frame").value, mode: el("ik-mode").value, target_base_pose_m_rad: target, tip_offset_m: el("ik-frame").value === "camera" ? config.tool0_from_camera.slice(0,3).map(row => row[3]) : [0,0,0], frames: []}})); preview(data.link_world_matrices); }
     } catch (error) { message(error.message, true); }
@@ -126,7 +152,7 @@
     stop(); pending = true; el("ik-trajectory").disabled = true; el("ik-solve").disabled = true;
     const token = generation;
     try {
-      const target = keys.map((_, i) => el(`ik-pose-${i}`).value === "" ? NaN : Number(el(`ik-pose-${i}`).value));
+      const target = readTarget();
       if (!target.every(Number.isFinite)) throw new Error("目标位姿须为六个有限数值");
       message("从输入种子生成到当前目标的离线轨迹，检查整条路径…");
       const data = await api("trajectory", {seed_q_rad: seed(), target_base_pose_m_rad: target, frame: el("ik-frame").value, mode: el("ik-mode").value});
@@ -136,7 +162,14 @@
     } catch (e) { if (token === generation) message(e.message, true); }
     finally { pending = false; el("ik-trajectory").disabled = !config?.integrity_ok || Boolean(window.ur10MotionArmed); el("ik-solve").disabled = el("ik-trajectory").disabled; }
   };
-  ["ik-seed", "ik-mode", ...keys.map((_, i) => `ik-pose-${i}`)].forEach(id => el(id).addEventListener("input", () => { stop(); message("种子或目标已修改，请重新生成轨迹或计算 IK。"); }));
+  ["ik-seed", "ik-mode", ...keys.map((_, i) => `ik-pose-${i}`)].forEach(id => el(id).addEventListener("input", () => { stop(); deltaLabel(); message("种子或目标已修改，请重新生成轨迹或计算 IK。"); }));
+  ["ik-position-unit", "ik-angle-unit"].forEach(id => el(id).onchange = () => {
+    try {
+      const target = readTarget(); positionUnit = el("ik-position-unit").value; angleUnit = el("ik-angle-unit").value;
+      unitLabels(); writeTarget(target); deltaLabel(); stop(); message("显示单位已切换，目标位姿未改变。");
+    } catch (e) { el("ik-position-unit").value = positionUnit; el("ik-angle-unit").value = angleUnit; message(e.message, true); }
+  });
+  el("ik-search").onchange = () => { stop(); message("已切换单点搜索范围；轨迹跟踪与真机点动限制保持原值。"); };
   el("ik-pause").onclick = () => { if (!playback) return; const now = performance.now(); if (playback.paused) playback.started = now - playback.elapsed * 1000; else playback.elapsed = playback.elapsed || 0; playback.paused = !playback.paused; el("ik-pause").textContent = playback.paused ? "继续预览" : "暂停预览"; };
   el("ik-clear").onclick = stop; el("ik-stop").onclick = stop;
   el("ik-refresh").onclick = () => { if (!configRequest) configRequest = refresh().finally(() => { configRequest = null; }); };

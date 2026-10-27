@@ -101,8 +101,32 @@ class DashboardKinematics:
         T = np.eye(4); T[:3, :3] = Rotation.from_rotvec(target[3:]).as_matrix(); T[:3, 3] = target[:3]
         if frame == 'camera':
             T = T @ np.linalg.inv(self.X)
+        search = request.get('search', 'initial')
+        if search not in ('initial', 'local'):
+            raise ValueError('搜索方式须为initial或local')
+        seed_tool = self.ik.fk_jacobian(seed)[0]
+        seed_task = seed_tool @ self.X if frame == 'camera' else seed_tool
+        delta_mm = (target[:3] - seed_task[:3, 3]) * 1000
+        # A conservative geometric bound, not a claim that every inside point
+        # is reachable. Fixed rotations cannot increase this sum of lengths.
+        bound = sum(np.linalg.norm(np.fromstring(j.find('origin').get('xyz', '0 0 0'), sep=' '))
+                    for j in self.ik.chain if j.find('origin') is not None) + .01
+        outside = np.linalg.norm(T[:3, 3]) > bound
         with self.lock:
-            result = self.ik.solve(T, seed, mode=mode)
+            if outside:
+                result = self.ik.solve(T, seed, mode=mode, max_iterations=1)
+                result['failure_reason'] = 'outside_workspace_bound'
+                explanation = '目标超出模型位置包络；请核对输入单位与目标坐标系'
+            elif search == 'initial':
+                result = self.ik.solve_initial(T, seed, mode=mode)
+                explanation = '45°邻域离线搜索未收敛；不等于已证明目标无解'
+            else:
+                result = self.ik.solve(T, seed, mode=mode)
+                explanation = '3°局部跟踪未收敛；单点目标可改用离线目标搜索'
+            result.update(search_mode=search, search_radius_deg=45. if search == 'initial' else 3.,
+                target_delta_mm=delta_mm.tolist(), target_distance_from_seed_mm=float(np.linalg.norm(delta_mm)),
+                target_base_pose_m_rad=target.tolist(), seed_task_position_m=seed_task[:3, 3].tolist(),
+                workspace_position_bound_m=float(bound), failure_explanation=None if result['success'] else explanation)
             q = np.asarray(result['q'])
             if self.collision is None:
                 self.collision = SelfCollisionModel()

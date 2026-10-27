@@ -119,13 +119,14 @@
     <div class="panel-head"><h2 id="ik-title">手眼标定与离线 IK</h2><div class="panel-actions"><span id="ik-health" class="badge">读取参数…</span><button id="ik-refresh">刷新状态</button><a href="/api/kinematics/calibration" download>下载标定</a></div></div>
     <div class="ik-summary" id="ik-summary" aria-live="polite">正在读取新安装参数与验证记录…</div>
     <div class="ik-workspace">
-      <form id="ik-form" class="ik-editor">
+      <form id="ik-form" class="ik-editor" novalidate>
         <div class="ik-toolbar"><label>目标坐标系 <select id="ik-frame"><option value="tool0">tool0 法兰（不含示教器TCP）</option><option value="camera">base → 相机</option></select></label><label>任务 <select id="ik-mode"><option value="pose">完整位姿</option><option value="axis">位置 + 工具 Z 轴</option></select></label></div>
+        <div class="ik-toolbar"><label>位置单位 <select id="ik-position-unit"><option value="mm">mm</option><option value="m">m</option></select></label><label>姿态单位 <select id="ik-angle-unit"><option value="deg">°</option><option value="rad">rad</option></select></label><label>单点求解 <select id="ik-search"><option value="initial">离线目标搜索（45°邻域）</option><option value="local">局部跟踪（3°邻域）</option></select></label></div>
         <label class="ik-seed-label">种子关节角（rad，六个数）<input id="ik-seed" autocomplete="off" spellcheck="false" required aria-label="种子关节角"></label>
         <div class="ik-toolbar"><button type="button" id="ik-live">读取当前关节</button><button type="button" id="ik-example">加载离线示例</button><span id="ik-seed-source" class="muted">请选择种子姿态</span></div>
-        <div class="ik-target" id="ik-target"></div>
+        <div class="ik-target" id="ik-target"></div><p id="ik-delta" class="ik-note">加载种子后可查看目标位置改变量。</p>
         <div class="ik-toolbar"><button type="submit" id="ik-solve">计算并预览 IK</button><button type="button" id="ik-trajectory">生成到当前目标的轨迹</button><button type="button" id="ik-clear">清除预览</button></div>
-        <p class="ik-note">位置单位 m；Rx / Ry / Rz 为轴角向量，单位 rad。相机目标使用完整手眼旋转与平移换算。</p>
+        <p class="ik-note">位置默认 mm（箭头一步1 mm）；姿态默认°（箭头一步0.5°）。Rx / Ry / Rz 是轴角向量分量，不是欧拉角；切换单位保留同一目标。相机目标使用完整手眼旋转与平移换算。</p>
       </form>
       <div class="ik-results"><div id="ik-result" role="status">等待计算。紫色模型只表示离线结果，实时关节与 TCP 仍显示真机回读。</div><p class="ik-note">轨迹从输入种子出发，到上方目标结束；所有位置均在机器人base中。绿色为目标/参考线，紫色为离线模型，白点为当前跟踪点。下方是固定离线示例，使用自带种子和笔尖偏移，与输入目标及真机当前位置无关。</p><div id="ik-caches" class="ik-caches"></div><div class="ik-toolbar"><button id="ik-pause" disabled>暂停预览</button><button id="ik-stop" disabled>结束预览</button><span id="ik-playback" class="muted"></span></div><p class="ik-note">本面板仅计算和预览，不发送运动指令。碰撞检查覆盖选定附件与机械臂；未完成全环境及真机运动验收。</p></div>
     </div>
